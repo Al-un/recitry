@@ -5,11 +5,14 @@ import { AccessToken } from "./AccessToken";
 
 export const tableName = "users";
 
-export const hashPassword = (clearPassword: string): [string, string] => {
+export const generateSalt = (): string => {
   const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(clearPassword, salt);
+  return salt;
+};
 
-  return [hash, salt];
+export const hashPassword = (clearPassword: string, salt: string): string => {
+  const hash = bcrypt.hashSync(clearPassword, salt);
+  return hash;
 };
 
 @Table({
@@ -27,13 +30,19 @@ export class User extends Model {
     return this.getDataValue("password");
   }
   set password(value: string) {
-    const [hash, salt] = hashPassword(value);
+    const salt = generateSalt();
+    const hash = hashPassword(value, salt);
     this.setDataValue("password", hash);
     this.setDataValue("salt", salt);
   }
 
   @Column({ allowNull: false })
-  salt!: string;
+  get salt(): string {
+    return this.getDataValue("salt");
+  }
+  set salt(value: string) {
+    throw new Error("Do not set salt value directly");
+  }
 
   @Column
   email?: string;

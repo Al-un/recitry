@@ -18,7 +18,7 @@ app.get("/helloworld", (req, res) => {
 
 app.use(AuthRouter);
 
-app.get("/pouet", AuthMiddleware.authenticate, function (req, res) {
+app.get("/pouet", AuthMiddleware, function (req, res) {
   res.send("YAYY\n");
 });
 

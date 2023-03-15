@@ -1,55 +1,73 @@
 import { RequestHandler } from "express";
 import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
+import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
+import { SignUpReq, SignUpResp } from "@al-un/ressaite-core/um/models/Auth";
 import { AccessToken } from "../models/AccessToken";
-import { User } from "../models/User";
+import { hashPassword, User } from "../models/User";
 
 // ----------------------------------------------------------------------------
 
-passport.use(
-  // @ts-ignore
-  new LocalStrategy(async function verify(username, password, cb) {
-    console.log(`Checking ${username} and ${password}`);
-    const user = await User.findOne({ where: { username, password } });
-    console.log(`Found`, user?.dataValues);
+const localVerify: VerifyFunction = async (username, password, cb) => {
+  let user: User | null;
+  try {
+    user = await User.findOne({ where: { username } });
     if (!user) {
       return cb(null, false, { message: "Incorrect username or password" });
     }
+  } catch (err) {
+    return cb(err, false, { message: `An error happened: ${err}` });
+  }
 
-    console.log("creating access token");
-    let newAccessToken = new AccessToken();
-    newAccessToken.init(user);
+  const salt = user.salt;
+  const hashedPassword = hashPassword(password, salt);
+  if (hashedPassword !== user.password) {
+    return cb(null, false, { message: "Incorrect username or password" });
+  }
 
-    try {
-      newAccessToken = await newAccessToken.save();
-      console.log("created access token", newAccessToken);
-      return cb(null, { user, token: newAccessToken });
-    } catch (err) {
-      return cb(err, false, { message: `An error happened: ${err}` });
-    }
-  })
-);
+  let newAccessToken = new AccessToken();
+  newAccessToken.init(user);
 
-const login: RequestHandler = (req, res, next) => {
-  // https://stackoverflow.com/a/32002327/4906586
-  passport.authenticate(
-    "local",
-    { session: false },
-    function (err: any, user: any, info: any) {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.json({ message: info.message });
-      }
-
-      res.json(user);
-    }
-  )(req, res, next);
+  try {
+    newAccessToken = await newAccessToken.save();
+    return cb(null, { user, token: newAccessToken });
+  } catch (err) {
+    return cb(err, false, { message: `An error happened: ${err}` });
+  }
 };
 
-const logout: RequestHandler = async (req, res, next) => {
+passport.use(new LocalStrategy(localVerify));
+
+// ----------------------------------------------------------------------------
+
+export const login: RequestHandler = (req, res, next) => {
+  type LocalCallback = Parameters<VerifyFunction>[2];
+  const callbackHandler: LocalCallback = (err, authInfo, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!authInfo) {
+      const error: RstErrorResp = {
+        message: info?.message,
+      };
+      return res.status(400).json(error);
+    }
+
+    // @ts-ignore
+    res.json({ token: authInfo.token });
+  };
+
+  // https://stackoverflow.com/a/32002327/4906586
+  const passportAugment = passport.authenticate(
+    "local",
+    { session: false },
+    callbackHandler
+  );
+  passportAugment(req, res, next);
+};
+
+export const logout: RequestHandler = async (req, res, next) => {
   // @ts-ignore
   const token = req.user.token;
 
@@ -67,47 +85,21 @@ const logout: RequestHandler = async (req, res, next) => {
   res.status(200);
 };
 
-const signUp: RequestHandler = async (req, res, next) => {
-  // @ts-ignore
+export const signUp: RequestHandler<undefined, SignUpResp, SignUpReq> = async (
+  req,
+  res,
+  next
+) => {
   const { username, password } = req.body;
   let newUser = new User({
     username,
     password,
   });
+
   try {
-    console.log(`Creating user`, newUser);
     await newUser.save();
-    res.status(201).send({ status: "Created" });
+    res.sendStatus(201);
   } catch (err) {
-    console.error(err);
     next(err);
   }
-
-  // req.login(newUser, function (err) {
-  //   res.json({ err });
-  // });
-
-  // var salt = crypto.randomBytes(16);
-  // crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
-  //   if (err) { return next(err); }
-  //   db.run('INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
-  //     req.body.username,
-  //     hashedPassword,
-  //     salt
-  //   ], function(err) {
-  //     if (err) { return next(err); }
-  //     var user = {
-  //       id: this.lastID,
-  //       username: req.body.username
-  //     };
-  //     req.login(user, function(err) {
-  //       if (err) { return next(err); }
-  //       res.redirect('/');
-  //     });
-  //   });
-  // });
 };
-
-// ----------------------------------------------------------------------------
-
-export default { login, logout, signUp };
