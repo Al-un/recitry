@@ -47,12 +47,13 @@ describe("AuthController", () => {
     });
 
     it("does not allow another user to signup with the same username", async () => {
-      signUpResponse = await request(app)
+      const res = await request(app)
         .post("/signup")
         .send({ username: "blah", password: "another-password" })
         .set("Accept", "application/json");
 
-      expect(signUpResponse.status).to.equal(400);
+      expect(res.status).to.equal(400);
+      expect(res.body).to.have.all.keys("message");
     });
   });
 });

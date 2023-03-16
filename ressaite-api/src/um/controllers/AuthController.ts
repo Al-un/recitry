@@ -3,7 +3,12 @@ import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
 import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
-import { SignUpReq, SignUpResp } from "@al-un/ressaite-core/um/models/Auth";
+import {
+  LoginReq,
+  LoginResp,
+  SignUpReq,
+  SignUpResp,
+} from "@al-un/ressaite-core/um/models/Auth";
 import { AccessToken } from "../models/AccessToken";
 import { hashPassword, User } from "../models/User";
 
@@ -40,18 +45,16 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
 passport.use(new LocalStrategy(localVerify));
 
 // ----------------------------------------------------------------------------
+type LoginHandler = RequestHandler<undefined, LoginResp, LoginReq>;
 
-export const login: RequestHandler = (req, res, next) => {
+export const login: LoginHandler = (req, res, next) => {
   type LocalCallback = Parameters<VerifyFunction>[2];
   const callbackHandler: LocalCallback = (err, authInfo, info) => {
     if (err) {
       return next(err);
     }
     if (!authInfo) {
-      const error: RstErrorResp = {
-        message: info?.message,
-      };
-      return res.status(400).json(error);
+      return res.status(400).json({ message: info?.message });
     }
 
     res.json({ token: authInfo.token });
@@ -66,15 +69,19 @@ export const login: RequestHandler = (req, res, next) => {
   passportAugment(req, res, next);
 };
 
-export const logout: RequestHandler = async (req, res, next) => {
-  // @ts-ignore
-  const token = req.user.token;
+type LogoutHandler = RequestHandler<undefined, null, null>;
+
+export const logout: LogoutHandler = async (req, res) => {
+  const token = req?.user?.token;
+  if (!token) {
+    throw new Error("No access token provided!");
+  }
 
   const accessToken = await AccessToken.findOne({ where: { token } });
   if (!accessToken) {
-    throw new Error();
+    throw new Error("Token not found");
   }
-  console.log("FOUND", accessToken);
+
   const yesterday = new Date();
   yesterday.setDate(new Date().getDate() - 1);
   accessToken.set("expiresAt", yesterday);
@@ -84,11 +91,9 @@ export const logout: RequestHandler = async (req, res, next) => {
   res.status(200);
 };
 
-export const signUp: RequestHandler<undefined, SignUpResp, SignUpReq> = async (
-  req,
-  res,
-  next
-) => {
+type SignUpHandler = RequestHandler<undefined, SignUpResp, SignUpReq>;
+
+export const signUp: SignUpHandler = async (req, res, next) => {
   const { username, password } = req.body;
 
   const existingUser = await User.findOne({ where: { username } });
