@@ -45,7 +45,10 @@ const AuthMiddleware: RequestHandler = (req, res, next) => {
     }
 
     // req.token = authInfo.token;
-    req.user = authInfo.user;
+    req.user = {
+      userId: authInfo.user.id,
+      token: authInfo.token,
+    };
 
     next();
   };

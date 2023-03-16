@@ -5,6 +5,11 @@ import { User } from "./um/models/User";
 
 declare global {
   namespace Express {
+    export interface User {
+      userId: number;
+      token: string;
+    }
+
     export interface Request {
       user?: User;
       token?: string;

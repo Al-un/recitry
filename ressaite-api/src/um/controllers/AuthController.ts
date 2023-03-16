@@ -31,7 +31,7 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
 
   try {
     newAccessToken = await newAccessToken.save();
-    return cb(null, { user, token: newAccessToken });
+    return cb(null, { userId: user.id, token: newAccessToken.token });
   } catch (err) {
     return cb(err, false, { message: `An error happened: ${err}` });
   }
@@ -54,7 +54,6 @@ export const login: RequestHandler = (req, res, next) => {
       return res.status(400).json(error);
     }
 
-    // @ts-ignore
     res.json({ token: authInfo.token });
   };
 
