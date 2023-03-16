@@ -8,12 +8,14 @@ export const mochaHooks: RootHookObject = {
     // Execute and check migrations
     await umzugMigrator.up();
     const migrations = await umzugMigrator.executed();
-    console.log("Executed migrations:", migrations);
+    const migNames = migrations.map((m) => m.name);
+    console.log("Executed migrations:", migNames);
 
     // Execute and check seeds
     await umzugSeeder.up();
     const seeds = await umzugSeeder.executed();
-    console.log("Executed seeds:", seeds);
+    const seedNames = seeds.map((s) => s.name);
+    console.log("Executed seeds:", seedNames);
 
     try {
       await initSequelize(sequelize);

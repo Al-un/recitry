@@ -12,7 +12,7 @@ export const umzugMigrator = new Umzug({
   storage: new SequelizeStorage({
     sequelize,
   }),
-  logger: console,
+  logger: process.env.DEBUG ? console : undefined,
 });
 
 export type Migration = typeof umzugMigrator._types.migration;
@@ -26,7 +26,7 @@ export const umzugSeeder = new Umzug({
     sequelize,
     modelName: "seeder_meta",
   }),
-  logger: console,
+  logger: process.env.DEBUG ? console : undefined,
 });
 
 export type Seeder = typeof umzugSeeder._types.migration;

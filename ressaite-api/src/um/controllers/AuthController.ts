@@ -90,6 +90,13 @@ export const signUp: RequestHandler<undefined, SignUpResp, SignUpReq> = async (
   next
 ) => {
   const { username, password } = req.body;
+
+  const existingUser = await User.findOne({ where: { username } });
+  if (existingUser) {
+    res.status(400).json({ message: "Username already taken" });
+    return;
+  }
+
   let newUser = new User({
     username,
     password,

@@ -25,14 +25,34 @@ describe("AuthController", () => {
   });
 
   describe("sign up", () => {
-    it("signs new user up with proper info", async () => {
+    let signUpResponse: request.Response;
+    before(async () => {
+      signUpResponse = await request(app)
+        .post("/signup")
+        .send({ username: "blah", password: "pouicpouic" })
+        .set("Accept", "application/json");
+    });
+
+    it("signs new user up with proper info", () => {
+      expect(signUpResponse.status).to.equal(201);
+      expect(signUpResponse.body).to.be.empty;
+    });
+
+    it("lets the new user to login", async () => {
       const res = await request(app)
         .post("/login")
-        .send({ username: "blah", password: "pouetpouet" })
+        .send({ username: "blah", password: "pouicpouic" });
+
+      expect(res.status).to.equal(200);
+    });
+
+    it("does not allow another user to signup with the same username", async () => {
+      signUpResponse = await request(app)
+        .post("/signup")
+        .send({ username: "blah", password: "another-password" })
         .set("Accept", "application/json");
 
-      expect(res.status).to.equal(201);
-      expect(res.body).to.be.empty;
+      expect(signUpResponse.status).to.equal(400);
     });
   });
 });

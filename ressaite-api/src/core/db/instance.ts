@@ -39,7 +39,7 @@ export const sequelize = new Sequelize({
   port: db_port,
   storage: db_storage,
   // https://sequelize.org/docs/v6/getting-started/#logging
-  logging: console.log,
+  logging: process.env.DEBUG ? console.log : false,
   // Loading models for sync
   models: [path.join(__dirname, "../../um/models/**/*.*")],
 });
