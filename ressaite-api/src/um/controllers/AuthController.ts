@@ -31,7 +31,7 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
 
   try {
     newAccessToken = await newAccessToken.save();
-    return cb(null, { userId: user.id, token: newAccessToken.token });
+    return cb(null, { id: user.id, token: newAccessToken.token });
   } catch (err) {
     return cb(err, false, { message: `An error happened: ${err}` });
   }

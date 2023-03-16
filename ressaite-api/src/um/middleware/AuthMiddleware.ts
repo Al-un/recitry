@@ -33,7 +33,7 @@ passport.use(new BearerStrategy(bearerVerify));
 
 const AuthMiddleware: RequestHandler = (req, res, next) => {
   type BearerCallback = Parameters<VerifyFunction>[1];
-  const callbackHandler: BearerCallback = (err, authInfo, opts) => {
+  const cbHandler: BearerCallback = (err, authInfo, opts) => {
     if (err) {
       return next(err);
     }
@@ -44,20 +44,20 @@ const AuthMiddleware: RequestHandler = (req, res, next) => {
       return res.status(401).json(error);
     }
 
-    // req.token = authInfo.token;
     req.user = {
-      userId: authInfo.user.id,
+      id: authInfo.user.id,
       token: authInfo.token,
     };
 
     next();
   };
 
-  passport.authenticate("bearer", { session: false }, callbackHandler)(
-    req,
-    res,
-    next
+  const bearerAugment = passport.authenticate(
+    "bearer",
+    { session: false },
+    cbHandler
   );
+  bearerAugment(req, res, next);
 };
 
 // ----------------------------------------------------------------------------

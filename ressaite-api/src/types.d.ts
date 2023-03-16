@@ -5,14 +5,12 @@ import { User } from "./um/models/User";
 
 declare global {
   namespace Express {
-    export interface User {
-      userId: number;
+    interface User {
+      /** The authenticated User ID */
+      id: number;
+      // For passport middleware
+      /** The authentication token used in the request */
       token: string;
-    }
-
-    export interface Request {
-      user?: User;
-      token?: string;
     }
   }
 }
