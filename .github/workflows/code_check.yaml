@@ -42,7 +42,7 @@ jobs:
 
   # ---------- Build ----------------------------------------------------------
   test:
-    name: Test
+    name: Test ressaite-api
     needs: init
     runs-on: ubuntu-latest
 
@@ -53,4 +53,4 @@ jobs:
       - name: Load Cache
         uses: ./.github/actions/setup-and-cache
 
-      - run: npm run test
+      - run: cd ressaite-api && npm run test
