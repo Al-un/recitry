@@ -69,9 +69,10 @@ export const login: LoginHandler = (req, res, next) => {
   passportAugment(req, res, next);
 };
 
-type LogoutHandler = RequestHandler<undefined, null, null>;
+// type LogoutHandler = RequestHandler<undefined, {}, {}>;
 
-export const logout: LogoutHandler = async (req, res) => {
+// export const logout: LogoutHandler = async (req, res) => {
+export const logout: RequestHandler = async (req, res) => {
   const token = req?.user?.token;
   if (!token) {
     throw new Error("No access token provided!");
