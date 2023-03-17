@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "lerna run build",
-    "test": "lerna run test"
+    "test:all": "lerna run test"
   },
   "devDependencies": {
     "lerna": "^6.5.1",

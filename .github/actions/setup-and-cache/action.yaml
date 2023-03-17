@@ -9,7 +9,7 @@ inputs:
   lockfile:
     description: 'Lockfile path/name to define the cache key'
     required: true
-    default: package.lock
+    default: package-lock.json
 
 outputs:
   cache-hit:
@@ -35,10 +35,12 @@ runs:
           ressaite-api/node_modules
           ressaite-core/node_modules
           ressaite-web/node_modules
-        key: ressaite-dependencies-${{ inputs.node-version }}-${{ hashFiles(inputs.lockfile) }}
+        key: ressaite-dependencies-${{ inputs.node-version }}-${{ hashFiles(inputs.lockfile) }}-v1
 
 
     - name: Install dependencies (if necessary)
       if: steps.node-cache.outputs.cache-hit != 'true'
-      run: npm install
+      # --workspaces              : https://docs.npmjs.com/cli/v8/commands/npm-install?v=true#workspaces
+      # --include-workspace-root  : https://docs.npmjs.com/cli/v8/commands/npm-install?v=true#include-workspace-root
+      run: npm install --workspaces --include-workspace-root
       shell: bash

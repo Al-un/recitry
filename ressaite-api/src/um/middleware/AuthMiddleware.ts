@@ -1,63 +1,65 @@
 import { RequestHandler } from "express";
 import passport from "passport";
-import { Strategy as BearerStrategy } from "passport-http-bearer";
+import {
+  Strategy as BearerStrategy,
+  VerifyFunction,
+} from "passport-http-bearer";
 
-import AccessToken from "../models/AccessToken";
+import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
+import { AccessToken } from "../models/AccessToken";
 
 // ----------------------------------------------------------------------------
 
-passport.use(
-  new BearerStrategy(async function verify(token, cb) {
+const bearerVerify: VerifyFunction = async function verify(token, cb) {
+  try {
     const validToken = await AccessToken.findOne({ where: { token } });
     if (!validToken) {
-      return cb(null, false);
-    }
-    console.log("TOKEN", validToken.dataValues);
-    console.log(
-      `Comparing ${validToken.dataValues.expiresAt} with now ${new Date()}`
-    );
-    if (validToken.dataValues.expiresAt < new Date()) {
-      return cb(null, false, { scope: "all", message: "expired" });
+      return cb(null, false, { scope: "all", message: "token not fond" });
     }
 
-    return cb(null, { token });
-  })
-);
-
-const authenticate: RequestHandler = (req, res, next) => {
-  passport.authenticate(
-    "bearer",
-    { session: false },
-    function (err: any, user: any, info: any) {
-      // console.log("ERR", err);
-      // console.log("user", user);
-      // console.log("info", info);
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.json(info);
-      }
-
-      // console.log("POUET", req.user);
-      next();
+    if (validToken.expiresAt < new Date()) {
+      return cb(null, false, { scope: "all", message: "expired token" });
     }
-  )(req, res, next);
+
+    const user = validToken.user;
+
+    return cb(null, { token, user });
+  } catch (error) {
+    return cb(error, false);
+  }
 };
 
-// passport.serializeUser(function (user, done) {
-//   done(null, user);
-// });
+passport.use(new BearerStrategy(bearerVerify));
 
-// passport.deserializeUser(async function (id: string, done) {
-//   try {
-//     const user = await User.findByPk(id);
-//     done(null, user);
-//   } catch (err) {
-//     done(err, false);
-//   }
-// });
+const AuthMiddleware: RequestHandler = (req, res, next) => {
+  type BearerCallback = Parameters<VerifyFunction>[1];
+  const cbHandler: BearerCallback = (err, authInfo, opts) => {
+    if (err) {
+      return next(err);
+    }
+    if (!authInfo) {
+      const error: RstErrorResp = {
+        message: typeof opts === "string" ? opts : opts?.message,
+      };
+      return res.status(401).json(error);
+    }
+
+    req.user = {
+      id: authInfo.user.id,
+      token: authInfo.token,
+    };
+
+    next();
+  };
+
+  const bearerAugment = passport.authenticate(
+    "bearer",
+    { session: false },
+    cbHandler
+  );
+  bearerAugment(req, res, next);
+};
 
 // ----------------------------------------------------------------------------
 
-export default { authenticate };
+export default AuthMiddleware;

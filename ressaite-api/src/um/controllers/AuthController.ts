@@ -1,57 +1,88 @@
 import { RequestHandler } from "express";
 import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
-import AccessToken from "../models/AccessToken";
-import User from "../models/User";
+import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
+import {
+  LoginReq,
+  LoginResp,
+  SignUpReq,
+  SignUpResp,
+} from "@al-un/ressaite-core/um/models/Auth";
+import { AccessToken } from "../models/AccessToken";
+import { hashPassword, User } from "../models/User";
 
 // ----------------------------------------------------------------------------
 
-passport.use(
-  // @ts-ignore
-  new LocalStrategy(async function verify(username, password, cb) {
-    // console.log(`Checking ${username} and ${password}`);
-    const user = await User.findOne({ where: { username, password } });
-    // console.log(`Found`, user?.dataValues);
+const localVerify: VerifyFunction = async (username, password, cb) => {
+  let user: User | null;
+  try {
+    user = await User.findOne({ where: { username } });
     if (!user) {
       return cb(null, false, { message: "Incorrect username or password" });
     }
+  } catch (err) {
+    return cb(err, false, { message: `An error happened: ${err}` });
+  }
 
-    let newAccessToken = new AccessToken();
-    newAccessToken.init();
-    newAccessToken = await AccessToken.create(newAccessToken);
+  const salt = user.salt;
+  const hashedPassword = hashPassword(password, salt);
+  if (hashedPassword !== user.password) {
+    return cb(null, false, { message: "Incorrect username or password" });
+  }
 
-    return cb(null, { user, token: newAccessToken });
-  })
-);
+  let newAccessToken = new AccessToken();
+  newAccessToken.init(user);
 
-const login: RequestHandler = (req, res, next) => {
-  // https://stackoverflow.com/a/32002327/4906586
-  passport.authenticate(
-    "local",
-    { session: false },
-    function (err: any, user: any, info: any) {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res.json({ message: info.message });
-      }
-
-      res.json(user);
-    }
-  )(req, res, next);
+  try {
+    newAccessToken = await newAccessToken.save();
+    return cb(null, { id: user.id, token: newAccessToken.token });
+  } catch (err) {
+    return cb(err, false, { message: `An error happened: ${err}` });
+  }
 };
 
-const logout: RequestHandler = async (req, res, next) => {
-  // @ts-ignore
-  const token = req.user.token;
+passport.use(new LocalStrategy(localVerify));
+
+// ----------------------------------------------------------------------------
+type LoginHandler = RequestHandler<undefined, LoginResp, LoginReq>;
+
+export const login: LoginHandler = (req, res, next) => {
+  type LocalCallback = Parameters<VerifyFunction>[2];
+  const callbackHandler: LocalCallback = (err, authInfo, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!authInfo) {
+      return res.status(400).json({ message: info?.message });
+    }
+
+    res.json({ token: authInfo.token });
+  };
+
+  // https://stackoverflow.com/a/32002327/4906586
+  const passportAugment = passport.authenticate(
+    "local",
+    { session: false },
+    callbackHandler
+  );
+  passportAugment(req, res, next);
+};
+
+// type LogoutHandler = RequestHandler<undefined, {}, {}>;
+
+// export const logout: LogoutHandler = async (req, res) => {
+export const logout: RequestHandler = async (req, res) => {
+  const token = req?.user?.token;
+  if (!token) {
+    throw new Error("No access token provided!");
+  }
 
   const accessToken = await AccessToken.findOne({ where: { token } });
   if (!accessToken) {
-    throw new Error();
+    throw new Error("Token not found");
   }
-  console.log("FOUND", accessToken);
+
   const yesterday = new Date();
   yesterday.setDate(new Date().getDate() - 1);
   accessToken.set("expiresAt", yesterday);
@@ -61,39 +92,26 @@ const logout: RequestHandler = async (req, res, next) => {
   res.status(200);
 };
 
-const signUp: RequestHandler = async (req, res, next) => {
-  // @ts-ignore
+type SignUpHandler = RequestHandler<undefined, SignUpResp, SignUpReq>;
+
+export const signUp: SignUpHandler = async (req, res, next) => {
   const { username, password } = req.body;
-  const newUser = await User.create({
-    username: username,
-    password: password,
+
+  const existingUser = await User.findOne({ where: { username } });
+  if (existingUser) {
+    res.status(400).json({ message: "Username already taken" });
+    return;
+  }
+
+  let newUser = new User({
+    username,
+    password,
   });
 
-  req.login(newUser, function (err) {
-    res.json({ err });
-  });
-
-  // var salt = crypto.randomBytes(16);
-  // crypto.pbkdf2(req.body.password, salt, 310000, 32, 'sha256', function(err, hashedPassword) {
-  //   if (err) { return next(err); }
-  //   db.run('INSERT INTO users (username, hashed_password, salt) VALUES (?, ?, ?)', [
-  //     req.body.username,
-  //     hashedPassword,
-  //     salt
-  //   ], function(err) {
-  //     if (err) { return next(err); }
-  //     var user = {
-  //       id: this.lastID,
-  //       username: req.body.username
-  //     };
-  //     req.login(user, function(err) {
-  //       if (err) { return next(err); }
-  //       res.redirect('/');
-  //     });
-  //   });
-  // });
+  try {
+    await newUser.save();
+    res.sendStatus(201);
+  } catch (err) {
+    next(err);
+  }
 };
-
-// ----------------------------------------------------------------------------
-
-export default { login, logout, signUp };

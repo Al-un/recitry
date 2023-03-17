@@ -1,31 +1,52 @@
-import { sequelize } from "../../core/db/instance";
-import {
-  CreationOptional,
-  DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
-  Model,
-} from "sequelize";
+import { Column, HasMany, Model, Table } from "sequelize-typescript";
+import bcrypt from "bcrypt";
 
-class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: CreationOptional<number>;
-  declare username: string;
-  declare password: string;
-  declare email: string | null;
+import { AccessToken } from "./AccessToken";
+
+export const tableName = "users";
+
+export const generateSalt = (): string => {
+  const salt = bcrypt.genSaltSync(10);
+  return salt;
+};
+
+export const hashPassword = (clearPassword: string, salt: string): string => {
+  const hash = bcrypt.hashSync(clearPassword, salt);
+  return hash;
+};
+
+@Table({
+  tableName,
+})
+export class User extends Model {
+  @Column({ primaryKey: true, autoIncrement: true, allowNull: false })
+  id!: number;
+
+  @Column({ allowNull: false })
+  username!: string;
+
+  @Column({ allowNull: false })
+  get password(): string {
+    return this.getDataValue("password");
+  }
+  set password(value: string) {
+    const salt = generateSalt();
+    const hash = hashPassword(value, salt);
+    this.setDataValue("password", hash);
+    this.setDataValue("salt", salt);
+  }
+
+  @Column({ allowNull: false })
+  get salt(): string {
+    return this.getDataValue("salt");
+  }
+  set salt(value: string) {
+    throw new Error("Do not set salt value directly");
+  }
+
+  @Column
+  email?: string;
+
+  @HasMany(() => AccessToken)
+  accessTokens!: AccessToken[];
 }
-
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    username: { type: new DataTypes.STRING(128), allowNull: false },
-    password: { type: new DataTypes.STRING(128), allowNull: false },
-    email: { type: new DataTypes.STRING(128) },
-  },
-  { tableName: "users", sequelize }
-);
-
-export default User;
