@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { ParamsDictionary } from "express-serve-static-core";
 import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
@@ -69,16 +70,17 @@ export const login: LoginHandler = (req, res, next) => {
   passportAugment(req, res, next);
 };
 
-// type LogoutHandler = RequestHandler<undefined, {}, {}>;
+// For some reason, the ParamsDictionary has to be explicitly defined...
+type LogoutHandler = RequestHandler<ParamsDictionary, any, any>;
 
 // export const logout: LogoutHandler = async (req, res) => {
-export const logout: RequestHandler = async (req, res) => {
+export const logout: LogoutHandler = async (req, res) => {
   const token = req?.user?.token;
   if (!token) {
     throw new Error("No access token provided!");
   }
 
-  const accessToken = await AccessToken.findOne({ where: { token } });
+  let accessToken = await AccessToken.findOne({ where: { token } });
   if (!accessToken) {
     throw new Error("Token not found");
   }
@@ -87,9 +89,9 @@ export const logout: RequestHandler = async (req, res) => {
   yesterday.setDate(new Date().getDate() - 1);
   accessToken.set("expiresAt", yesterday);
 
-  await accessToken.save();
+  accessToken = await accessToken.save();
 
-  res.status(200);
+  res.sendStatus(200);
 };
 
 type SignUpHandler = RequestHandler<undefined, SignUpResp, SignUpReq>;

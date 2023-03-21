@@ -2,6 +2,7 @@ import { expect } from "chai";
 import request from "supertest";
 
 import app from "@/app";
+import { AccessToken } from "../models/AccessToken";
 
 describe("AuthController", () => {
   describe("login", () => {
@@ -25,8 +26,24 @@ describe("AuthController", () => {
   });
 
   describe("logout", () => {
+    it("expires the currently valid token", async () => {
+      const token = "pouet";
 
-  })
+      const beforeLogoutToken = await AccessToken.findOne({ where: { token } });
+      expect(beforeLogoutToken?.expiresAt).is.greaterThan(new Date());
+
+      const res = await request(app)
+        .post("/v1/logout")
+        // https://stackoverflow.com/a/71992321/4906586
+        .auth(token, { type: "bearer" });
+        console.log(res.body)
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.empty;
+
+      const afterLogoutToken = await AccessToken.findOne({ where: { token } });
+      expect(afterLogoutToken?.expiresAt).is.lessThan(new Date());
+    });
+  });
 
   describe("sign up", () => {
     let signUpResponse: request.Response;
