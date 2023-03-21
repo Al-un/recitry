@@ -7,6 +7,7 @@ const InternalErrorMiddleware: ErrorRequestHandler = (
   next
 ) => {
   if (error) {
+    console.warn("Internal server error:", error);
     res.status(500).send({
       message: "An unknown error happened, sorry about that",
       error: error,
@@ -16,4 +17,4 @@ const InternalErrorMiddleware: ErrorRequestHandler = (
   }
 };
 
-export default InternalErrorMiddleware
+export default InternalErrorMiddleware;
