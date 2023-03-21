@@ -12,7 +12,7 @@ let db_port = process.env.DB_PORT
 const db_dialect = process.env.DB_DIALECT;
 const db_storage = process.env.DB_STORAGE;
 
-let sequelize: Sequelize;
+export let sequelize: Sequelize;
 // https://sequelize.org/docs/v6/getting-started/#logging
 const logging = process.env.DEBUG ? console.log : false;
 // https://github.com/sequelize/sequelize-typescript/blob/master/examples/simple/lib/database/sequelize.ts
@@ -57,8 +57,6 @@ if (db_url) {
     models,
   });
 }
-
-export default { sequelize };
 
 export const initSequelize = async (sequelize: Sequelize) => {
   await sequelize.authenticate();

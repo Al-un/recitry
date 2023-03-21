@@ -10,7 +10,9 @@
     "test": "npm run test:in-memory src/**/*.spec.ts",
     "test:in-memory": "DB_DIALECT=sqlite DB_STORAGE=:memory: npm run test:run",
     "test:run": "mocha -r ts-node/register -r src/mocha-root.ts --timeout 10000 --exit",
-    "db:migrate": "sequelize-cli db:migrate"
+    "db:sqlite:init": "node sqlite",
+    "db:migrate": "node migrator up",
+    "db:seed": "node seeder up"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
