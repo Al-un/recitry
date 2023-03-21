@@ -1,8 +1,8 @@
 import express from "express";
 
-import { catchAllErrorMiddleware } from "@/core/middleware/ErrorMiddleware";
+import { catchAllErrorMiddleware } from "@/core/middlewares/ErrorMiddleware";
 import AuthRouter from "@/um/routers/AuthRouter";
-import AuthMiddleware from "@/um/middleware/AuthMiddleware";
+import AuthMiddleware from "@/um/middlewares/AuthMiddleware";
 
 const app = express();
 
