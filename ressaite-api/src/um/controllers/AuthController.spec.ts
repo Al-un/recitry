@@ -26,9 +26,18 @@ describe("AuthController", () => {
   });
 
   describe("logout", () => {
-    it("expires the currently valid token", async () => {
-      const token = "pouet";
+    let token: string;
 
+    before(async () => {
+      // from v1/login test
+      const res = await request(app)
+        .post("/v1/login")
+        .send({ username: "admin", password: "pouetpouet" });
+
+      token = res.body.token;
+    });
+
+    it("expires the currently valid token", async () => {
       const beforeLogoutToken = await AccessToken.findOne({ where: { token } });
       expect(beforeLogoutToken?.expiresAt).is.greaterThan(new Date());
 
@@ -36,7 +45,7 @@ describe("AuthController", () => {
         .post("/v1/logout")
         // https://stackoverflow.com/a/71992321/4906586
         .auth(token, { type: "bearer" });
-        
+
       expect(res.status).to.equal(204);
       expect(res.body).to.be.empty;
 
