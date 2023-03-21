@@ -7,7 +7,7 @@ describe("AuthController", () => {
   describe("login", () => {
     it("logins with proper credentials", async () => {
       const res = await request(app)
-        .post("/login")
+        .post("/v1/login")
         .send({ username: "admin", password: "pouetpouet" });
 
       expect(res.status).to.equal(200);
@@ -16,7 +16,7 @@ describe("AuthController", () => {
 
     it("rejects incorrect credentials", async () => {
       const res = await request(app)
-        .post("/login")
+        .post("/v1/login")
         .send({ username: "admin", password: "wrong password" });
 
       expect(res.status).to.equal(400);
@@ -24,11 +24,15 @@ describe("AuthController", () => {
     });
   });
 
+  describe("logout", () => {
+
+  })
+
   describe("sign up", () => {
     let signUpResponse: request.Response;
     before(async () => {
       signUpResponse = await request(app)
-        .post("/signup")
+        .post("/v1/signup")
         .send({ username: "blah", password: "pouicpouic" })
         .set("Accept", "application/json");
     });
@@ -40,7 +44,7 @@ describe("AuthController", () => {
 
     it("lets the new user to login", async () => {
       const res = await request(app)
-        .post("/login")
+        .post("/v1/login")
         .send({ username: "blah", password: "pouicpouic" });
 
       expect(res.status).to.equal(200);
@@ -48,7 +52,7 @@ describe("AuthController", () => {
 
     it("does not allow another user to signup with the same username", async () => {
       const res = await request(app)
-        .post("/signup")
+        .post("/v1/signup")
         .send({ username: "blah", password: "another-password" })
         .set("Accept", "application/json");
 

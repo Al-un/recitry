@@ -7,11 +7,11 @@ const AuthRouter = Express.Router();
 
 // ----------------------------------------------------------------------------
 
-AuthRouter.post("/login", AuthController.login);
+AuthRouter.post("/v1/login", AuthController.login);
 
-AuthRouter.post("/signup", AuthController.signUp);
+AuthRouter.post("/v1/signup", AuthController.signUp);
 
-AuthRouter.post("/logout", AuthMiddleware, AuthController.logout);
+AuthRouter.post("/v1/logout", AuthMiddleware, AuthController.logout);
 
 // ----------------------------------------------------------------------------
 
