@@ -1,8 +1,9 @@
 import express from "express";
 
-import { catchAllErrorMiddleware } from "@/core/middleware/ErrorMiddleware";
+import InternalErrorMiddleware from "@/core/middlewares/InternalErrorMiddleware";
+import MiscRouter from "@/core/routers/MiscRouter";
 import AuthRouter from "@/um/routers/AuthRouter";
-import AuthMiddleware from "@/um/middleware/AuthMiddleware";
+import UnknownRouteMiddleware from "./core/middlewares/UnknownRouteMiddleware";
 
 const app = express();
 
@@ -12,16 +13,11 @@ const app = express();
 // app.use(BodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/helloworld", (req, res) => {
-  res.send("helloworld\n");
-});
-
+app.use(MiscRouter);
 app.use(AuthRouter);
 
-app.get("/pouet", AuthMiddleware, function (req, res) {
-  res.send("YAYY\n");
-});
+app.use(InternalErrorMiddleware);
 
-app.use(catchAllErrorMiddleware);
+app.all("*", UnknownRouteMiddleware);
 
 export default app;
