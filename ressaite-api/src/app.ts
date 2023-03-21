@@ -1,8 +1,9 @@
-import express from "express";
+import express, { RequestHandler } from "express";
 
+import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
 import { catchAllErrorMiddleware } from "@/core/middlewares/ErrorMiddleware";
+import MiscRouter from "@/core/routers/MiscRouter";
 import AuthRouter from "@/um/routers/AuthRouter";
-import AuthMiddleware from "@/um/middlewares/AuthMiddleware";
 
 const app = express();
 
@@ -12,16 +13,19 @@ const app = express();
 // app.use(BodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/helloworld", (req, res) => {
-  res.send("helloworld\n");
-});
-
+app.use(MiscRouter);
 app.use(AuthRouter);
 
-app.get("/pouet", AuthMiddleware, function (req, res) {
-  res.send("YAYY\n");
-});
-
 app.use(catchAllErrorMiddleware);
+
+/** To refactor into a middleware even if used once? */
+const catchAll: RequestHandler = (req, res) => {
+  const path = req.path;
+  const notFoundError: RstErrorResp = {
+    message: `${path} not found`,
+  };
+  res.status(404).json(notFoundError);
+};
+app.all("*", catchAll);
 
 export default app;
