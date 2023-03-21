@@ -36,8 +36,8 @@ describe("AuthController", () => {
         .post("/v1/logout")
         // https://stackoverflow.com/a/71992321/4906586
         .auth(token, { type: "bearer" });
-        console.log(res.body)
-      expect(res.status).to.equal(200);
+        
+      expect(res.status).to.equal(204);
       expect(res.body).to.be.empty;
 
       const afterLogoutToken = await AccessToken.findOne({ where: { token } });

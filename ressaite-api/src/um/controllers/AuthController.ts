@@ -97,7 +97,7 @@ export const logout: LogoutHandler = async (req, res) => {
 
   accessToken = await accessToken.save();
 
-  res.sendStatus(200);
+  res.sendStatus(204);
 };
 
 type SignUpHandler = RequestHandler<undefined, SignUpResp, SignUpReq>;
