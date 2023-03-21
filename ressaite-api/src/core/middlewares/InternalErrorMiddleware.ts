@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from "express";
 
-export const catchAllErrorMiddleware: ErrorRequestHandler = (
+const InternalErrorMiddleware: ErrorRequestHandler = (
   error,
   req,
   res,
@@ -15,3 +15,5 @@ export const catchAllErrorMiddleware: ErrorRequestHandler = (
     next();
   }
 };
+
+export default InternalErrorMiddleware
