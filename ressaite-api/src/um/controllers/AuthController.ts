@@ -73,7 +73,13 @@ export const login: LoginHandler = (req, res, next) => {
 // For some reason, the ParamsDictionary has to be explicitly defined...
 type LogoutHandler = RequestHandler<ParamsDictionary, any, any>;
 
-// export const logout: LogoutHandler = async (req, res) => {
+/**
+ * Handle the logout flow by expiring the valid token.
+ *
+ * Also, returning 401 based on StackOverflow below.
+ *
+ * @see https://stackoverflow.com/a/6937030/4906586
+ */
 export const logout: LogoutHandler = async (req, res) => {
   const token = req?.user?.token;
   if (!token) {
