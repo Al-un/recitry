@@ -13,15 +13,16 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 await esbuild.build({
   // ---------- Config --------------------------------------------------------
   // https://esbuild.github.io/api/#entry-points
-  entryPoints: [{ in: path.join(dirname, "/src/index.ts"), out: "index" }],
+  entryPoints: [
+    { in: path.join(dirname, "/src/migrator.ts"), out: "migrator" },
+    { in: path.join(dirname, "/src/seeder.ts"), out: "seeder" },
+  ],
   outdir: path.join(dirname, "/dist"),
-  // If custom tsconfig will later be required
-  // tsconfig: "tsconfig.json",
   platform: "node",
-  // Bundling also enables:
-  //    - tree shaking: https://esbuild.github.io/api/#tree-shaking
   bundle: true,
-  external: ["bcrypt"],
+  // Exclude sqlite to ensure @mapbox/node-pre-gyp is not included in this build
+  // @see <root>/sqlite.js
+  external: ["sqlite"],
   // ---------- Optimization --------------------------------------------------
-  // minify: true,
+  minify: true,
 });

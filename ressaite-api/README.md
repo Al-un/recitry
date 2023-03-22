@@ -14,3 +14,13 @@ Technical stack is:
 - ```sh
   DB_DIALECT=postgres DB_HOST=127.0.0.1 DB_PORT=5432 DB_USERNAME=ressaite DB_PASSWORD=ressaite DB_NAME=ressaite node migrator.js up
   ```
+
+## Dependencies
+
+### Others
+
+`@mapbox/node-pre-gyp` uses some devDependencies in their code (see [#661](https://github.com/mapbox/node-pre-gyp/issues/661)) which requires to have the following devDependencies installed:
+
+- `aws-sdk`
+- `mock-aws-s3`
+- `nock`
