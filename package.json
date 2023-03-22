@@ -6,6 +6,7 @@
     "test:all": "lerna run test"
   },
   "devDependencies": {
+    "@types/node": "18.15.5",
     "lerna": "^6.5.1",
     "typescript": "4.9.5"
   },
