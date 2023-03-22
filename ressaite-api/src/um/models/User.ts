@@ -1,4 +1,4 @@
-import { Column, HasMany, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import bcrypt from "bcrypt";
 
 import { AccessToken } from "./AccessToken";
@@ -19,13 +19,18 @@ export const hashPassword = (clearPassword: string, salt: string): string => {
   tableName,
 })
 export class User extends Model {
-  @Column({ primaryKey: true, autoIncrement: true, allowNull: false })
+  @Column({
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+    type: DataType.INTEGER,
+  })
   id!: number;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, type: DataType.STRING })
   username!: string;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, type: DataType.STRING })
   get password(): string {
     return this.getDataValue("password");
   }
@@ -36,7 +41,7 @@ export class User extends Model {
     this.setDataValue("salt", salt);
   }
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, type: DataType.STRING })
   get salt(): string {
     return this.getDataValue("salt");
   }
@@ -44,7 +49,9 @@ export class User extends Model {
     throw new Error("Do not set salt value directly");
   }
 
-  @Column
+  @Column({
+    type: DataType.STRING,
+  })
   email?: string;
 
   @HasMany(() => AccessToken)
