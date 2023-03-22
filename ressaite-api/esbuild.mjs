@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "node:fs";
 
 /**
  * Define __dirname in ESM mode
@@ -10,18 +11,24 @@ import { fileURLToPath } from "url";
  */
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-await esbuild.build({
+const build = await esbuild.build({
   // ---------- Config --------------------------------------------------------
   // https://esbuild.github.io/api/#entry-points
   entryPoints: [{ in: path.join(dirname, "/src/index.ts"), out: "index" }],
   outdir: path.join(dirname, "/dist"),
-  // If custom tsconfig will later be required
-  // tsconfig: "tsconfig.json",
   platform: "node",
-  // Bundling also enables:
-  //    - tree shaking: https://esbuild.github.io/api/#tree-shaking
   bundle: true,
   external: ["bcrypt"],
+
   // ---------- Optimization --------------------------------------------------
-  // minify: true,
+  minify: true,
+  treeShaking: true, // https://esbuild.github.io/api/#tree-shaking
+
+  // ---------- Analysis ------------------------------------------------------
+  logLevel: "info",
+  color: true,
+  metafile: true,
 });
+
+// https://esbuild.github.io/api/#metafile
+fs.writeFileSync("dist/esbuild-metafile.json", JSON.stringify(build.metafile));
