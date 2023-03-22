@@ -5,8 +5,10 @@
   "author": "Al-un",
   "license": "ISC",
   "main": "dist/index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "nodemon src/index.ts",
+    "build": "node esbuild.mjs",
     "test": "npm run test:in-memory src/**/*.spec.ts",
     "test:in-memory": "DB_DIALECT=sqlite DB_STORAGE=:memory: npm run test:run",
     "test:run": "mocha -r ts-node/register -r src/mocha-root.ts --timeout 10000 --exit",
