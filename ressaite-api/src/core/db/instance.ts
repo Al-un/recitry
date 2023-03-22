@@ -1,5 +1,7 @@
-import path from "path";
 import { Sequelize } from "sequelize-typescript";
+
+import { AccessToken } from "@/um/models/AccessToken";
+import { User } from "@/um/models/User";
 
 const db_url = process.env.DB_URL;
 const db_username = process.env.DB_USERNAME;
@@ -15,12 +17,10 @@ const db_storage = process.env.DB_STORAGE;
 export let sequelize: Sequelize;
 // https://sequelize.org/docs/v6/getting-started/#logging
 const logging = process.env.DEBUG ? console.log : false;
-// https://github.com/sequelize/sequelize-typescript/blob/master/examples/simple/lib/database/sequelize.ts
-const models = [path.join(__dirname, "../../um/models/**/*.*")];
 
 if (db_url) {
   console.debug("DB_URL provided, other DB_* variables will be ignored");
-  sequelize = new Sequelize(db_url, { logging, models });
+  sequelize = new Sequelize(db_url, { logging });
 } else if (db_dialect === "sqlite") {
   if (!db_storage) {
     throw new Error("Need DB_STORAGE for sqlite");
@@ -30,7 +30,6 @@ if (db_url) {
     dialect: db_dialect,
     storage: db_storage,
     logging,
-    models,
   });
 } else {
   if (db_dialect !== "postgres") {
@@ -54,7 +53,6 @@ if (db_url) {
     port: db_port,
     storage: db_storage,
     logging,
-    models,
   });
 }
 
@@ -62,6 +60,14 @@ export const initSequelize = async (sequelize: Sequelize) => {
   await sequelize.authenticate();
   console.log("Database check: connection OK");
 
-  await sequelize.sync({ force: false, alter: false });
-  console.log("Database check: models sync OK");
+  // ----
+  // Cannot use "sequelize.sync" as when building with esbuild, the models
+  // auto-initialisation will be lost. The auto-init was found at
+  // https://github.com/sequelize/sequelize-typescript/blob/master/examples/simple/lib/database/sequelize.ts
+  // ---
+  // await sequelize.sync({ force: false, alter: false });
+
+  sequelize.addModels([User, AccessToken]);
+
+  console.log("Database check: models sync OK. Loaded:", sequelize.models);
 };
