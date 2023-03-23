@@ -11,16 +11,16 @@ export const mochaHooks: RootHookObject = {
     const migNames = migrations.map((m) => m.name);
     console.log("Executed migrations:", migNames);
 
-    // Execute and check seeds
-    await umzugSeeder.up();
-    const seeds = await umzugSeeder.executed();
-    const seedNames = seeds.map((s) => s.name);
-    console.log("Executed seeds:", seedNames);
-
     try {
       await initSequelize(sequelize);
     } catch (err) {
       console.error("Database check: connection error", err);
     }
+
+    // Execute and check seeds
+    await umzugSeeder.up();
+    const seeds = await umzugSeeder.executed();
+    const seedNames = seeds.map((s) => s.name);
+    console.log("Executed seeds:", seedNames);
   },
 };
