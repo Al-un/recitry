@@ -2,7 +2,9 @@ const sqlite3 = require("sqlite3");
 const { open } = require("sqlite");
 
 /**
- * Create a local Sqlite DB for fast development
+ * Create a local Sqlite DB for fast development. Not bundling with esbuild 
+ * as sqlite depends on @mapbox/node-pre-gyp which causes a lot of troubles
+ * as reported on https://github.com/mapbox/node-pre-gyp/issues/308.
  *
  * @see https://github.com/kriasoft/node-sqlite#without-caching
  */

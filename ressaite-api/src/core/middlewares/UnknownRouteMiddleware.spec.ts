@@ -3,9 +3,9 @@ import request from "supertest";
 
 import app from "@/app";
 
-describe("MiscController", () => {
-  describe("healthcheck", () => {
-    it("returns OK!", async () => {
+describe("UnknownRouteMiddleware", () => {
+  describe("when accessing an unregistered route", () => {
+    it("returns a 404 error", async () => {
       const res = await request(app).get("/some-unknown-route");
 
       expect(res.status).to.equal(404);
