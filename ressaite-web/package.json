@@ -1,5 +1,5 @@
 {
-  "name": "ressaite-web",
+  "name": "@al-un/ressaite-web",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@al-un/ressaite-core": "*",
     "pinia": "2.0.33",
     "vite-plugin-ssr": "0.4.106",
     "vue": "3.2.47"
