@@ -1,0 +1,6 @@
+@forward './css_reset';
+@forward './components/rst-card';
+
+:root{
+  --rst-layout-header-height: 40px;
+}

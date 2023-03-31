@@ -66,3 +66,7 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+---
+
+https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode

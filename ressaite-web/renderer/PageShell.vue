@@ -1,11 +1,10 @@
 <template>
-  <div class="layout">
-    <div class="navigation">
+  <div class="layout-page">
+    <nav class="layout-navigation">
       <a href="/">Home</a>
-      <a href="/pouet">Pouet</a>
-      <a @click="nav()">Pouet nav</a>
-    </div>
-    <div class="content"><slot /></div>
+    </nav>
+
+    <main class="layout-content"><slot></slot></main>
   </div>
 </template>
 
@@ -22,20 +21,25 @@ const nav = () => {
 }
 </script>
 
-<style>
-body {
-  margin: 0;
-  font-family: sans-serif;
+<style lang="scss">
+$nav-header-height: 40px;
+
+.layout-page {
+  width: 100vw;
+  height: 100vh;
 }
-* {
-  box-sizing: border-box;
+
+.layout-navigation {
+  height: $nav-header-height;
+  border-bottom: 1px solid black;
 }
-a {
-  text-decoration: none;
+
+.layout-content {
+  height: calc(100% - $nav-header-height);
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
 .layout {
   display: flex;
   max-width: 900px;
@@ -48,6 +52,7 @@ a {
   min-height: 100vh;
 }
 .navigation {
+  background-color: $plop;
   padding: 20px;
   flex-shrink: 0;
   display: flex;

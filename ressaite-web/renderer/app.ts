@@ -40,11 +40,15 @@ import type { PageContext } from './types'
 import { setPageContext } from './usePageContext'
 
 import { createPinia } from 'pinia'
+import '@/styles/main.scss'
 
 export { createApp }
 
 function createApp(pageContext: PageContext) {
   const { Page } = pageContext
+
+  // // https://github.com/brillout/vite-plugin-ssr/blob/main/examples/layouts-vue/renderer/app.js
+  // const Layout = pageContext.exports.Layout || PageShell
 
   // let rootComponent:  Component
   let rootComponent: any
@@ -52,6 +56,7 @@ function createApp(pageContext: PageContext) {
     data: () => ({
       Page: markRaw(Page),
       pageProps: markRaw(pageContext.pageProps || {})
+      // Layout
     }),
     created() {
       rootComponent = this
@@ -66,6 +71,18 @@ function createApp(pageContext: PageContext) {
           }
         }
       )
+      // render() {
+      //   return this.Layout
+      //     ? h(
+      //         this.Layout,
+      //         {},
+      //         {
+      //           default: () => {
+      //             return h(this.Page, this.pageProps)
+      //           }
+      //         }
+      //       )
+      //     : h(this.Page, this.pageProps)
     }
   })
 

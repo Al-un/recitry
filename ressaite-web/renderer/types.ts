@@ -37,6 +37,7 @@ export type PageContext = {
     documentProps?: {
       title: string
     }
+    // Layout?: Component | null
   }
   documentProps?: {
     title: string

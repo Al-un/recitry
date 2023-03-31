@@ -11,5 +11,14 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  // https://vitejs.dev/config/shared-options.html#css-preprocessoroptions
+  // https://stackoverflow.com/a/74789562/4906586
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@/styles/_include.scss" as *;`
+      }
+    }
   }
 })

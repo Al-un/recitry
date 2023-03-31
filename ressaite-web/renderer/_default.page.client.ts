@@ -48,9 +48,9 @@ function onHydrationEnd() {
 }
 function onPageTransitionStart() {
   console.log('Page transition start')
-  document.querySelector('.content')!.classList.add('page-transition')
+  document.querySelector('.layout-page')!.classList.add('page-transition')
 }
 function onPageTransitionEnd() {
   console.log('Page transition end')
-  document.querySelector('.content')!.classList.remove('page-transition')
+  document.querySelector('.layout-page')!.classList.remove('page-transition')
 }
