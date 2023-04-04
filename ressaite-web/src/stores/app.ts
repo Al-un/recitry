@@ -12,7 +12,20 @@ export const useAppStore = defineStore('app', () => {
 
   // ---------- Actions -------------------------------------------------------
   async function login(loginReq: LoginReq) {
-    console.log('Logging with', loginReq)
+    console.log('Logging', loginReq)
+
+    const resp = await window.fetch('http://localhost:8000/v1/login/', {
+      body: JSON.stringify(loginReq),
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Origin": "*"
+      }
+    })
+    console.log('login status', resp.status)
+    const data = await resp.json()
+    console.log('login resp', data)
     userInfo.value = 1
   }
 

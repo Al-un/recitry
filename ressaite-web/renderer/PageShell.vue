@@ -26,8 +26,12 @@ import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
 
-onMounted(() => {
+onMounted(async () => {
   console.log('Layout LOADED!!')
+
+  await fetch("http://localhost:8000/v1/health", {
+    method: "GET"
+  })
 })
 
 async function submitLogout() {

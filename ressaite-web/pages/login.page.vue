@@ -31,7 +31,7 @@ const submitLogin = async () => {
     password: form.password
   })
 
-  navigate('/')
+  // navigate('/')
 }
 </script>
 
