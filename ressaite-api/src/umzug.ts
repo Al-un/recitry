@@ -24,7 +24,7 @@ export const umzugSeeder = new Umzug({
   context: sequelize,
   storage: new SequelizeStorage({
     sequelize,
-    modelName: "seeder_meta",
+    // modelName: "seeder_meta",
   }),
   logger: process.env.DEBUG ? console : undefined,
 });

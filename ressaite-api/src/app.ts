@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import InternalErrorMiddleware from "@/core/middlewares/InternalErrorMiddleware";
 import MiscRouter from "@/core/routers/MiscRouter";
@@ -12,6 +13,9 @@ const app = express();
 // app.use(CookieParser());
 // app.use(BodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:3000"
+}));
 
 app.use(MiscRouter);
 app.use(AuthRouter);

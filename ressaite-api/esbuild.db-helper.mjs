@@ -22,7 +22,7 @@ await esbuild.build({
   bundle: true,
   // Exclude sqlite to ensure @mapbox/node-pre-gyp is not included in this build
   // @see <root>/sqlite.js
-  external: ["sqlite"],
+  external: ["sqlite", "bcrypt"],
 
   // ---------- Optimization --------------------------------------------------
   minify: true,
