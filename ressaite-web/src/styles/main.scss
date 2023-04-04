@@ -1,6 +1,8 @@
-@forward './css_reset';
-@forward './components/rst-card';
+@forward './css_reset.scss';
+@forward './components/rst-card.scss';
+@forward './components/rst-dropdown.scss';
+@forward './utils/flex.scss';
 
-:root{
+:root {
   --rst-layout-header-height: 40px;
 }

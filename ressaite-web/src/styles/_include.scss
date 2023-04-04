@@ -5,6 +5,11 @@ $plop: magenta;
   flex-direction: column;
 }
 
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
 @mixin flex-center-all {
   display: flex;
   justify-content: center;

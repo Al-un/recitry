@@ -2,6 +2,16 @@
   <div class="layout-page">
     <nav class="layout-navigation">
       <a href="/">Home</a>
+      <div class="flex-spacer"></div>
+      <span>{{ appStore.isAuthenticated }}</span>
+      <a v-if="!appStore.isAuthenticated" href="/login">Login</a>
+      <div v-else class="rst-dropdown">
+        <div class="layout-my-profile">My profile</div>
+
+        <ul class="rst-dropdown-content" style="background: magenta">
+          <li @click="submitLogout">Logout</li>
+        </ul>
+      </div>
     </nav>
 
     <main class="layout-content"><slot></slot></main>
@@ -12,12 +22,16 @@
 import { onMounted } from 'vue'
 import { navigate } from 'vite-plugin-ssr/client/router'
 
+import { useAppStore } from '@/stores/app'
+
+const appStore = useAppStore()
+
 onMounted(() => {
   console.log('Layout LOADED!!')
 })
 
-const nav = () => {
-  navigate('/pouet')
+async function submitLogout() {
+  await appStore.logout()
 }
 </script>
 
@@ -30,6 +44,7 @@ $nav-header-height: 40px;
 }
 
 .layout-navigation {
+  @include flex-row;
   height: $nav-header-height;
   border-bottom: 1px solid black;
 }
@@ -37,31 +52,8 @@ $nav-header-height: 40px;
 .layout-content {
   height: calc(100% - $nav-header-height);
 }
-</style>
 
-<style lang="scss" scoped>
-.layout {
-  display: flex;
-  max-width: 900px;
-  margin: auto;
-}
-.content {
-  padding: 20px;
-  border-left: 2px solid #eee;
-  padding-bottom: 50px;
-  min-height: 100vh;
-}
-.navigation {
-  background-color: $plop;
-  padding: 20px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1.8em;
-}
-.logo {
-  margin-top: 20px;
-  margin-bottom: 10px;
+.layout-my-profile {
+  height: $nav-header-height;
 }
 </style>

@@ -9,18 +9,29 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive } from 'vue'
+import { navigate } from 'vite-plugin-ssr/client/router'
+
+import type { LoginReq } from '@al-un/ressaite-core/um/models/Auth'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
+import { useAppStore } from '@/stores/app'
 
-const form = reactive({
-  username: 'username',
-  password: 'password'
+const app = useAppStore()
+
+const form: LoginReq = reactive({
+  username: '',
+  password: ''
 })
 
-function submitLogin() {
-  console.log('Login with', form)
+const submitLogin = async () => {
+  await app.login({
+    username: form.username,
+    password: form.password
+  })
+
+  navigate('/')
 }
 </script>
 
