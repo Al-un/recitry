@@ -19,7 +19,7 @@
     "db:sqlite:init": "node sqlite",
     "db:migrate": "node dist/migrator up",
     "db:seed": "node dist/seeder up",
-    "db:quick-start": "DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db npm run db:sqlite:init && DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db npm run db:migrate && DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db npm run db:seed"
+    "db:quick-start": "DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db node --loader esbuild-register/loader -r esbuild-register src/quick-start-init.ts"
   },
   "dependencies": {
     "bcrypt": "5.1.0",
@@ -47,6 +47,7 @@
     "aws-sdk": "2.1340.0",
     "chai": "4.3.7",
     "esbuild": "0.17.12",
+    "esbuild-register": "3.4.2",
     "mocha": "10.2.0",
     "mock-aws-s3": "4.0.2",
     "nock": "13.3.0",
