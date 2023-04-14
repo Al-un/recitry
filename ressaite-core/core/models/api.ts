@@ -19,10 +19,10 @@ export interface Route {
 }
 
 export type EndpointType<
-  method extends HttpMethod = any,
-  PathParams = Record<string, string>,
-  RequestPayload = any,
-  Response = any
+  method extends HttpMethod,
+  PathParams,
+  RequestPayload,
+  Response
 > = {
   /** Expected HTTP endpoint for this endpoint */
   method: method;
@@ -35,7 +35,7 @@ export type EndpointType<
 
 export type NoPathParams = unknown;
 
-export type EndpointTypes = { [key: string]: EndpointType };
+export type EndpointTypes = { [key: string]: EndpointType<any, any, any, any> };
 
 export type RouteOf<AllEndpoints extends EndpointTypes> = {
   [EndpointName in keyof AllEndpoints]: Route & {
