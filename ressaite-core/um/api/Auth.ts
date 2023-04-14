@@ -1,8 +1,8 @@
-import { EndpointType, NoPathParams, RouteOf } from "../../core/models/api";
+import type { EndpointType, NoPathParams, RouteOf } from "../../core/models/api";
 
 export type AuthEndpointTypes = {
   login: EndpointType<"POST", NoPathParams, LoginReq, LoginSuccessfulResp>;
-  logout: EndpointType<"POST", NoPathParams, unknown, null>;
+  logout: EndpointType<"POST", NoPathParams, null, null>;
   signup: EndpointType<"POST", NoPathParams, SignUpReq, null>;
 };
 

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/api/Auth'
+import { callEndpoint } from '@/api'
 
 export const useAppStore = defineStore('app', () => {
   // ---------- State ---------------------------------------------------------
@@ -13,55 +14,28 @@ export const useAppStore = defineStore('app', () => {
 
   // ---------- Actions -------------------------------------------------------
   async function login(loginReq: AuthEndpointTypes['login']['request']) {
-    console.log('Logging', loginReq)
+    // console.log('Logging', loginReq)
 
-    const resp = await window.fetch('http://localhost:8000/v1/login/', {
-      body: JSON.stringify(loginReq),
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-    console.log('login status', resp.status)
-    const data = await resp.json()
-    console.log('login resp', data)
+    const resp = await callEndpoint('login', null, loginReq)
+
+    // console.log('login status', resp.status)
+    // console.log('login resp', resp.data)
     userInfo.value = 1
-    token.value = data.token
+    token.value = resp.data.token
   }
-  async function signUp(loginReq: AuthEndpointTypes['signup']['request']) {
-    console.log('Logging', loginReq)
 
-    const resp = await window.fetch('http://localhost:8000/v1/signup/', {
-      body: JSON.stringify(loginReq),
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
-    console.log('login status', resp.status)
-    const data = await resp.json()
-    console.log('login resp', data)
-    userInfo.value = 1
-    token.value = data.token
+  async function signUp(signUpReq: AuthEndpointTypes['signup']['request']) {
+    const resp = await callEndpoint('signup', null, signUpReq)
+    // console.log('signup status', resp.status)
+    // console.log('signup resp', resp.data)
+    // userInfo.value = 1
+    // token.value = data.token
   }
 
   async function logout() {
-    const resp = await window.fetch('http://localhost:8000/v1/logout/', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        Authorization: `Bearer ${token.value}`
-      }
-    })
-    console.log('logout status', resp.status)
-    const data = await resp.json()
-    console.log('logout resp', data)
+    const resp = await callEndpoint('logout', null, null)
+    // console.log('logout status', resp.status)
+    // console.log('logout resp', resp.data)
     userInfo.value = null
   }
 
@@ -71,6 +45,7 @@ export const useAppStore = defineStore('app', () => {
     login,
     logout,
     signUp,
-    userInfo
+    userInfo,
+    token
   }
 })
