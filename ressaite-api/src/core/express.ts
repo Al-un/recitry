@@ -3,15 +3,12 @@ import type { ParsedQs } from "qs";
 
 import {
   EndpointType,
+  EndpointTypes,
   Route,
   RstResp,
 } from "@al-un/ressaite-core/core/models/api";
 
-export type ExpressController<
-  AllEndpoints extends {
-    [key: string]: EndpointType<any, any, any, any>;
-  }
-> = {
+export type ExpressController<AllEndpoints extends EndpointTypes> = {
   [EndpointName in keyof AllEndpoints]: AllEndpoints[EndpointName]["method"] extends "GET"
     ? RequestHandler<
         AllEndpoints[EndpointName]["pathParams"],
@@ -29,11 +26,7 @@ export type ExpressController<
       >;
 };
 
-export type ExpressRouterConfig<
-  AllEndpoints extends {
-    [key: string]: EndpointType<any, any, any, any>;
-  }
-> = {
+export type ExpressRouterConfig<AllEndpoints extends EndpointTypes> = {
   [EndpointName in keyof AllEndpoints]: {
     route: Route;
     controller: ExpressController<AllEndpoints>[EndpointName];
@@ -41,11 +34,7 @@ export type ExpressRouterConfig<
   };
 };
 
-export const loadRouterConfig = <
-  AllEndpoints extends {
-    [key: string]: EndpointType<any, any, any, any>;
-  }
->(
+export const loadRouterConfig = <AllEndpoints extends EndpointTypes>(
   config: ExpressRouterConfig<AllEndpoints>,
   router?: Router
 ) => {
