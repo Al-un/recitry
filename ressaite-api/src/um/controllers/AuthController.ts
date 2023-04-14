@@ -3,15 +3,14 @@ import { ParamsDictionary } from "express-serve-static-core";
 import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
-import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
-import {
-  LoginReq,
-  LoginResp,
-  SignUpReq,
-  SignUpResp,
-} from "@al-un/ressaite-core/um/models/Auth";
+import { AuthEndpointTypes } from "@al-un/ressaite-core/um/api/Auth";
 import { AccessToken } from "../models/AccessToken";
 import { hashPassword, User } from "../models/User";
+import { ExpressController } from "@/core/express";
+
+// ----------------------------------------------------------------------------
+
+type AuthControllerTypes = ExpressController<AuthEndpointTypes>;
 
 // ----------------------------------------------------------------------------
 
@@ -46,9 +45,8 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
 passport.use(new LocalStrategy(localVerify));
 
 // ----------------------------------------------------------------------------
-type LoginHandler = RequestHandler<undefined, LoginResp, LoginReq>;
 
-export const login: LoginHandler = (req, res, next) => {
+export const login: AuthControllerTypes["login"] = (req, res, next) => {
   type LocalCallback = Parameters<VerifyFunction>[2];
   const callbackHandler: LocalCallback = (err, authInfo, info) => {
     if (err) {
@@ -80,7 +78,7 @@ type LogoutHandler = RequestHandler<ParamsDictionary, any, any>;
  *
  * @see https://stackoverflow.com/a/6937030/4906586
  */
-export const logout: LogoutHandler = async (req, res) => {
+export const logout: AuthControllerTypes['logout'] = async (req, res) => {
   const token = req?.user?.token;
   if (!token) {
     throw new Error("No access token provided!");
@@ -100,9 +98,7 @@ export const logout: LogoutHandler = async (req, res) => {
   res.sendStatus(204);
 };
 
-type SignUpHandler = RequestHandler<undefined, SignUpResp, SignUpReq>;
-
-export const signUp: SignUpHandler = async (req, res, next) => {
+export const signUp: AuthControllerTypes["signup"] = async (req, res, next) => {
   const { username, password } = req.body;
 
   const existingUser = await User.findOne({ where: { username } });
