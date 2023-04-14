@@ -1,26 +1,18 @@
 import { RootHookObject } from "mocha";
 
-import { initSequelize, sequelize } from "@/core/db/instance";
-import { umzugMigrator, umzugSeeder } from "@/umzug";
+import { connectSequelize, getSequelizeInstance } from "@/core/db/instance";
+import { executeAllMigrations, executeAllSeeds } from "@/umzug";
 
 export const mochaHooks: RootHookObject = {
   async beforeAll() {
     // Execute and check migrations
-    await umzugMigrator.up();
-    const migrations = await umzugMigrator.executed();
-    const migNames = migrations.map((m) => m.name);
-    console.log("Executed migrations:", migNames);
+    await executeAllMigrations();
+    await executeAllSeeds();
 
     try {
-      await initSequelize(sequelize);
+      await connectSequelize(getSequelizeInstance());
     } catch (err) {
       console.error("Database check: connection error", err);
     }
-
-    // Execute and check seeds
-    await umzugSeeder.up();
-    const seeds = await umzugSeeder.executed();
-    const seedNames = seeds.map((s) => s.name);
-    console.log("Executed seeds:", seedNames);
   },
 };

@@ -1,17 +1,18 @@
-import { initSequelize, sequelize } from "./core/db/instance";
+import { connectSequelize, getSequelizeInstance } from "@/core/db/instance";
 import { faireUnPouet } from "@al-un/ressaite-core/pouet";
 import app from "./app";
 
 (async () => {
   try {
-    await initSequelize(sequelize);
+    await connectSequelize(getSequelizeInstance());
   } catch (err) {
     console.error("Error when connecting to DB", err);
   }
 })();
 
-const port = 8000;
+const port = process.env.PORT || 8000;
+
 app.listen(port, () => {
   faireUnPouet();
-  console.log("Ready to plop!");
+  console.log(`App started, listening to port ${port}`);
 });
