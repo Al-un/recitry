@@ -5,6 +5,7 @@
       <rst-input v-model="form.password" type="password" />
 
       <button class="rst-button" @click="submitLogin">Login!</button>
+      <button class="rst-button" @click="submitSignUp">Signup!</button>
     </div>
   </div>
 </template>
@@ -27,6 +28,15 @@ const form: LoginReq = reactive({
 
 const submitLogin = async () => {
   await app.login({
+    username: form.username,
+    password: form.password
+  })
+
+  // navigate('/')
+}
+
+const submitSignUp = async () => {
+  await app.signUp({
     username: form.username,
     password: form.password
   })
