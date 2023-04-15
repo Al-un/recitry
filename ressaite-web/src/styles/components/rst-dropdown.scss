@@ -1,0 +1,12 @@
+.rst-dropdown {
+}
+
+.rst-dropdown-content {
+  display: none;
+}
+
+.rst-dropdown:hover {
+  .rst-dropdown-content {
+    display: block;
+  }
+}

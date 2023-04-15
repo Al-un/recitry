@@ -2,10 +2,13 @@
   "name": "@al-un/ressaite-root",
   "private": true,
   "scripts": {
+    "setup:quick-start": "lerna run setup:quick-start",
+    "dev:quick-start": "lerna run dev:quick-start",
     "build": "lerna run build",
     "test:all": "lerna run test"
   },
   "devDependencies": {
+    "@types/cors": "2.8.13",
     "@types/node": "18.15.5",
     "lerna": "^6.5.1",
     "typescript": "4.9.5"

@@ -1,4 +1,7 @@
 {
   "name": "@al-un/ressaite-core",
-  "private": true
+  "private": true,
+  "scripts": {
+    "setup:quick-start": "echo \"Nothing to do in the ressaite-core package\""
+  }
 }

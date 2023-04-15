@@ -1,7 +1,7 @@
 import { tableName } from "@/um/models/User";
-import { Seeder } from "@/umzug";
+import { Seed } from "@/umzug";
 
-export const up: Seeder = async ({ context: sequelize }) => {
+export const up: Seed = async ({ context: sequelize }) => {
   return sequelize.getQueryInterface().bulkInsert(tableName, [
     {
       username: "admin",
@@ -15,7 +15,7 @@ export const up: Seeder = async ({ context: sequelize }) => {
   ]);
 };
 
-export const down: Seeder = async ({ context: sequelize }) => {
+export const down: Seed = async ({ context: sequelize }) => {
   sequelize
     .getQueryInterface()
     .bulkDelete(tableName, { email: "ressaite@al-un.fr" }, {});

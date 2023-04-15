@@ -1,56 +1,63 @@
 <template>
-  <div class="layout">
-    <div class="navigation">
+  <div class="layout-page">
+    <nav class="layout-navigation">
       <a href="/">Home</a>
-      <a href="/pouet">Pouet</a>
-    </div>
-    <div class="content"><slot /></div>
+      <div class="flex-spacer"></div>
+      <span>{{ appStore.isAuthenticated }}</span>
+      <a v-if="!appStore.isAuthenticated" href="/login">Login</a>
+      <div v-else class="rst-dropdown">
+        <div class="layout-my-profile">My profile</div>
+
+        <ul class="rst-dropdown-content" style="background: magenta">
+          <li @click="submitLogout">Logout</li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="layout-content"><slot></slot></main>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from "vue";
+import { onMounted } from 'vue'
+import { navigate } from 'vite-plugin-ssr/client/router'
 
-onMounted(() => {
-  console.log("Layout LOADED!!");
-});
+import { useAppStore } from '@/stores/app'
+
+const appStore = useAppStore()
+
+onMounted(async () => {
+  console.log('Layout LOADED!!')
+
+  await fetch("http://localhost:8000/v1/health", {
+    method: "GET"
+  })
+})
+
+async function submitLogout() {
+  await appStore.logout()
+}
 </script>
 
-<style>
-body {
-  margin: 0;
-  font-family: sans-serif;
-}
-* {
-  box-sizing: border-box;
-}
-a {
-  text-decoration: none;
-}
-</style>
+<style lang="scss">
+$nav-header-height: 40px;
 
-<style scoped>
-.layout {
-  display: flex;
-  max-width: 900px;
-  margin: auto;
+.layout-page {
+  width: 100vw;
+  height: 100vh;
 }
-.content {
-  padding: 20px;
-  border-left: 2px solid #eee;
-  padding-bottom: 50px;
-  min-height: 100vh;
+
+.layout-navigation {
+  @include flex-row;
+  height: $nav-header-height;
+  border-bottom: 1px solid black;
 }
-.navigation {
-  padding: 20px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1.8em;
+
+.layout-content {
+  height: calc(100% - $nav-header-height);
 }
-.logo {
-  margin-top: 20px;
-  margin-bottom: 10px;
+
+.layout-my-profile {
+  height: $nav-header-height;
 }
 </style>

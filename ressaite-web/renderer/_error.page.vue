@@ -9,6 +9,6 @@
   </div>
 </template>
 
-<script setup>
-defineProps(['is404'])
+<script lang="ts" setup>
+defineProps(['is404', 'errorInfo'])
 </script>

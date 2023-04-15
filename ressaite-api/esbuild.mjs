@@ -18,6 +18,7 @@ const build = await esbuild.build({
   outdir: path.join(dirname, "/dist"),
   platform: "node",
   bundle: true,
+  // Exclude dependencies that rely on @mapbox/node-pre-gyp
   external: ["bcrypt"],
 
   // ---------- Optimization --------------------------------------------------

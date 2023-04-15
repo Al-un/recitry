@@ -1,18 +1,11 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { faireUnPouet } from "@al-un/ressaite-core/pouet";
-
 defineProps<{
-  msg: string;
-}>();
-
-onMounted(() => {
-  faireUnPouet();
-});
+  msg: string
+}>()
 </script>
 
 <template>
-  <div class="greetings">
+  <div class="greetings rst-card">
     <h1 class="green">{{ msg }}</h1>
     <h3>
       You’ve successfully created a project with
