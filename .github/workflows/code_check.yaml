@@ -38,7 +38,20 @@ jobs:
       - name: Load Cache
         uses: ./.github/actions/setup-and-cache
 
-      - run: cd ressaite-web && npm run vercel-build
+      - run: npm run build:web
+  build-api:
+    name: Build Ressaite API
+    needs: init
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load Cache
+        uses: ./.github/actions/setup-and-cache
+
+      - run: npm run build:api
 
   # ---------- Build ----------------------------------------------------------
   test:

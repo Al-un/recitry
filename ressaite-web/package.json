@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "dev:quick-start": "API_BASE_URL=http://localhost:8000 npm run dev",
+    "dev:quick-start": "VITE_API_BASE_URL=http://localhost:8000 npm run dev",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
+    "test": "echo \"TODO\"",
     "test:unit": "vitest",
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",

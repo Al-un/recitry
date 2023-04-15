@@ -37,7 +37,7 @@ To avoid the long step of install PostgreSQL and setting this up, it is possible
 npm run setup:quick-start
 
 # Go!
-npm run dev:quick-start
+npm run dev:all:quick-start
 ```
 
 The front-end will be available in [`http://localhost:3000/`](http://localhost:3000/) and back-end runs at [`http://localhost:8000/`](http://localhost:8000/). A downside of this quick start is that no log will be available in the terminal. To visualise the logs, the back-end and the front-end must run separately.
@@ -65,7 +65,7 @@ The Sqlite database is ready to be used:
 ```sh
 DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/mydatabase.db \
 CORS_WHITELISTED_ORIGIN="http://localhost:3000" PORT=8000 \
-npm run dev --workspace @al-un/ressaite-api
+npm run dev:api
 ```
 
 ### Start with PostgreSQL (`ressaite-api`)
@@ -104,7 +104,7 @@ npm run db:seed --workspace @al-un/ressaite-api
 
 # ----- Start -----
 # If the terminal context is the root of the monorepo
-npm run dev --workspace @al-un/ressaite-api
+CORS_WHITELISTED_ORIGIN="http://localhost:3000" PORT=8000 npm run dev:api
 # Workspace argument can be skipped in already in the right location
 cd ressaite-api
 CORS_WHITELISTED_ORIGIN="http://localhost:3000" PORT=8000 npm run dev
@@ -112,15 +112,15 @@ CORS_WHITELISTED_ORIGIN="http://localhost:3000" PORT=8000 npm run dev
 
 ### Start (`ressaite-web`)
 
-Ensure that the front-end is reaching the back-end at the right port. Apart from that, there is no specific preparation step required to launch the front-end:
+Ensure that the front-end is reaching the back-end at the right port with `VITE_API_BASE_URL`. Apart from that, there is no specific preparation step required to launch the front-end:
 
 ```sh
 # ----- Start -----
 # If the terminal context is the root of the monorepo
-npm run dev --workspace @al-un/ressaite-web
+VITE_API_BASE_URL="http://localhost:8000" npm run dev:web
 # Workspace argument can be skipped in already in the right location
 cd ressaite-web
-npm run dev
+VITE_API_BASE_URL="http://localhost:8000" npm run dev
 ```
 
 ## Environment variables
