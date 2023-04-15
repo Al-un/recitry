@@ -16,7 +16,12 @@ app.use(express.json());
 
 const CORS_WHITELISTED_ORIGIN = process.env.CORS_WHITELISTED_ORIGIN;
 if (CORS_WHITELISTED_ORIGIN) {
-  app.use(cors({ origin: CORS_WHITELISTED_ORIGIN }));
+  /** @see https://github.com/expressjs/cors#configuration-options */
+  const corsOriginsAsArray = CORS_WHITELISTED_ORIGIN.split(",");
+  app.use(cors({ origin: corsOriginsAsArray }));
+  console.log("CORS enabled for domains:", corsOriginsAsArray);
+} else {
+  console.log("CORS not enabled");
 }
 
 // Load all routes
