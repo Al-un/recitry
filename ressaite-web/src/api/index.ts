@@ -8,7 +8,10 @@ export const callEndpoint = async <K extends AllEndpointsKey>(
   pathParams: AllEndpoints[K]['pathParams'],
   payload: AllEndpoints[K]['request']
 ): Promise<CallEndpointResponse<AllEndpoints[K]['response']>> => {
-  const baseUrl = 'http://localhost:8000'
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
+  if (!baseUrl) {
+    throw new Error('VITE_API_BASE_URL not defined')
+  }
 
   let route = baseUrl + AllRoutes[endpointKey].path
   if (pathParams !== null) {
