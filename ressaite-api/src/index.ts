@@ -1,5 +1,4 @@
 import { connectSequelize, getSequelizeInstance } from "@/core/db/instance";
-import { faireUnPouet } from "@al-un/ressaite-core/pouet";
 import app from "./app";
 
 (async () => {
@@ -13,6 +12,5 @@ import app from "./app";
 const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
-  faireUnPouet();
   console.log(`App started, listening to port ${port}`);
 });
