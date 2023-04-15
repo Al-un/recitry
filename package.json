@@ -2,6 +2,8 @@
   "name": "@al-un/ressaite-root",
   "private": true,
   "scripts": {
+    "setup:quick-start": "lerna run setup:quick-start",
+    "dev:quick-start": "lerna run dev:quick-start",
     "build": "lerna run build",
     "test:all": "lerna run test"
   },

@@ -1,4 +1,12 @@
-# Ressaite API
+# Ressaite API <!-- omit in toc -->
+
+- [Getting started](#getting-started)
+- [Dependencies](#dependencies)
+  - [Runtime](#runtime)
+  - [Database](#database)
+  - [REST](#rest)
+  - [Testing](#testing)
+  - [Others](#others)
 
 This is the back-end of Ressaite
 
@@ -16,6 +24,39 @@ Technical stack is:
   ```
 
 ## Dependencies
+
+### Runtime
+
+- `ts-node`
+- `tsconfig-paths`
+- `esbuild`
+- `esbuild-register`
+- `nodemon`
+
+### Database
+
+- [`sequelize`](https://github.com/sequelize/sequelize): the ORM
+  - [`sequelize-typescript`](https://github.com/sequelize/sequelize-typescript): TypeScript adapter recommended by the [documentation](https://sequelize.org/docs/v6/other-topics/typescript). Code will be merged in Sequelize v7
+    - [`reflect-metadata`](https://www.npmjs.com/package/reflect-metadata) is required by `sequelize-typescript` (see README)
+  - [`pg`](https://www.npmjs.com/package/pg) is required for PostgreSQL ([documentation](https://sequelize.org/releases/#postgresql-support-table))
+  - `pg-hstore` --> ??
+  - [`sqlite3`](https://www.npmjs.com/package/sqlite3) is required for Sqlite ([documentation](https://sequelize.org/releases/#sqlite-support-table))
+- [`umzug`](https://github.com/sequelize/umzug) replace Sequelize CLI for migration
+
+### REST
+
+- `express`
+  - `cors`
+- `passport`
+  - `passport-http-bearer`
+  - `passport-local`
+- `bcrypt`
+
+### Testing
+
+- `mocha`
+- `chai`
+- `supertest`
 
 ### Others
 
