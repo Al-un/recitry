@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "dev:quick-start": "DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db PORT=8000 nodemon src/index.ts",
+    "dev:quick-start": "DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db PORT=8000 CORS_WHITELISTED_ORIGIN=\"http://localhost:3000\" nodemon src/index.ts",
     "build": "node esbuild.mjs",
     "test": "npm run test:in-memory src/**/*.spec.ts",
     "test:in-memory": "DB_DIALECT=sqlite DB_STORAGE=:memory: npm run test:run",

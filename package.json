@@ -2,15 +2,19 @@
   "name": "@al-un/ressaite-root",
   "private": true,
   "scripts": {
-    "setup:quick-start": "lerna run setup:quick-start",
-    "dev:quick-start": "lerna run dev:quick-start",
-    "build": "lerna run build",
-    "test:all": "lerna run test"
+    "setup:quick-start": "nx run-many -t setup:quick-start",
+    "dev:all:quick-start": "nx run-many -t dev:quick-start",
+    "dev:api": "nx dev @al-un/ressaite-api",
+    "dev:web": "nx dev @al-un/ressaite-web",
+    "build:all": "nx run-many -t build",
+    "build:api": "nx build @al-un/ressaite-api",
+    "build:web": "nx vercel-build @al-un/ressaite-web",
+    "test:all": "nx run-many -t test"
   },
   "devDependencies": {
     "@types/cors": "2.8.13",
     "@types/node": "18.15.5",
-    "lerna": "^6.5.1",
+    "nx": "15.9.2",
     "typescript": "4.9.5"
   },
   "workspaces": [
