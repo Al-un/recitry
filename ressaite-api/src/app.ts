@@ -13,15 +13,18 @@ const app = express();
 // app.use(CookieParser());
 // app.use(BodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({
-    origin: "http://localhost:3000"
-}));
 
+const CORS_WHITELISTED_ORIGIN = process.env.CORS_WHITELISTED_ORIGIN;
+if (CORS_WHITELISTED_ORIGIN) {
+  app.use(cors({ origin: CORS_WHITELISTED_ORIGIN }));
+}
+
+// Load all routes
 app.use(MiscRouter);
 app.use(AuthRouter);
 
+// Load all middlewares
 app.use(InternalErrorMiddleware);
-
 app.all("*", UnknownRouteMiddleware);
 
 export default app;
