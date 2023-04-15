@@ -37,7 +37,7 @@
 //   }
 // }
 
-import { renderToNodeStream } from '@vue/server-renderer'
+import { renderToNodeStream, renderToString } from '@vue/server-renderer'
 import { escapeInject } from 'vite-plugin-ssr/server'
 import { createApp } from './app'
 import { getPageTitle } from './getPageTitle'
@@ -51,7 +51,8 @@ const passToClient = ['pageProps', 'documentProps']
 
 async function render(pageContext: PageContextBuiltIn & PageContext) {
   const app = createApp(pageContext)
-  const stream = renderToNodeStream(app)
+  // const stream = renderToNodeStream(app)
+  const stream = await renderToString(app)
 
   const title = getPageTitle(pageContext)
 

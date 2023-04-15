@@ -2,6 +2,7 @@
   "name": "@al-un/ressaite-web",
   "version": "0.0.0",
   "private": true,
+  "type" :"module",
   "scripts": {
     "dev": "vite",
     "dev:quick-start": "VITE_API_BASE_URL=http://localhost:8000 npm run dev",

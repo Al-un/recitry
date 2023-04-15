@@ -16,6 +16,7 @@ export default async function handler(req, res) {
 
   const { body, statusCode, contentType } = httpResponse
   res.statusCode = statusCode
-  res.setHeader('content-type', contentType)
+  // res.setHeader('content-type', contentType)
+  res.setHeader('content-type', 'text/html')
   res.end(body)
 }
