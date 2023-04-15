@@ -1,5 +1,10 @@
 import { renderPage } from 'vite-plugin-ssr/server'
 
+/**
+ * Vercel serverless functions must be in the `<root>/api/` folder
+ * 
+ * @see https://vercel.com/docs/concepts/functions/serverless-functions#adding-utility-files-to-the-/api-directory
+ */
 export default async function handler(req, res) {
   const { url } = req
   console.log('Request to url:', url)
@@ -16,7 +21,8 @@ export default async function handler(req, res) {
 
   const { body, statusCode, contentType } = httpResponse
   res.statusCode = statusCode
-  // res.setHeader('content-type', contentType)
-  res.setHeader('content-type', 'text/html')
+  console.log("responding content-type", contentType)
+  res.setHeader('content-type', contentType)
+  // res.setHeader('content-type', 'text/html')
   res.end(body)
 }

@@ -1,8 +1,10 @@
 {
+  "region": ["hnd1"],
   "rewrites": [
     {
       "source": "/((?!assets/).*)",
       "destination": "/api/ssr.js"
     }
-  ]
+  ],
+  "outputDirectory": "dist/client"
 }

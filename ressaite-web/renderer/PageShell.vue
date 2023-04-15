@@ -20,18 +20,16 @@
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import { navigate } from 'vite-plugin-ssr/client/router'
 
 import { useAppStore } from '@/stores/app'
+import { callEndpoint } from '@/api'
 
 const appStore = useAppStore()
 
 onMounted(async () => {
   console.log('Layout LOADED!!')
 
-  await fetch("http://localhost:8000/v1/health", {
-    method: "GET"
-  })
+  callEndpoint('health', null, null)
 })
 
 async function submitLogout() {
