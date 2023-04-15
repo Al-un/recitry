@@ -17,7 +17,15 @@ app.use(express.json());
 const CORS_WHITELISTED_ORIGIN = process.env.CORS_WHITELISTED_ORIGIN;
 if (CORS_WHITELISTED_ORIGIN) {
   /** @see https://github.com/expressjs/cors#configuration-options */
-  const corsOriginsAsArray = CORS_WHITELISTED_ORIGIN.split(",");
+  const corsOriginsAsArray = CORS_WHITELISTED_ORIGIN.split(",").map(
+    (pattern) => {
+      if (pattern.startsWith("/") && pattern.endsWith("/")) {
+        return new RegExp(pattern.substring(1, pattern.length - 1));
+      }
+
+      return pattern;
+    }
+  );
   app.use(cors({ origin: corsOriginsAsArray }));
   console.log("CORS enabled for domains:", corsOriginsAsArray);
 } else {
