@@ -1,12 +1,20 @@
-import Express from "express";
-
+import {
+  MiscEndpointTypes,
+  MiscRoutes,
+} from "@al-un/ressaite-core/core/api/Misc";
+import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import * as MiscController from "../controllers/MiscController";
-
-const MiscRouter = Express.Router();
 
 // ----------------------------------------------------------------------------
 
-MiscRouter.get("/v1/health", MiscController.healthCheck);
+const MiscRouterConfig: ExpressRouterConfig<MiscEndpointTypes> = {
+  health: {
+    route: MiscRoutes["health"],
+    controller: MiscController.healthCheck,
+  },
+};
+
+const MiscRouter = loadRouterConfig(MiscRouterConfig);
 
 // ----------------------------------------------------------------------------
 

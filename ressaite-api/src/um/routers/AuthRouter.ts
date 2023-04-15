@@ -1,14 +1,10 @@
-// import Express from "express";
-
-import * as AuthController from "../controllers/AuthController";
-import AuthMiddleware from "../middlewares/AuthMiddleware";
-import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import {
   AuthEndpointTypes,
   AuthRoutes,
 } from "@al-un/ressaite-core/um/api/Auth";
-
-// const AuthRouter = Express.Router();
+import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
+import * as AuthController from "../controllers/AuthController";
+import AuthMiddleware from "../middlewares/AuthMiddleware";
 
 // ----------------------------------------------------------------------------
 
@@ -29,12 +25,6 @@ const AuthRouterConfig: ExpressRouterConfig<AuthEndpointTypes> = {
 };
 
 const AuthRouter = loadRouterConfig(AuthRouterConfig);
-
-// AuthRouter.post("/v1/login", AuthController.login);
-
-// AuthRouter.post("/v1/signup", AuthController.signUp);
-
-// AuthRouter.post("/v1/logout", AuthMiddleware, AuthController.logout);
 
 // ----------------------------------------------------------------------------
 

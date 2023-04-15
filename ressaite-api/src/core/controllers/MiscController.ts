@@ -1,5 +1,14 @@
 import { RequestHandler } from "express";
 
-export const healthCheck: RequestHandler = (_, resp) => {
+import { MiscEndpointTypes } from "@al-un/ressaite-core/core/api/Misc";
+import { ExpressController } from "../express";
+
+// ----------------------------------------------------------------------------
+
+type MiscControllerTypes = ExpressController<MiscEndpointTypes>;
+
+// ----------------------------------------------------------------------------
+
+export const healthCheck: MiscControllerTypes["health"] = (_, resp) => {
   return resp.status(200).json({ status: "All good!" });
 };
