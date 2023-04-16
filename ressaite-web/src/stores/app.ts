@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/api/Auth'
+import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/api/auth'
 import { callEndpoint } from '@/api'
 
 export const useAppStore = defineStore('app', () => {

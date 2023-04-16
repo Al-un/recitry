@@ -35,6 +35,7 @@ export { onPageTransitionEnd }
 let app: ReturnType<typeof createApp>
 async function render(pageContext: PageContextBuiltInClient & PageContext) {
   if (!app) {
+    console.log("Client render, app content", pageContext)
     app = createApp(pageContext)
     app.mount('#app')
   } else {
@@ -45,6 +46,7 @@ async function render(pageContext: PageContextBuiltInClient & PageContext) {
 
 function onHydrationEnd() {
   console.log('Hydration finished; page is now interactive.')
+  document.querySelector('#app')!.classList.remove("hidden")
 }
 function onPageTransitionStart() {
   console.log('Page transition start')

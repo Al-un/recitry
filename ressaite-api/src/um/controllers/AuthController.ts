@@ -3,7 +3,7 @@ import { ParamsDictionary } from "express-serve-static-core";
 import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
-import { AuthEndpointTypes } from "@al-un/ressaite-core/um/api/Auth";
+import { AuthEndpointTypes } from "@al-un/ressaite-core/um/api/auth";
 import { AccessToken } from "../models/AccessToken";
 import { hashPassword, User } from "../models/User";
 import { ExpressController } from "@/core/express";

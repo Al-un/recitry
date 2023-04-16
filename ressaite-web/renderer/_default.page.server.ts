@@ -60,9 +60,10 @@ async function render(pageContext: PageContextBuiltIn & PageContext) {
     <html>
       <head>
         <title>${title}</title>
+        <style>.hidden{display:none;}</style>
       </head>
       <body>
-        <div id="app">${stream}</div>
+        <div id="app" class="hidden">${stream}</div>
       </body>
     </html>`
 
