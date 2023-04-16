@@ -71,7 +71,7 @@ describe("AuthController", () => {
 
     it("lets the new user to login", async () => {
       const res = await request(app)
-        .post(AllRoutes.signup.path)
+        .post(AllRoutes.login.path)
         .send({ username: "blah", password: "pouicpouic" });
 
       expect(res.status).to.equal(200);
