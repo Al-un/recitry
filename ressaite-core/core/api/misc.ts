@@ -1,11 +1,11 @@
 import type {
   EndpointType,
-  NoPathParams,
+  PathWithNoParam,
   RouteOf,
 } from "../../core/models/api";
 
 export type MiscEndpointTypes = {
-  health: EndpointType<"GET", NoPathParams, null, HealthResp>;
+  health: EndpointType<"GET", PathWithNoParam, null, HealthResp>;
 };
 
 export const MiscRoutes: RouteOf<MiscEndpointTypes> = {

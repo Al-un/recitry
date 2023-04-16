@@ -33,7 +33,6 @@ export type EndpointType<
   response: Response;
 };
 
-export type NoPathParams = null;
 
 export type EndpointTypes = { [key: string]: EndpointType<any, any, any, any> };
 
@@ -42,3 +41,10 @@ export type RouteOf<AllEndpoints extends EndpointTypes> = {
     method: AllEndpoints[EndpointName]["method"];
   };
 };
+
+export interface WithPagination {
+  page: number;
+  limit: number;
+}
+
+export type PathWithNoParam = null;
