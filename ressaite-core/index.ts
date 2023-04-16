@@ -1,5 +1,5 @@
-import { type MiscEndpointTypes, MiscRoutes } from "./core/api/Misc";
-import { type AuthEndpointTypes, AuthRoutes } from "./um/api/Auth";
+import { type MiscEndpointTypes, MiscRoutes } from "./core/api/misc";
+import { type AuthEndpointTypes, AuthRoutes } from "./um/api/auth";
 
 export type AllEndpoints = MiscEndpointTypes & AuthEndpointTypes;
 
