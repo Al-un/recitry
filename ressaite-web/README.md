@@ -70,3 +70,9 @@ npm run lint
 ---
 
 https://vuejs.org/guide/typescript/overview.html#volar-takeover-mode
+
+## Vercel
+
+### Config
+
+- https://vercel.com/docs/concepts/projects/project-configuration#regions
