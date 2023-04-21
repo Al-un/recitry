@@ -1,14 +1,11 @@
 <template>
   <div class="login-page">
-    <form class="login-card rst-card" @submit.prevent="submitLogin">
+    <form class="login-card rst-card" @submit.prevent="submitSignUp">
       <rst-input v-model="form.username" />
       <rst-input v-model="form.password" type="password" />
+      <rst-input v-model="form.passwordConfirm" type="password" />
 
-      <button class="rst-button" type="submit">Login!</button>
-
-      <div>
-        <p>No account? Sign up <a href="/signup">there</a></p>
-      </div>
+      <button class="rst-button" type="submit">Signup!</button>
     </form>
   </div>
 </template>
@@ -26,11 +23,12 @@ const app = useAppStore()
 
 const form: LoginReq = reactive({
   username: '',
-  password: ''
+  password: '',
+  passwordConfirm: ''
 })
 
-async function submitLogin() {
-  await app.login({
+async function submitSignUp() {
+  await app.signUp({
     username: form.username,
     password: form.password
   })
