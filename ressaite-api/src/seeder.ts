@@ -1,2 +1,2 @@
-import { umzugSeeder } from "@/umzug";
-umzugSeeder.runAsCLI();
+import { getUmzugSeeder } from "@/umzug";
+getUmzugSeeder().runAsCLI();

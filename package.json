@@ -6,6 +6,7 @@
     "dev:all:quick-start": "nx run-many -t dev:quick-start",
     "dev:api": "nx dev @al-un/ressaite-api",
     "dev:web": "nx dev @al-un/ressaite-web",
+    "dev:quick-start:api": "nx dev:quick-start @al-un/ressaite-api",
     "build:all": "nx run-many -t build",
     "build:api": "nx build @al-un/ressaite-api",
     "build:web": "nx vercel-build @al-un/ressaite-web",
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@types/cors": "2.8.13",
     "@types/node": "18.15.5",
+    "dotenv": "16.0.3",
     "nx": "15.9.2",
     "typescript": "4.9.5"
   },

@@ -1,32 +1,35 @@
 import { Umzug, SequelizeStorage, MigrateUpOptions } from "umzug";
 
-import { getSequelizeInstance } from "@/core/db/instance";
-
-const sequelize = getSequelizeInstance();
+import { Sequelize } from "sequelize";
+import { getSequelizeInstance } from "./core/db/instance";
 
 // ----------------------------------------------------------------------------
 
 // https://github.com/sequelize/umzug/blob/main/examples/1.sequelize-typescript/migrate.js
 
-export const umzugMigrator = new Umzug({
-  migrations: {
-    glob: ["core/db/migrations/*.ts", { cwd: __dirname }],
-  },
-  context: sequelize,
-  storage: new SequelizeStorage({
-    sequelize,
-  }),
-  logger: process.env.DEBUG ? console : undefined,
-});
+export const getUmzugMigrator = (sequelize?: Sequelize) => {
+  let sequelizeInstance = sequelize || getSequelizeInstance();
 
-export type Migrator = typeof umzugMigrator;
-export type Migration = typeof umzugMigrator._types.migration;
+  return new Umzug({
+    migrations: {
+      glob: ["core/db/migrations/*.ts", { cwd: __dirname }],
+    },
+    context: sequelizeInstance,
+    storage: new SequelizeStorage({
+      sequelize: sequelizeInstance,
+    }),
+    logger: process.env.DEBUG ? console : undefined,
+  });
+};
+
+export type Migrator = ReturnType<typeof getUmzugMigrator>;
+export type Migration = Migrator["_types"]["migration"];
 
 export const executeAllMigrations = async (
   migrator?: Migrator,
   options?: MigrateUpOptions
 ) => {
-  const migratorInstance = migrator || umzugMigrator;
+  const migratorInstance = migrator || getUmzugMigrator();
 
   await migratorInstance.up(options);
   const migrations = await migratorInstance.executed();
@@ -37,26 +40,30 @@ export const executeAllMigrations = async (
 
 // ----------------------------------------------------------------------------
 
-export const umzugSeeder = new Umzug({
-  migrations: {
-    glob: ["core/db/seeders/*.ts", { cwd: __dirname }],
-  },
-  context: sequelize,
-  storage: new SequelizeStorage({
-    sequelize,
-    // modelName: "seeder_meta",
-  }),
-  logger: process.env.DEBUG ? console : undefined,
-});
+export const getUmzugSeeder = (sequelize?: Sequelize) => {
+  let sequelizeInstance = sequelize || getSequelizeInstance();
 
-export type Seeder = typeof umzugSeeder;
-export type Seed = typeof umzugSeeder._types.migration;
+  return new Umzug({
+    migrations: {
+      glob: ["core/db/seeders/*.ts", { cwd: __dirname }],
+    },
+    context: sequelizeInstance,
+    storage: new SequelizeStorage({
+      sequelize: sequelizeInstance,
+      // modelName: "seeder_meta",
+    }),
+    logger: process.env.DEBUG ? console : undefined,
+  });
+};
+
+export type Seeder = ReturnType<typeof getUmzugSeeder>;
+export type Seed = Seeder["_types"]["migration"];
 
 export const executeAllSeeds = async (
   seeder?: Seeder,
   options?: MigrateUpOptions
 ): Promise<void> => {
-  const seederInstance = seeder || umzugSeeder;
+  const seederInstance = seeder || getUmzugSeeder();
 
   await seederInstance.up(options);
   const seeds = await seederInstance.executed();

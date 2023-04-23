@@ -1,2 +1,2 @@
-import { umzugMigrator } from "@/umzug";
-umzugMigrator.runAsCLI();
+import { getUmzugMigrator } from "@/umzug";
+getUmzugMigrator().runAsCLI();
