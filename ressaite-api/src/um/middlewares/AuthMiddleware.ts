@@ -5,7 +5,7 @@ import {
   VerifyFunction,
 } from "passport-http-bearer";
 
-import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
+import { RstErrorResp } from "@al-un/ressaite-core/core/base-api.models";
 import { User } from "../models/User";
 import { AccessToken } from "../models/AccessToken";
 

@@ -1,12 +1,9 @@
 import { RequestHandler, Router } from "express";
 import type { ParsedQs } from "qs";
 
-import {
-  EndpointType,
-  EndpointTypes,
-  Route,
-  RstResp,
-} from "@al-un/ressaite-core/core/models/api";
+import { EndpointTypes } from "@al-un/ressaite-core/core/base-api.endpoints";
+import { Route } from "@al-un/ressaite-core/core/base-api.routes";
+import { RstResp } from "@al-un/ressaite-core/core/base-api.models";
 
 export type ExpressController<AllEndpoints extends EndpointTypes> = {
   [EndpointName in keyof AllEndpoints]: AllEndpoints[EndpointName]["method"] extends "GET"
