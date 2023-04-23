@@ -6,6 +6,12 @@ import { PathWithRecipeId } from "./recipe.routes";
 
 export type RecipeEndpointTypes = {
   recipeCreate: EndpointType<"POST", PathWithNoParam, RecipeCreation, Recipe>;
+  recipeSearch: EndpointType<
+    "GET",
+    PathWithNoParam,
+    RecipeSearchQuery,
+    Recipe[]
+  >;
   recipeDelete: EndpointType<"DELETE", PathWithRecipeId, null, null>;
   recipeListPerUser: EndpointType<
     "GET",
@@ -17,3 +23,7 @@ export type RecipeEndpointTypes = {
 };
 
 // ----------------------------------------------------------------------------
+
+export interface RecipeSearchQuery extends WithPagination {
+  title: string;
+}

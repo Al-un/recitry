@@ -6,6 +6,10 @@ export const RecipeRoutes: RouteOf<RecipeEndpointTypes> = {
     path: "/v1/recipes/",
     method: "POST",
   },
+  recipeSearch: {
+    path: "/v1/recipes/",
+    method: "GET",
+  },
   recipeDelete: {
     path: "/v1/recipe/:recipeId",
     method: "DELETE",

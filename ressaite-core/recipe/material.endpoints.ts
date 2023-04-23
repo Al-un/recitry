@@ -14,5 +14,5 @@ export type MaterialEndpointTypes = {
 // ----------------------------------------------------------------------------
 
 interface MaterialSearch extends WithPagination {
-  search: string;
+  name: string;
 }
