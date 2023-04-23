@@ -1,27 +1,11 @@
 import { EndpointType } from "../core/base-api.endpoints";
-import { PathWithNoParam, RouteOf } from "../core/base-api.routes";
+import { PathWithNoParam } from "../core/base-api.routes";
 
 export type AuthEndpointTypes = {
   login: EndpointType<"POST", PathWithNoParam, LoginReq, LoginSuccessfulResp>;
   logout: EndpointType<"POST", PathWithNoParam, null, null>;
   signup: EndpointType<"POST", PathWithNoParam, SignUpReq, null>;
 };
-
-export const AuthRoutes: RouteOf<AuthEndpointTypes> = {
-  login: {
-    path: "/v1/login",
-    method: "POST",
-  },
-  logout: {
-    path: "/v1/logout",
-    method: "POST",
-  },
-  signup: {
-    path: "/v1/signup",
-    method: "POST",
-  },
-};
-
 // ----------------------------------------------------------------------------
 
 interface SignUpReq {

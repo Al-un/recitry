@@ -20,5 +20,6 @@ interface RecipeMaterialBase extends MaterialBase {
 export interface RecipeMaterial extends RecipeMaterialBase {}
 
 export interface RecipeMaterialCreation extends RecipeMaterialBase {
+  /**Material ID */
   id: number;
 }
