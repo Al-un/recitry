@@ -1,9 +1,4 @@
-export interface RstErrorResp {
-  errorCode?: number;
-  message?: string;
-}
 
-export type RstResp<ResponseFormat> = ResponseFormat | RstErrorResp;
 
 export type HttpMethod =
   | "GET"
@@ -13,10 +8,6 @@ export type HttpMethod =
   | "DELETE"
   | "OPTIONS";
 
-export interface Route {
-  path: string;
-  method: HttpMethod;
-}
 
 export type EndpointType<
   method extends HttpMethod,
@@ -36,15 +27,11 @@ export type EndpointType<
 
 export type EndpointTypes = { [key: string]: EndpointType<any, any, any, any> };
 
-export type RouteOf<AllEndpoints extends EndpointTypes> = {
-  [EndpointName in keyof AllEndpoints]: Route & {
-    method: AllEndpoints[EndpointName]["method"];
-  };
-};
+
 
 export interface WithPagination {
   page: number;
   limit: number;
 }
 
-export type PathWithNoParam = null;
+

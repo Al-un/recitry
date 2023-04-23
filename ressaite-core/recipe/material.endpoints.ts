@@ -1,10 +1,9 @@
-import type {
+import {
   EndpointType,
-  PathWithNoParam,
-  RouteOf,
   WithPagination,
-} from "../../core/models/api";
-import { Material } from "../models/material";
+} from "../core/base-api.endpoints";
+import { PathWithNoParam, RouteOf } from "../core/base-api.routes";
+import { Material } from "./material.models";
 
 export type MaterialEndpointTypes = {
   materialSearch: EndpointType<
