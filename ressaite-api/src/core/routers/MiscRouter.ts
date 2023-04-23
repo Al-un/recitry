@@ -1,7 +1,7 @@
 import {
   MiscEndpointTypes,
   MiscRoutes,
-} from "@al-un/ressaite-core/core/api/misc";
+} from "@al-un/ressaite-core/core/misc.endpoints";
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import * as MiscController from "../controllers/MiscController";
 

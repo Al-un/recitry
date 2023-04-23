@@ -1,12 +1,12 @@
 import { AllRoutes, type AllEndpoints, type AllEndpointsKey } from '@al-un/ressaite-core'
-import { buildRouteWithParam } from '@al-un/ressaite-core/core/utils/api'
+import { buildRouteWithParam } from '@al-un/ressaite-core/core/base-api.utils'
 
 export type CallEndpointResponse<P> = { status: number; data: P }
 
 export const callEndpoint = async <K extends AllEndpointsKey>(
   endpointKey: K,
-  pathParams: AllEndpoints[K]['pathParams'],
-  payload: AllEndpoints[K]['request']
+  pathParams?: AllEndpoints[K]['pathParams'],
+  payload?: AllEndpoints[K]['request']
 ): Promise<CallEndpointResponse<AllEndpoints[K]['response']>> => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL
   if (!baseUrl) {

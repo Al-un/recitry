@@ -3,7 +3,7 @@ import { ParamsDictionary } from "express-serve-static-core";
 import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
-import { AuthEndpointTypes } from "@al-un/ressaite-core/um/api/auth";
+import { AuthEndpointTypes } from "@al-un/ressaite-core/um/auth.endpoints";
 import { AccessToken } from "../models/AccessToken";
 import { hashPassword, User } from "../models/User";
 import { ExpressController } from "@/core/express";
@@ -78,7 +78,7 @@ type LogoutHandler = RequestHandler<ParamsDictionary, any, any>;
  *
  * @see https://stackoverflow.com/a/6937030/4906586
  */
-export const logout: AuthControllerTypes['logout'] = async (req, res) => {
+export const logout: AuthControllerTypes["logout"] = async (req, res) => {
   const token = req?.user?.token;
   if (!token) {
     throw new Error("No access token provided!");

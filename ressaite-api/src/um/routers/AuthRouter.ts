@@ -1,7 +1,7 @@
 import {
   AuthEndpointTypes,
   AuthRoutes,
-} from "@al-un/ressaite-core/um/api/auth";
+} from "@al-un/ressaite-core/um/auth.endpoints";
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import * as AuthController from "../controllers/AuthController";
 import AuthMiddleware from "../middlewares/AuthMiddleware";
