@@ -7,6 +7,7 @@
     "dev:api": "nx dev @al-un/ressaite-api",
     "dev:web": "nx dev @al-un/ressaite-web",
     "dev:quick-start:api": "nx dev:quick-start @al-un/ressaite-api",
+    "dev:quick-start:web": "nx dev:quick-start @al-un/ressaite-web",
     "build:all": "nx run-many -t build",
     "build:api": "nx build @al-un/ressaite-api",
     "build:web": "nx vercel-build @al-un/ressaite-web",
