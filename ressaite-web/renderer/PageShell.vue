@@ -1,10 +1,18 @@
 <template>
-  <div class="layout-page">
+  <div class="layout-page" :class="{ 'show-side-nav-bar': showSideNavBar }">
     <nav class="layout-navigation">
-      <a href="/">Home</a>
+      <!-- To add a logo here :) -->
+      <div @click="showSideNavBar = !showSideNavBar">Menu</div>
+      <a href="/" class="temporary-logo"> Ressaite </a>
+
       <div class="flex-spacer"></div>
-      <span>{{ appStore.isAuthenticated }}</span>
-      <a v-if="!appStore.isAuthenticated" href="/login">Login</a>
+
+      <rst-input-search v-model="recipeSearch" placeholder="Search a recipe here" />
+
+      <div class="flex-spacer"></div>
+
+      <!-- To add a logo here :) -->
+      <a v-if="!appStore.isAuthenticated" href="/login" class="temporary-login">Login</a>
       <div v-else class="rst-dropdown">
         <div class="layout-my-profile">My profile</div>
 
@@ -14,17 +22,24 @@
       </div>
     </nav>
 
+    <nav id="sidenavbar"></nav>
+
+    <div class="sidenavbar-background"></div>
     <main class="layout-content"><slot></slot></main>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
+import RstInputSearch from '@/components/ui/form/RstInputSearch.vue'
 import { useAppStore } from '@/stores/app'
 import { callEndpoint } from '@/api'
 
 const appStore = useAppStore()
+
+const recipeSearch = ref('')
+const showSideNavBar = ref<boolean>(false)
 
 onMounted(async () => {
   console.log('Layout LOADED!!')
@@ -57,5 +72,31 @@ $nav-header-height: 40px;
 
 .layout-my-profile {
   height: $nav-header-height;
+}
+
+.temporary-logo {
+  color: var(--rst-primary);
+  width: 200px;
+  padding: ($nav-header-height - 24px) / 2;
+  font-size: 16px;
+  border-right: 1px solid var(--rst-primary);
+  text-decoration: none;
+
+  &:hover {
+    background-color: lightcoral;
+  }
+}
+
+.temporary-login {
+  width: 120px;
+  padding: ($nav-header-height - 24px) / 2;
+  font-size: 16px;
+  border-left: 1px solid var(--rst-primary);
+  text-align: right;
+  text-decoration: none;
+
+  &:hover {
+    background-color: lightcoral;
+  }
 }
 </style>
