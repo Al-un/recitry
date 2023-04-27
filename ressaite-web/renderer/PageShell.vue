@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-page" :class="{ 'show-side-nav-bar': showSideNavBar }">
+  <div class="layout-page" :class="{ 'show-sidenavbar': showSideNavBar }">
     <nav class="layout-navigation">
       <!-- To add a logo here :) -->
       <div @click="showSideNavBar = !showSideNavBar">Menu</div>
@@ -58,7 +58,14 @@ $nav-header-height: 40px;
 .layout-page {
   width: 100vw;
   height: 100vh;
+
+  &.show-sidenavbar{
+  #sidenavbar{
+    
+  }
 }
+}
+
 
 .layout-navigation {
   @include flex-row;
