@@ -36,7 +36,7 @@ interface InventoryItemBase {
 }
 
 export interface InventoryItemCreation extends InventoryItemBase {
-  materialId: number;
+  materialId: number | null;
   inventoryContainerId: number;
 }
 
@@ -45,5 +45,5 @@ export interface InventoryItem extends InventoryItemBase, HasAuthor {
   material: {
     id: number;
     name: string;
-  };
+  } | null;
 }

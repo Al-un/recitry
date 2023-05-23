@@ -47,7 +47,13 @@ import type { PageContextBuiltIn } from 'vite-plugin-ssr'
 export { passToClient }
 export { render }
 
-const passToClient = ['pageProps', 'documentProps']
+const passToClient = [
+  'pageProps',
+  'documentProps',
+  'routeParams'
+  // https://github.com/brillout/vite-plugin-ssr/blob/main/examples/vue-pinia/renderer/_default.page.server.js
+  // 'initialStoreState'
+]
 
 async function render(pageContext: PageContextBuiltIn & PageContext) {
   const app = createApp(pageContext)

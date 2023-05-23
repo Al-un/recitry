@@ -4,3 +4,8 @@ export interface RstErrorResp {
 }
 
 export type RstResp<ResponseFormat> = ResponseFormat | RstErrorResp;
+
+export type PaginatedResp<List> = {
+  data: List;
+  totalCount: number;
+};

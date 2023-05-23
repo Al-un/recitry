@@ -1,3 +1,15 @@
 .rst-card {
-  border: 1px solid red;
+  background-color: var(--rst-bg-content);
+  // https://m2.material.io/components/cards
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+}
+
+.rst-card:hover{
+  background-color: var(--rst-bg-content-hover);
+  cursor: pointer;
+}
+
+.rst-card.padded{
+  padding: 16px;
 }

@@ -25,7 +25,9 @@
     <nav id="sidenavbar"></nav>
 
     <div class="sidenavbar-background"></div>
-    <main class="layout-content"><slot></slot></main>
+    <main class="layout-content">
+      <slot></slot>
+    </main>
   </div>
 </template>
 
@@ -53,21 +55,20 @@ async function submitLogout() {
 </script>
 
 <style lang="scss">
-@use "sass:math";
+@use 'sass:math';
 
 $nav-header-height: 40px;
 
 .layout-page {
+  background-color: var(--rst-bg-app);
   width: 100vw;
   height: 100vh;
 
-  &.show-sidenavbar{
-  #sidenavbar{
-    
+  &.show-sidenavbar {
+    #sidenavbar {
+    }
   }
 }
-}
-
 
 .layout-navigation {
   @include flex-row;

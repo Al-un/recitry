@@ -1,4 +1,5 @@
-import type { EndpointType } from "../core/base-api.endpoints";
+import type { EndpointType, WithPagination } from "../core/base-api.endpoints";
+import type { PaginatedResp } from "../core/base-api.models";
 import type { PathWithNoParam } from "../core/base-api.routes";
 import type {
   Inventory,
@@ -20,6 +21,12 @@ export type InventoryEndpointTypes = {
     PathWithNoParam,
     InventoryCreation,
     Inventory
+  >;
+  inventoryList: EndpointType<
+    "GET",
+    WithPagination,
+    null,
+    PaginatedResp<Inventory[]>
   >;
   inventoryDisplay: EndpointType<"GET", PathWithInventoryId, null, Inventory>;
   inventoryUpdate: EndpointType<

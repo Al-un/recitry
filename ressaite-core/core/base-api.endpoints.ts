@@ -1,5 +1,3 @@
-
-
 export type HttpMethod =
   | "GET"
   | "POST"
@@ -7,7 +5,6 @@ export type HttpMethod =
   | "PUT"
   | "DELETE"
   | "OPTIONS";
-
 
 export type EndpointType<
   method extends HttpMethod,
@@ -24,14 +21,9 @@ export type EndpointType<
   response: Response;
 };
 
-
 export type EndpointTypes = { [key: string]: EndpointType<any, any, any, any> };
-
-
 
 export interface WithPagination {
   page: number;
   limit: number;
 }
-
-

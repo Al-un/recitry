@@ -2,9 +2,16 @@
 @forward './components/rst-card.scss';
 @forward './components/rst-dropdown.scss';
 @forward './utils/flex.scss';
+@forward './utils/page.scss';
 
 :root {
   --rst-layout-header-height: 40px;
 
   --rst-primary: darkorange;
+
+  --rst-bg-app: #fafafa;
+  --rst-bg-content: #ffffff;
+  --rst-bg-content-hover: #efefef;
+
+  --rst-txt-color: #333333;
 }

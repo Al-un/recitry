@@ -6,6 +6,10 @@ export const InventoryRoutes: RouteOf<InventoryEndpointTypes> = {
     path: "/v1/inventories/",
     method: "POST",
   },
+  inventoryList: {
+    path: "/v1/inventories/",
+    method: "GET",
+  },
   inventoryDisplay: {
     path: "/v1/inventory/:inventoryId",
     method: "GET",

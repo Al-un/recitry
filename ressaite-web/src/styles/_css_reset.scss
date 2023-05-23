@@ -36,6 +36,11 @@ ul {
   font-weight: normal;
 }
 
+a {
+  color: var(--rst-txt-color);
+  text-decoration: none;
+}
+
 ol,
 ul {
   list-style: none;
