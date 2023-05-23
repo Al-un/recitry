@@ -1,4 +1,4 @@
-import { EndpointTypes, HttpMethod } from "./base-api.endpoints";
+import type { EndpointTypes, HttpMethod } from "./base-api.endpoints";
 
 export interface Route {
   path: string;

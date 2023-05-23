@@ -1,5 +1,5 @@
-import { RouteOf } from "../core/base-api.routes";
-import { InventoryEndpointTypes } from "./inventory.endpoints";
+import type { RouteOf } from "../core/base-api.routes";
+import type { InventoryEndpointTypes } from "./inventory.endpoints";
 
 export const InventoryRoutes: RouteOf<InventoryEndpointTypes> = {
   inventoryCreate: {

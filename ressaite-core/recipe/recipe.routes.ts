@@ -1,5 +1,5 @@
-import { RouteOf } from "../core/base-api.routes";
-import { RecipeEndpointTypes } from "./recipe.endpoints";
+import type { RouteOf } from "../core/base-api.routes";
+import type { RecipeEndpointTypes } from "./recipe.endpoints";
 
 export const RecipeRoutes: RouteOf<RecipeEndpointTypes> = {
   recipeCreate: {

@@ -1,4 +1,4 @@
-import { HasAuthor } from "../um/users.models";
+import type { HasAuthor } from "../um/users.models";
 
 interface InventoryBase {
   name: string;

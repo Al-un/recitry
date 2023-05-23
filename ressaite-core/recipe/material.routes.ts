@@ -1,5 +1,5 @@
-import { RouteOf } from "../core/base-api.routes";
-import { MaterialEndpointTypes } from "./material.endpoints";
+import type { RouteOf } from "../core/base-api.routes";
+import type { MaterialEndpointTypes } from "./material.endpoints";
 
 export const MaterialRoutes: RouteOf<MaterialEndpointTypes> = {
   materialSearch: {

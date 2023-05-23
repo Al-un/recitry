@@ -1,6 +1,6 @@
-import { EndpointType } from "../core/base-api.endpoints";
-import { PathWithNoParam } from "../core/base-api.routes";
-import {
+import type { EndpointType } from "../core/base-api.endpoints";
+import type { PathWithNoParam } from "../core/base-api.routes";
+import type {
   Inventory,
   InventoryContainer,
   InventoryContainerCreation,
@@ -8,7 +8,7 @@ import {
   InventoryItem,
   InventoryItemCreation,
 } from "./inventory.models";
-import {
+import type {
   PathWithInventoryContainerId,
   PathWithInventoryId,
   PathWithInventoryItemId,

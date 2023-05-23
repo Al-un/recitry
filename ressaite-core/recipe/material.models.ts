@@ -1,5 +1,5 @@
-import { Lang } from "../core/models/lang";
-import { HasAuthor } from "../um/users.models";
+import type { Lang } from "../core/models/lang";
+import type { HasAuthor } from "../um/users.models";
 
 interface MaterialBase {
   name: string;

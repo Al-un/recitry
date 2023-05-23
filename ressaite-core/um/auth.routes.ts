@@ -1,5 +1,5 @@
-import { RouteOf } from "../core/base-api.routes";
-import { AuthEndpointTypes } from "./auth.endpoints";
+import type { RouteOf } from "../core/base-api.routes";
+import type { AuthEndpointTypes } from "./auth.endpoints";
 
 export const AuthRoutes: RouteOf<AuthEndpointTypes> = {
   login: {

@@ -1,5 +1,5 @@
-import { EndpointType } from "../core/base-api.endpoints";
-import { PathWithNoParam } from "../core/base-api.routes";
+import type { EndpointType } from "../core/base-api.endpoints";
+import type { PathWithNoParam } from "../core/base-api.routes";
 
 export type AuthEndpointTypes = {
   login: EndpointType<"POST", PathWithNoParam, LoginReq, LoginSuccessfulResp>;

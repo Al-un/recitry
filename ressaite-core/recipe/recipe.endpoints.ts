@@ -1,8 +1,8 @@
-import { EndpointType, WithPagination } from "../core/base-api.endpoints";
-import { PathWithNoParam } from "../core/base-api.routes";
-import { PathWithUserId } from "../um/users.routes";
-import { Recipe, RecipeCreation } from "./recipe.models";
-import { PathWithRecipeId } from "./recipe.routes";
+import type { EndpointType, WithPagination } from "../core/base-api.endpoints";
+import type { PathWithNoParam } from "../core/base-api.routes";
+import type { PathWithUserId } from "../um/users.routes";
+import type { Recipe, RecipeCreation } from "./recipe.models";
+import type { PathWithRecipeId } from "./recipe.routes";
 
 export type RecipeEndpointTypes = {
   recipeCreate: EndpointType<"POST", PathWithNoParam, RecipeCreation, Recipe>;
