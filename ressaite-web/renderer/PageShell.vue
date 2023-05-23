@@ -53,6 +53,8 @@ async function submitLogout() {
 </script>
 
 <style lang="scss">
+@use "sass:math";
+
 $nav-header-height: 40px;
 
 .layout-page {
@@ -84,7 +86,7 @@ $nav-header-height: 40px;
 .temporary-logo {
   color: var(--rst-primary);
   width: 200px;
-  padding: ($nav-header-height - 24px) / 2;
+  padding: math.div($nav-header-height - 24px, 2);
   font-size: 16px;
   border-right: 1px solid var(--rst-primary);
   text-decoration: none;
@@ -96,7 +98,7 @@ $nav-header-height: 40px;
 
 .temporary-login {
   width: 120px;
-  padding: ($nav-header-height - 24px) / 2;
+  padding: math.div($nav-header-height - 24px, 2);
   font-size: 16px;
   border-left: 1px solid var(--rst-primary);
   text-align: right;
