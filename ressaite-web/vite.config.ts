@@ -20,5 +20,12 @@ export default defineConfig({
         additionalData: `@use "@/styles/_include.scss" as *;`
       }
     }
+  },
+  // https://v2.vitejs.dev/config/#environment-variables
+  define: {
+    // https://vue-i18n.intlify.dev/guide/advanced/optimization.html#reduce-bundle-size-with-feature-build-flags
+    __VUE_I18N_FULL_INSTALL__: true,
+    __VUE_I18N_LEGACY_API__: false,
+    __INTLIFY_PROD_DEVTOOLS__: false
   }
 })
