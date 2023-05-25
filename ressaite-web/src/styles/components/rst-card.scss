@@ -5,11 +5,12 @@
     0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 }
 
-.rst-card:hover{
+.rst-card.clickable:hover,
+a.rst-card:hover {
   background-color: var(--rst-bg-content-hover);
   cursor: pointer;
 }
 
-.rst-card.padded{
+.rst-card.padded {
   padding: 16px;
 }
