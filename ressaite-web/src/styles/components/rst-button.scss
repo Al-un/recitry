@@ -1,0 +1,31 @@
+.rst-button {
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  transition: background-color 0.25s;
+}
+
+.rst-button:hover,
+.rst-button:active {
+  cursor: pointer;
+}
+
+.rst-button.primary {
+  background-color: var(--rst-primary);
+  color: var(--rst-txt-color-alternate);
+}
+.rst-button.primary:hover {
+  background-color: var(--rst-primary-active);
+}
+
+.rst-button.secondary {
+  background-color: var(--rst-bg-content);
+  color: var(--rst-txt-color);
+}
+
+.rst-button.secondary:hover {
+  background-color: var(--rst-bg-content-hover);
+}
+
+.rst-button-group {
+}

@@ -44,8 +44,6 @@ const recipeSearch = ref('')
 const showSideNavBar = ref<boolean>(false)
 
 onMounted(async () => {
-  console.log('Layout LOADED!!')
-
   callEndpoint('health', null, null)
 })
 

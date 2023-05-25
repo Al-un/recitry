@@ -38,19 +38,21 @@ import { createPinia } from 'pinia'
 import { createSSRApp, defineComponent, h, markRaw, reactive } from 'vue'
 import { createI18n } from 'vue-i18n'
 
+import i18nMessages from '@/i18n'
+import '@/styles/main.scss'
 import PageShell from './PageShell.vue'
 import type { PageContext } from './types'
 import { setPageContext } from './usePageContext'
-import i18nMessages from '@/i18n'
-import '@/styles/main.scss'
 
-export { createApp }
-
-function createApp(pageContext: PageContext) {
+/**
+ *
+ * @param pageContext
+ * @returns
+ *
+ * @see https://github.com/brillout/vite-plugin-ssr/blob/main/examples/vue-full/renderer/app.ts
+ */
+export function createApp(pageContext: PageContext) {
   const { Page } = pageContext
-
-  // // https://github.com/brillout/vite-plugin-ssr/blob/main/examples/layouts-vue/renderer/app.js
-  // const Layout = pageContext.exports.Layout || PageShell
 
   // let rootComponent:  Component
   let rootComponent: any
@@ -58,7 +60,6 @@ function createApp(pageContext: PageContext) {
     data: () => ({
       Page: markRaw(Page),
       pageProps: markRaw(pageContext.pageProps || {})
-      // Layout
     }),
     created() {
       rootComponent = this
@@ -73,18 +74,6 @@ function createApp(pageContext: PageContext) {
           }
         }
       )
-      // render() {
-      //   return this.Layout
-      //     ? h(
-      //         this.Layout,
-      //         {},
-      //         {
-      //           default: () => {
-      //             return h(this.Page, this.pageProps)
-      //           }
-      //         }
-      //       )
-      //     : h(this.Page, this.pageProps)
     }
   })
 
@@ -118,7 +107,7 @@ function createApp(pageContext: PageContext) {
   // Make `pageContext` accessible from any Vue component
   setPageContext(app, pageContextReactive)
 
-  return app
+  return { app, store }
 }
 
 // Same as `Object.assign()` but with type inference

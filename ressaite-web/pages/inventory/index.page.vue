@@ -19,6 +19,10 @@
         <div></div>
       </div>
     </div>
+
+    <div>
+      <div class="rst-button primary">Add container</div>
+    </div>
   </div>
   <div v-else>Loading inventory...</div>
 </template>

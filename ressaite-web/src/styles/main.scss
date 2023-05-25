@@ -1,4 +1,5 @@
 @forward './css_reset.scss';
+@forward './components/rst-button.scss';
 @forward './components/rst-card.scss';
 @forward './components/rst-dropdown.scss';
 @forward './utils/flex.scss';
@@ -7,11 +8,13 @@
 :root {
   --rst-layout-header-height: 40px;
 
-  --rst-primary: darkorange;
+  --rst-primary: #d38c28;
+  --rst-primary-active: #b7761b;
 
   --rst-bg-app: #fafafa;
   --rst-bg-content: #ffffff;
   --rst-bg-content-hover: #efefef;
 
   --rst-txt-color: #333333;
+  --rst-txt-color-alternate: #ffffff;
 }
