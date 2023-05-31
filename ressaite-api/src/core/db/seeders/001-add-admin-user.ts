@@ -1,22 +1,23 @@
-import { tableName } from "@/um/models/User";
+import { tableName as userTableName } from "@/um/models/User";
 import { Seed } from "@/umzug";
 
+import { userOne } from "@al-un/ressaite-core/um/users.mocks";
+
 export const up: Seed = async ({ context: sequelize }) => {
-  return sequelize.getQueryInterface().bulkInsert(tableName, [
+  await sequelize.getQueryInterface().bulkInsert(userTableName, [
     {
-      username: "admin",
-      // "pouetpouet" with the salt below
-      password: "$2b$10$EuERg7PrpZtUDVr5MKXYYOzuJQUWiOFuY7C4FtKiP3rwwbMIBtaVu",
-      email: "admin@ressaite.fr",
-      salt: "$2b$10$EuERg7PrpZtUDVr5MKXYYO",
-      createdAt: new Date(),
+      username: userOne.username,
+      password: userOne.password,
+      email: userOne.email,
+      salt: userOne.salt,
+      createdAt: userOne.createdAt || new Date(),
       updatedAt: new Date(),
     },
   ]);
 };
 
 export const down: Seed = async ({ context: sequelize }) => {
-  sequelize
+  await sequelize
     .getQueryInterface()
-    .bulkDelete(tableName, { email: "ressaite@al-un.fr" }, {});
+    .bulkDelete(userTableName, { username: userOne.username }, {});
 };

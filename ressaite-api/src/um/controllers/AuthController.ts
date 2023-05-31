@@ -4,8 +4,8 @@ import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
 import { AuthEndpointTypes } from "@al-un/ressaite-core/um/auth.endpoints";
-import { AccessToken } from "../models/AccessToken";
-import { hashPassword, User } from "../models/User";
+import { AccessTokenModel } from "../models/AccessToken";
+import { hashPassword, UserModel } from "../models/User";
 import { ExpressController } from "@/core/express";
 
 // ----------------------------------------------------------------------------
@@ -15,9 +15,9 @@ type AuthControllerTypes = ExpressController<AuthEndpointTypes>;
 // ----------------------------------------------------------------------------
 
 const localVerify: VerifyFunction = async (username, password, cb) => {
-  let user: User | null;
+  let user: UserModel | null;
   try {
-    user = await User.findOne({ where: { username } });
+    user = await UserModel.findOne({ where: { username } });
     if (!user) {
       return cb(null, false, { message: "Incorrect username or password" });
     }
@@ -31,7 +31,7 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
     return cb(null, false, { message: "Incorrect username or password" });
   }
 
-  let newAccessToken = new AccessToken();
+  let newAccessToken = new AccessTokenModel();
   newAccessToken.init(user);
 
   try {
@@ -84,7 +84,7 @@ export const logout: AuthControllerTypes["logout"] = async (req, res) => {
     throw new Error("No access token provided!");
   }
 
-  let accessToken = await AccessToken.findOne({ where: { token } });
+  let accessToken = await AccessTokenModel.findOne({ where: { token } });
   if (!accessToken) {
     throw new Error("Token not found");
   }
@@ -101,13 +101,13 @@ export const logout: AuthControllerTypes["logout"] = async (req, res) => {
 export const signUp: AuthControllerTypes["signup"] = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const existingUser = await User.findOne({ where: { username } });
+  const existingUser = await UserModel.findOne({ where: { username } });
   if (existingUser) {
     res.status(400).json({ message: "Username already taken" });
     return;
   }
 
-  let newUser = new User({
+  let newUser = new UserModel({
     username,
     password,
   });

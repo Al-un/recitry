@@ -1,7 +1,11 @@
 import { Sequelize } from "sequelize-typescript";
 
-import { AccessToken } from "@/um/models/AccessToken";
-import { User } from "@/um/models/User";
+import { InventoryModel } from "@/inventory/Inventory.model";
+import { InventoryContainerModel } from "@/inventory/InventoryContainer.model";
+import { InventoryItemModel } from "@/inventory/InventoryItem.model";
+import { MaterialModel } from "@/recipe/Material.model";
+import { AccessTokenModel } from "@/um/models/AccessToken";
+import { UserModel } from "@/um/models/User";
 
 let sequelize: Sequelize;
 
@@ -66,7 +70,14 @@ const initSequelize = () => {
     });
   }
 
-  sequelize.addModels([User, AccessToken]);
+  sequelize.addModels([
+    InventoryModel,
+    InventoryContainerModel,
+    InventoryItemModel,
+    MaterialModel,
+    UserModel,
+    AccessTokenModel,
+  ]);
 };
 
 export const getSequelizeInstance = (): Sequelize => {

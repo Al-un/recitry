@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import {
   BelongsTo,
   Column,
@@ -8,16 +7,17 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { InventoryItem as InventoryItemResponse } from "@al-un/ressaite-core/inventory/inventory.models";
-import { User } from "@/um/models/User";
-import { InventoryContainer } from "./InventoryContainer.model";
+import { InventoryItem } from "@al-un/ressaite-core/inventory/inventory.models";
+import { UserModel } from "@/um/models/User";
+import { InventoryContainerModel } from "./InventoryContainer.model";
+import { MaterialModel } from "@/recipe/Material.model";
 
 export const tableName = "inventory_item";
 
 @Table({
   tableName,
 })
-export class InventoryItem extends Model {
+export class InventoryItemModel extends Model {
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -33,23 +33,30 @@ export class InventoryItem extends Model {
   quantity!: number;
 
   @Column({ allowNull: true, type: DataType.DATE })
-  dueDate!: Date;
+  dueDate!: Date | null;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserModel)
   authorId!: number;
 
-  @BelongsTo(() => User)
-  author!: User;
+  @BelongsTo(() => UserModel)
+  author!: UserModel;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  @ForeignKey(() => InventoryContainer)
+  @ForeignKey(() => InventoryContainerModel)
   inventoryContainerId!: number;
 
-  @BelongsTo(() => User)
-  inventoryContainer!: InventoryContainer;
+  @BelongsTo(() => InventoryContainerModel)
+  inventoryContainer!: InventoryContainerModel;
 
-  get toResponseFormat(): InventoryItemResponse {
+  @Column({ allowNull: true, type: DataType.INTEGER })
+  @ForeignKey(() => MaterialModel)
+  materialId!: number | null;
+
+  @BelongsTo(() => MaterialModel)
+  material!: MaterialModel | null;
+
+  get toResponseFormat(): InventoryItem {
     return {
       id: this.id,
       name: this.name,

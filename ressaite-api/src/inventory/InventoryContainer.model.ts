@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import {
   BelongsTo,
   Column,
@@ -9,17 +8,17 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { InventoryContainer as InventoryContainerResponse } from "@al-un/ressaite-core/inventory/inventory.models";
-import { User } from "@/um/models/User";
-import { Inventory } from "./Inventory.model";
-import { InventoryItem } from "./InventoryItem.model";
+import { InventoryContainer } from "@al-un/ressaite-core/inventory/inventory.models";
+import { UserModel } from "@/um/models/User";
+import { InventoryModel } from "./Inventory.model";
+import { InventoryItemModel } from "./InventoryItem.model";
 
 export const tableName = "inventory_container";
 
 @Table({
   tableName,
 })
-export class InventoryContainer extends Model {
+export class InventoryContainerModel extends Model {
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -32,23 +31,23 @@ export class InventoryContainer extends Model {
   name!: string;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserModel)
   authorId!: number;
 
-  @BelongsTo(() => User)
-  author!: User;
+  @BelongsTo(() => UserModel)
+  author!: UserModel;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  @ForeignKey(() => Inventory)
+  @ForeignKey(() => InventoryModel)
   inventoryId!: number;
 
-  @BelongsTo(() => User)
-  inventory!: Inventory;
+  @BelongsTo(() => InventoryModel)
+  inventory!: InventoryModel;
 
-  @HasMany(() => InventoryItem)
-  items!: InventoryItem[];
+  @HasMany(() => InventoryItemModel, { onDelete: "CASCADE" })
+  items!: InventoryItemModel[];
 
-  get toResponseFormat(): InventoryContainerResponse {
+  get toResponseFormat(): InventoryContainer {
     return {
       id: this.id,
       name: this.name,

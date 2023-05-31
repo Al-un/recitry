@@ -1,8 +1,8 @@
 import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import bcrypt from "bcrypt";
 
-import { AccessToken } from "./AccessToken";
-import { UserMinimalProfile } from "@al-un/ressaite-core/um/users.models";
+import { AccessTokenModel } from "./AccessToken";
+import { UserMinimalProfile, User } from "@al-un/ressaite-core/um/users.models";
 
 export const tableName = "users";
 
@@ -19,7 +19,7 @@ export const hashPassword = (clearPassword: string, salt: string): string => {
 @Table({
   tableName,
 })
-export class User extends Model {
+export class UserModel extends Model implements User {
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -46,17 +46,17 @@ export class User extends Model {
   get salt(): string {
     return this.getDataValue("salt");
   }
-  set salt(value: string) {
+  set salt(_: string) {
     throw new Error("Do not set salt value directly");
   }
 
   @Column({
     type: DataType.STRING,
   })
-  email?: string;
+  email!: string | null;
 
-  @HasMany(() => AccessToken)
-  accessTokens!: AccessToken[];
+  @HasMany(() => AccessTokenModel)
+  accessTokens!: AccessTokenModel[];
 
   get toMinimalProfile(): UserMinimalProfile {
     return {

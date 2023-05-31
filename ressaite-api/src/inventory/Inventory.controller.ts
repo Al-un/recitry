@@ -6,9 +6,10 @@ import {
 import { PaginatedResp } from "@al-un/ressaite-core/core/base-api.models";
 
 import { ExpressController } from "@/core/express";
-import { Inventory } from "./Inventory.model";
-import { InventoryContainer } from "./InventoryContainer.model";
-import { InventoryItem } from "./InventoryItem.model";
+import { InventoryModel } from "./Inventory.model";
+import { InventoryContainerModel } from "./InventoryContainer.model";
+import { InventoryItemModel } from "./InventoryItem.model";
+import { UserModel } from "@/um/models/User";
 
 // ----------------------------------------------------------------------------
 
@@ -18,19 +19,19 @@ type InventoryControllerTypes = ExpressController<InventoryEndpointTypes>;
 
 export const createInventory: InventoryControllerTypes["inventoryCreate"] =
   async (req, res) => {
-    const creationRequest = req.body as InventoryCreation;
     const authorId = req.user?.id;
     if (!authorId) throw new Error("req.user.id is not defined");
 
-    const newInventory = new Inventory({
+    const creationRequest = req.body as InventoryCreation;
+    const createdInventory = await InventoryModel.create({
       name: creationRequest.name,
       authorId,
       containers: creationRequest.containers.map((container) => {
-        const newContainer = new InventoryContainer({
+        const newContainer = new InventoryContainerModel({
           name: container.name,
           authorId,
           items: container.items.map((item) => {
-            const newItem = new InventoryItem({
+            const newItem = new InventoryItemModel({
               name: item.name,
               quantity: item.quantity,
               dueDate: item.dueDate,
@@ -43,17 +44,41 @@ export const createInventory: InventoryControllerTypes["inventoryCreate"] =
         return newContainer;
       }),
     });
+    console.log("Created", createdInventory.dataValues);
 
-    await newInventory.save();
+    const fetchedInventory = await InventoryModel.findByPk(
+      createdInventory.id,
+      {
+        include: [
+          { model: UserModel, required: true },
+          // {
+          //   model: InventoryContainerModel,
+          //   required: true,
+            // include: [
+            //   { model: UserModel },
+            //   {
+            //     model: InventoryItemModel,
+            //     required: true,
+            //     include: [{ model: UserModel }],
+            //   },
+            // ],
+          // },
+        ],
+      }
+    );
+    console.log("Fetched", fetchedInventory?.dataValues);
 
-    res.status(201).json(newInventory.toResponseFormat);
+    const respBody = fetchedInventory?.toResponseFormat;
+    console.log("SENDING back", respBody);
+    res.status(201).json(respBody);
+    console.log("sent");
   };
 
 export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
   async (req, res) => {
     const inventoryId = req.params.inventoryId;
-    const updateRequest = req.body as Partial<Inventory>;
-    let inventory = await Inventory.findByPk(inventoryId);
+    const updateRequest = req.body as Partial<InventoryModel>;
+    let inventory = await InventoryModel.findByPk(inventoryId);
     if (!inventory) {
       res
         .status(404)
@@ -69,7 +94,7 @@ export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
 export const deleteInventory: InventoryControllerTypes["inventoryDelete"] =
   async (req, res) => {
     const inventoryId = req.params.inventoryId;
-    const deletedCount = await Inventory.destroy({
+    const deletedCount = await InventoryModel.destroy({
       where: { id: inventoryId },
     });
 
@@ -85,7 +110,7 @@ export const displayInventory: InventoryControllerTypes["inventoryDisplay"] =
     const inventoryId = req.params.inventoryId;
     if (!inventoryId) throw new Error(`Invalid inventoryId: ${inventoryId}`);
 
-    const inventory = await Inventory.findByPk(inventoryId);
+    const inventory = await InventoryModel.findByPk(inventoryId);
 
     if (inventory === null) {
       res.status(404).json({ message: `Inventory ${inventoryId} not found` });
@@ -100,7 +125,7 @@ export const listInventories: InventoryControllerTypes["inventoryList"] =
     const userId = req.user?.id;
     if (!userId) throw new Error("req.user.id is not defined");
 
-    const inventories = await Inventory.findAll({
+    const inventories = await InventoryModel.findAll({
       where: { authorId: userId },
     });
 
@@ -113,30 +138,30 @@ export const listInventories: InventoryControllerTypes["inventoryList"] =
 
 export const createInventoryContainer: InventoryControllerTypes["inventoryContainerCreate"] =
   async (req, res) => {
-    throw new Error("not implemented yet");
+    res.status(503).json({ message: "not implemented yet" });
   };
 
 export const updateInventoryContainer: InventoryControllerTypes["inventoryContainerUpdate"] =
   async (req, res) => {
-    throw new Error("not implemented yet");
+    res.status(503).json({ message: "not implemented yet" });
   };
 
 export const deleteInventoryContainer: InventoryControllerTypes["inventoryContainerDelete"] =
   async (req, res) => {
-    throw new Error("not implemented yet");
+    res.status(503).json({ message: "not implemented yet" });
   };
 
 export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"] =
   async (req, res) => {
-    throw new Error("not implemented yet");
+    res.status(503).json({ message: "not implemented yet" });
   };
 
 export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"] =
   async (req, res) => {
-    throw new Error("not implemented yet");
+    res.status(503).json({ message: "not implemented yet" });
   };
 
 export const deleteInventoryItem: InventoryControllerTypes["inventoryItemDelete"] =
   async (req, res) => {
-    throw new Error("not implemented yet");
+    res.status(503).json({ message: "not implemented yet" });
   };

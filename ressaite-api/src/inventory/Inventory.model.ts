@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import {
   BelongsTo,
   Column,
@@ -9,16 +8,16 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { Inventory as InventoryResponse } from "@al-un/ressaite-core/inventory/inventory.models";
-import { User } from "@/um/models/User";
-import { InventoryContainer } from "./InventoryContainer.model";
+import { Inventory } from "@al-un/ressaite-core/inventory/inventory.models";
+import { UserModel } from "@/um/models/User";
+import { InventoryContainerModel } from "./InventoryContainer.model";
 
 export const tableName = "inventory";
 
 @Table({
   tableName,
 })
-export class Inventory extends Model {
+export class InventoryModel extends Model {
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -31,23 +30,25 @@ export class Inventory extends Model {
   name!: string;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserModel)
   authorId!: number;
 
-  @BelongsTo(() => User)
-  author!: User;
+  @BelongsTo(() => UserModel, {})
+  author!: UserModel;
 
-  @HasMany(() => InventoryContainer)
-  containers!: InventoryContainer[];
+  @HasMany(() => InventoryContainerModel, { onDelete: "CASCADE" })
+  containers!: InventoryContainerModel[];
 
-  get toResponseFormat(): InventoryResponse {
+  get toResponseFormat(): Inventory {
     return {
       id: this.id,
       name: this.name,
+      // author: { id: 123, username: "pouet" },
       author: this.author.toMinimalProfile,
-      containers: this.containers.map(
-        (container) => container.toResponseFormat
-      ),
+      containers: [],
+      // containers: this.containers.map(
+      //   (container) => container.toResponseFormat
+      // ),
     };
   }
 }

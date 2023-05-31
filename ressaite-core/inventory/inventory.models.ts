@@ -33,18 +33,18 @@ export interface InventoryContainer extends InventoryContainerBase, HasAuthor {
 interface InventoryItemBase {
   /** Useful name, maybe more accurate than the material */
   name: string;
-  /** 
+  /**
    * Quantity is bound to `dueDate` so multiple items can have the same
    * material but different due date
    */
   quantity: number;
   /** Best before :) */
-  dueDate: Date;
+  dueDate: Date | null;
 }
 
 export interface InventoryItemCreation extends InventoryItemBase {
   materialId: number | null;
-  inventoryContainerId: number;
+  inventoryContainerId: number | null;
 }
 
 export interface InventoryItem extends InventoryItemBase, HasAuthor {

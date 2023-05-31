@@ -6,16 +6,16 @@ import {
 } from "passport-http-bearer";
 
 import { RstErrorResp } from "@al-un/ressaite-core/core/base-api.models";
-import { User } from "../models/User";
-import { AccessToken } from "../models/AccessToken";
+import { UserModel } from "../models/User";
+import { AccessTokenModel } from "../models/AccessToken";
 
 // ----------------------------------------------------------------------------
 
 const bearerVerify: VerifyFunction = async function verify(token, cb) {
   try {
-    const validToken = await AccessToken.findOne({
+    const validToken = await AccessTokenModel.findOne({
       where: { token },
-      include: User,
+      include: UserModel,
     });
     if (!validToken) {
       return cb(null, false, { scope: "all", message: "token not fond" });

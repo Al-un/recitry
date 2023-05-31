@@ -1,25 +1,33 @@
-import { tableName } from "@/um/models/AccessToken";
-import { User } from "@/um/models/User";
+import { tableName as accessTokenTableName } from "@/um/models/AccessToken";
+import { UserModel } from "@/um/models/User";
 import { Seed } from "@/umzug";
 
+import {
+  userOneToken1,
+  userOneExpiredToken,
+} from "@al-un/ressaite-core/um/access-token.mocks";
+import { userOne } from "@al-un/ressaite-core/um/users.mocks";
+
 export const up: Seed = async ({ context: sequelize }) => {
-  const admin = await User.findOne({ where: { username: "admin" } });
-  if (!admin) {
-    throw new Error("Admin user not yet created");
+  const firstUser = await UserModel.findOne({
+    where: { username: userOne.username },
+  });
+  if (!firstUser) {
+    throw new Error(`${userOne.username} user not yet created`);
   }
 
-  return sequelize.getQueryInterface().bulkInsert(tableName, [
+  await sequelize.getQueryInterface().bulkInsert(accessTokenTableName, [
     {
-      token: "pouet",
-      userId: admin.id,
-      expiresAt: new Date("2099-12-31T23:59:59"),
+      token: userOneToken1.token,
+      userId: firstUser.id,
+      expiresAt: userOneToken1.expiresAt,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
-      token: "expired",
-      userId: admin.id,
-      expiresAt: new Date("2019-12-31T23:59:59"),
+      token: userOneExpiredToken.token,
+      userId: firstUser.id,
+      expiresAt: userOneExpiredToken.expiresAt,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -27,6 +35,10 @@ export const up: Seed = async ({ context: sequelize }) => {
 };
 
 export const down: Seed = async ({ context: sequelize }) => {
-  sequelize.getQueryInterface().bulkDelete(tableName, { token: "pouet" }, {});
-  sequelize.getQueryInterface().bulkDelete(tableName, { token: "expired" }, {});
+  await sequelize
+    .getQueryInterface()
+    .bulkDelete(accessTokenTableName, { token: userOneToken1.token }, {});
+  await sequelize
+    .getQueryInterface()
+    .bulkDelete(accessTokenTableName, { token: userOneExpiredToken.token }, {});
 };
