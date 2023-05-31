@@ -11,6 +11,8 @@ import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";
 import { UserModel } from "@/um/models/User";
 
+import * as InventoryService from "./Inventory.service"
+
 // ----------------------------------------------------------------------------
 
 type InventoryControllerTypes = ExpressController<InventoryEndpointTypes>;
@@ -23,55 +25,56 @@ export const createInventory: InventoryControllerTypes["inventoryCreate"] =
     if (!authorId) throw new Error("req.user.id is not defined");
 
     const creationRequest = req.body as InventoryCreation;
-    const createdInventory = await InventoryModel.create({
-      name: creationRequest.name,
-      authorId,
-      containers: creationRequest.containers.map((container) => {
-        const newContainer = new InventoryContainerModel({
-          name: container.name,
-          authorId,
-          items: container.items.map((item) => {
-            const newItem = new InventoryItemModel({
-              name: item.name,
-              quantity: item.quantity,
-              dueDate: item.dueDate,
-            });
+    const inventory = await InventoryService.createInventory(creationRequest, authorId);
+    // const createdInventory = await InventoryModel.create({
+    //   name: creationRequest.name,
+    //   authorId,
+    //   containers: creationRequest.containers.map((container) => {
+    //     const newContainer = new InventoryContainerModel({
+    //       name: container.name,
+    //       authorId,
+    //       items: container.items.map((item) => {
+    //         const newItem = new InventoryItemModel({
+    //           name: item.name,
+    //           quantity: item.quantity,
+    //           dueDate: item.dueDate,
+    //         });
 
-            return newItem;
-          }),
-        });
+    //         return newItem;
+    //       }),
+    //     });
 
-        return newContainer;
-      }),
-    });
-    console.log("Created", createdInventory.dataValues);
+    //     return newContainer;
+    //   }),
+    // });
+    // console.log("Created", createdInventory.dataValues);
 
-    const fetchedInventory = await InventoryModel.findByPk(
-      createdInventory.id,
-      {
-        include: [
-          { model: UserModel, required: true },
-          // {
-          //   model: InventoryContainerModel,
-          //   required: true,
-            // include: [
-            //   { model: UserModel },
-            //   {
-            //     model: InventoryItemModel,
-            //     required: true,
-            //     include: [{ model: UserModel }],
-            //   },
-            // ],
-          // },
-        ],
-      }
-    );
-    console.log("Fetched", fetchedInventory?.dataValues);
+    // const fetchedInventory = await InventoryModel.findByPk(
+    //   createdInventory.id,
+    //   {
+    //     include: [
+    //       { model: UserModel, required: true },
+    //       // {
+    //       //   model: InventoryContainerModel,
+    //       //   required: true,
+    //         // include: [
+    //         //   { model: UserModel },
+    //         //   {
+    //         //     model: InventoryItemModel,
+    //         //     required: true,
+    //         //     include: [{ model: UserModel }],
+    //         //   },
+    //         // ],
+    //       // },
+    //     ],
+    //   }
+    // );
+    // console.log("Fetched", fetchedInventory?.dataValues);
 
-    const respBody = fetchedInventory?.toResponseFormat;
-    console.log("SENDING back", respBody);
-    res.status(201).json(respBody);
-    console.log("sent");
+    // const respBody = fetchedInventory?.toResponseFormat;
+    // console.log("SENDING back", respBody);
+    res.status(201).json(inventory);
+    // console.log("sent");
   };
 
 export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =

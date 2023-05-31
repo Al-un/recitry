@@ -44,10 +44,10 @@ export class InventoryItemModel extends Model {
 
   @Column({ allowNull: false, type: DataType.INTEGER })
   @ForeignKey(() => InventoryContainerModel)
-  inventoryContainerId!: number;
+  containerId!: number;
 
   @BelongsTo(() => InventoryContainerModel)
-  inventoryContainer!: InventoryContainerModel;
+  container!: InventoryContainerModel;
 
   @Column({ allowNull: true, type: DataType.INTEGER })
   @ForeignKey(() => MaterialModel)

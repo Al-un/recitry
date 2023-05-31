@@ -9,6 +9,7 @@ import { Seed } from "@/umzug";
 
 import { userOne } from "@al-un/ressaite-core/um/users.mocks";
 import { userOneInventories } from "@al-un/ressaite-core/inventory/inventory.mocks";
+import { Inventory } from "@al-un/ressaite-core/inventory/inventory.models";
 import { InventoryContainerModel } from "@/inventory/InventoryContainer.model";
 import { InventoryItemModel } from "@/inventory/InventoryItem.model";
 
@@ -20,30 +21,39 @@ export const up: Seed = async ({ context: sequelize }) => {
     throw new Error(`${userOne.username} user not yet created`);
   }
 
-  const inventoryOne = userOneInventories.inventories[0];
+  const createInventory = async (i: Inventory, u: UserModel) => {
+    const inventory = await InventoryModel.create({
+      name: i.name,
+      authorId: u.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
 
-  // await sequelize.getQueryInterface().bulkInsert(inventoryTableName, [
-  //   {
-  //     name: inventoryOne.name,
-  //     authorId: firstUser.id,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   },
-  // ]);
-  // let createdInventory = await InventoryModel.findOne({
-  //   where: { name: inventoryOne.name, authorId: firstUser.id },
-  // });
-  // if (createdInventory === null) throw new Error("Created inventory not found");
-  // console.log("CREATED", createdInventory)
-  // const containers = inventoryOne.containers.map((c) => ({
-  //   name: c.name,
-  //   authorId: firstUser.id,
-  //   inventoryId: createdInventory?.id,
-  // }));
-  // await sequelize
-  //   .getQueryInterface()
-  //   .bulkInsert(inventoryContainerTableName, containers);
-  
+    for (let c of i.containers) {
+      const container = await InventoryContainerModel.create({
+        name: c.name,
+        authorId: u.id,
+        inventoryId: inventory.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      for (let i of c.items) {
+        await InventoryItemModel.create({
+          name: i.name,
+          quantity: i.quantity,
+          dueDate: i.dueDate,
+          authorId: u.id,
+          containerId: container.id,
+          materialId: i.material ? i.material.id : null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      }
+    }
+  };
+
+  await createInventory(userOneInventories.inventories[0], firstUser);
 };
 
 export const down: Seed = async ({ context: sequelize }) => {
