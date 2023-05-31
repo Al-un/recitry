@@ -4,6 +4,7 @@ import cors from "cors";
 import InternalErrorMiddleware from "@/core/middlewares/InternalErrorMiddleware";
 import MiscRouter from "@/core/routers/MiscRouter";
 import AuthRouter from "@/um/routers/AuthRouter";
+import InventoryRouter from "@/inventory/Inventory.router";
 import UnknownRouteMiddleware from "./core/middlewares/UnknownRouteMiddleware";
 
 const app = express();
@@ -35,6 +36,7 @@ if (CORS_WHITELISTED_ORIGIN) {
 // Load all routes
 app.use(MiscRouter);
 app.use(AuthRouter);
+app.use(InventoryRouter);
 
 // Load all middlewares
 app.use(InternalErrorMiddleware);

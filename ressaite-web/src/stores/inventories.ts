@@ -1,7 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import type { Inventory } from '@al-un/ressaite-core/inventory/inventory.models'
+import type {
+  Inventory,
+  InventoryContainer,
+  InventoryContainerCreation,
+  InventoryCreation,
+  InventoryItem,
+  InventoryItemCreation
+} from '@al-un/ressaite-core/inventory/inventory.models'
 import { userOneInventories } from '@al-un/ressaite-core/inventory/inventory.mocks'
 import type { InventoryEndpointTypes } from '@al-un/ressaite-core/inventory/inventory.endpoints'
 import type { PaginatedResp } from '@al-un/ressaite-core/core/base-api.models'
@@ -40,12 +47,18 @@ export const useInventoryStore = defineStore('inventory', () => {
     current.value = (list.value || []).find((i: Inventory) => i.id === id) || null
   }
 
+  async function createInventory(inventory: InventoryCreation) {}
+
+  async function updateInventory(inventory: Inventory) {}
+
   // --------------------------------------------------------------------------
   return {
     current,
     list,
     loading,
     loadInventories,
-    loadInventoryById
+    loadInventoryById,
+    createInventory,
+    updateInventory
   }
 })

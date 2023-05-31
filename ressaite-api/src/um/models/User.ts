@@ -2,6 +2,7 @@ import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import bcrypt from "bcrypt";
 
 import { AccessToken } from "./AccessToken";
+import { UserMinimalProfile } from "@al-un/ressaite-core/um/users.models";
 
 export const tableName = "users";
 
@@ -56,4 +57,11 @@ export class User extends Model {
 
   @HasMany(() => AccessToken)
   accessTokens!: AccessToken[];
+
+  get toMinimalProfile(): UserMinimalProfile {
+    return {
+      id: this.id,
+      username: this.username,
+    };
+  }
 }
