@@ -3,6 +3,7 @@
     <h2>{{ $t('dashboard.quick_menu.title') }}</h2>
     <div class="dashboard-quick-cards-container">
       <a class="rst-card padded" href="/inventories">{{ $t('dashboard.quick_menu.inventories') }}</a>
+      <a class="rst-card padded" href="/materials">{{ $t('dashboard.quick_menu.materials') }}</a>
     </div>
   </div>
 </template>

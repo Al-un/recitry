@@ -1,6 +1,8 @@
 import { AllRoutes, type AllEndpoints, type AllEndpointsKey } from '@al-un/ressaite-core'
 import { buildRouteWithParam } from '@al-un/ressaite-core/core/base-api.utils'
 
+import { useAppStore } from '@/stores/app'
+
 export type CallEndpointResponse<P> = { status: number; data: P }
 
 export const callEndpoint = async <K extends AllEndpointsKey>(
@@ -18,33 +20,38 @@ export const callEndpoint = async <K extends AllEndpointsKey>(
     route = buildRouteWithParam(route, pathParams)
   }
 
-  const method = AllRoutes[endpointKey].method
+  const method = AllRoutes[endpointKey].method.toUpperCase()
   // @ts-ignore
   const isGet = method === 'GET'
 
-  const body = !isGet ? JSON.stringify(payload) : null
+  const body = !isGet ? (payload ? JSON.stringify(payload) : undefined) : null
 
   // @ts-ignore
   const contentType: Record<string, string> = !isGet ? { 'Content-Type': 'application/json' } : {}
   if (isGet && payload && Object.keys(payload).length) {
     const queries = Object.entries(payload)
-      .map(([queryKey, queryValue]) => `${queryKey}=${JSON.stringify(queryValue)}`)
+      .map(([queryKey, queryValue]) => `${queryKey}=${queryValue}`)
       .join('&')
     route += `?${queries}`
   }
 
   try {
-    const response = await window.fetch(route, {
-      method: method.toUpperCase(),
-      body,
-      headers: {
-        Accept: 'application/json',
-        ...contentType,
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
+    let headers: HeadersInit = {
+      Accept: 'application/json',
+      ...contentType,
+      'Access-Control-Allow-Origin': '*'
+    }
 
-    const responseData = ![201, 204].includes(response.status) ? await response.json() : null
+    const app = useAppStore()
+    if (app.token) {
+      headers = {
+        ...headers,
+        Authorization: `Bearer ${app.token}`
+      }
+    }
+
+    const response = await window.fetch(route, { method, body, headers })
+    const responseData = ![204].includes(response.status) ? await response.json() : null
 
     return {
       status: response.status,

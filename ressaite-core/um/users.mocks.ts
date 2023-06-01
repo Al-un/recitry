@@ -55,7 +55,7 @@ export const userOne = new MockUserData({
 
 export const userTwo = new MockUserData({
   id: 2,
-  username: "Alice, apres Eve",
+  username: "Alice", // pas Adam
   email: "alice@ressaite.fr",
   password: "$2b$10$EuERg7PrpZtUDVr5MKXYYOzuJQUWiOFuY7C4FtKiP3rwwbMIBtaVu",
   clearPassword: "pouetpouet",
