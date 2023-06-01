@@ -60,7 +60,7 @@ describe("InventoryController", () => {
           .post(AllRoutes.inventoryCreate.path)
           .auth(userOneToken1.token, { type: "bearer" })
           .send(toCreateInventory);
-        console.log("RES body", res.body);
+        console.log(res.body);
         expect(res.status).to.equal(201);
       });
     });
