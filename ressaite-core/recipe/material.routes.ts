@@ -6,6 +6,18 @@ export const MaterialRoutes: RouteOf<MaterialEndpointTypes> = {
     path: "/v1/materials/",
     method: "GET",
   },
+  materialCreate: {
+    path: "/v1/materials/",
+    method: "POST",
+  },
+  materialUpdate: {
+    path: "/v1/material/:materialId",
+    method: "PATCH",
+  },
+  materialDelete: {
+    path: "/v1/material/:materialId",
+    method: "DELETE",
+  },
 };
 
 // ----------------------------------------------------------------------------

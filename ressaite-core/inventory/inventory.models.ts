@@ -1,3 +1,4 @@
+import { HasTimestamp } from "../core/base-api.models";
 import type { HasAuthor } from "../um/users.models";
 
 interface InventoryBase {
@@ -8,7 +9,7 @@ export interface InventoryCreation extends InventoryBase {
   containers: InventoryContainerCreation[];
 }
 
-export interface Inventory extends InventoryBase, HasAuthor {
+export interface Inventory extends InventoryBase, HasAuthor, HasTimestamp {
   id: number;
   containers: InventoryContainer[];
 }
@@ -24,7 +25,10 @@ export interface InventoryContainerCreation extends InventoryContainerBase {
   items: InventoryItemCreation[];
 }
 
-export interface InventoryContainer extends InventoryContainerBase, HasAuthor {
+export interface InventoryContainer
+  extends InventoryContainerBase,
+    HasAuthor,
+    HasTimestamp {
   id: number;
   items: InventoryItem[];
 }
@@ -47,7 +51,10 @@ export interface InventoryItemCreation extends InventoryItemBase {
   inventoryContainerId: number | null;
 }
 
-export interface InventoryItem extends InventoryItemBase, HasAuthor {
+export interface InventoryItem
+  extends InventoryItemBase,
+    HasAuthor,
+    HasTimestamp {
   id: number;
   material: {
     id: number;

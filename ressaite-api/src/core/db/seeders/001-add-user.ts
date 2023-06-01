@@ -1,7 +1,7 @@
 import { tableName as userTableName } from "@/um/models/User";
 import { Seed } from "@/umzug";
 
-import { userOne } from "@al-un/ressaite-core/um/users.mocks";
+import { userOne, userTwo } from "@al-un/ressaite-core/um/users.mocks";
 
 export const up: Seed = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().bulkInsert(userTableName, [
@@ -11,6 +11,14 @@ export const up: Seed = async ({ context: sequelize }) => {
       email: userOne.email,
       salt: userOne.salt,
       createdAt: userOne.createdAt || new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      username: userTwo.username,
+      password: userTwo.password,
+      email: userTwo.email,
+      salt: userTwo.salt,
+      createdAt: userTwo.createdAt || new Date(),
       updatedAt: new Date(),
     },
   ]);

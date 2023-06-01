@@ -1,3 +1,4 @@
+import { HasTimestamp } from "../core/base-api.models";
 import type { Lang } from "../core/models/lang";
 import type { HasAuthor } from "../um/users.models";
 
@@ -8,7 +9,7 @@ interface MaterialBase {
 
 export interface MaterialCreation extends MaterialBase {}
 
-export interface Material extends MaterialBase, HasAuthor {
+export interface Material extends MaterialBase, HasAuthor, HasTimestamp {
   id: number;
 }
 

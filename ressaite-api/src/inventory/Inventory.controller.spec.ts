@@ -3,7 +3,7 @@ import request from "supertest";
 
 import { AllRoutes } from "@al-un/ressaite-core";
 import { buildRouteWithParam } from "@al-un/ressaite-core/core/base-api.utils";
-import { userOneToken1 } from "@al-un/ressaite-core/um/access-token.mocks";
+import { userOneForeverToken } from "@al-un/ressaite-core/um/access-token.mocks";
 
 import app from "@/app";
 import { UserModel } from "@/um/models/User";
@@ -58,7 +58,7 @@ describe("InventoryController", () => {
       it("creates inventory", async () => {
         const res = await request(app)
           .post(AllRoutes.inventoryCreate.path)
-          .auth(userOneToken1.token, { type: "bearer" })
+          .auth(userOneForeverToken.token, { type: "bearer" })
           .send(toCreateInventory);
         console.log(res.body);
         expect(res.status).to.equal(201);
@@ -79,7 +79,7 @@ describe("InventoryController", () => {
       it('returns "not implemented yet" error', async () => {
         const res = await request(app)
           .post(AllRoutes.inventoryContainerCreate.path)
-          .auth(userOneToken1.token, { type: "bearer" });
+          .auth(userOneForeverToken.token, { type: "bearer" });
 
         expect(res.status).to.equal(503);
         expect(res.body.message).to.equal("not implemented yet");
@@ -94,7 +94,7 @@ describe("InventoryController", () => {
               inventoryContainerId: 123,
             })
           )
-          .auth(userOneToken1.token, { type: "bearer" });
+          .auth(userOneForeverToken.token, { type: "bearer" });
 
         expect(res.status).to.equal(503);
         expect(res.body.message).to.equal("not implemented yet");
@@ -109,7 +109,7 @@ describe("InventoryController", () => {
               inventoryContainerId: 123,
             })
           )
-          .auth(userOneToken1.token, { type: "bearer" });
+          .auth(userOneForeverToken.token, { type: "bearer" });
 
         expect(res.status).to.equal(503);
         expect(res.body.message).to.equal("not implemented yet");
@@ -122,7 +122,7 @@ describe("InventoryController", () => {
       it('returns "not implemented yet" error', async () => {
         const res = await request(app)
           .post(AllRoutes.inventoryContainerCreate.path)
-          .auth(userOneToken1.token, { type: "bearer" });
+          .auth(userOneForeverToken.token, { type: "bearer" });
 
         expect(res.status).to.equal(503);
         expect(res.body.message).to.equal("not implemented yet");
@@ -137,7 +137,7 @@ describe("InventoryController", () => {
               inventoryItemId: 123,
             })
           )
-          .auth(userOneToken1.token, { type: "bearer" });
+          .auth(userOneForeverToken.token, { type: "bearer" });
 
         expect(res.status).to.equal(503);
         expect(res.body.message).to.equal("not implemented yet");
@@ -152,7 +152,7 @@ describe("InventoryController", () => {
               inventoryItemId: 123,
             })
           )
-          .auth(userOneToken1.token, { type: "bearer" });
+          .auth(userOneForeverToken.token, { type: "bearer" });
 
         expect(res.status).to.equal(503);
         expect(res.body.message).to.equal("not implemented yet");

@@ -64,6 +64,8 @@ export const fetchInventory = async (
     name: i.name,
     author: i.author.toMinimalProfile,
     containers: [],
+    createdAt: i.createdAt,
+    updatedAt: i.updatedAt,
   };
 
   const containers = await InventoryContainerModel.findAll({
@@ -77,6 +79,8 @@ export const fetchInventory = async (
       name: c.name,
       author: c.author.toMinimalProfile,
       items: [],
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt,
     };
 
     const items = await InventoryItemModel.findAll({
@@ -96,6 +100,8 @@ export const fetchInventory = async (
         material: item.material
           ? { id: item.material.id, name: item.material.name }
           : null,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
       };
       formattedContainer.items.push(formattedItem);
     }

@@ -15,6 +15,7 @@ export const up: Migration = async ({ context: sequelize }) => {
     },
     name: {
       allowNull: false,
+      unique: true,
       type: DataTypes.STRING,
     },
     lang: {

@@ -9,3 +9,8 @@ export type PaginatedResp<List> = {
   data: List;
   totalCount: number;
 };
+
+export interface HasTimestamp {
+  createdAt?: Date;
+  updatedAt?: Date;
+}

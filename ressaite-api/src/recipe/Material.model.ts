@@ -16,7 +16,7 @@ export const tableName = "material";
 @Table({
   tableName,
 })
-export class MaterialModel extends Model implements Material {
+export class MaterialModel extends Model {
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -25,7 +25,7 @@ export class MaterialModel extends Model implements Material {
   })
   id!: number;
 
-  @Column({ allowNull: false, type: DataType.STRING })
+  @Column({ allowNull: false, type: DataType.STRING, unique: true })
   name!: string;
 
   @Column({
@@ -40,4 +40,15 @@ export class MaterialModel extends Model implements Material {
 
   @BelongsTo(() => UserModel)
   author!: UserModel;
+
+  get toJson(): Material {
+    return {
+      id: this.id,
+      name: this.name,
+      lang: this.lang,
+      author: this.author.toMinimalProfile,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
 }

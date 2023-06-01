@@ -1,5 +1,5 @@
 import { AccessToken } from "./access-token.models";
-import { userOne } from "./users.mocks";
+import { userOne, userTwo } from "./users.mocks";
 
 class MockAccessTokenData implements AccessToken {
   id: number;
@@ -16,7 +16,7 @@ class MockAccessTokenData implements AccessToken {
 }
 
 /** Never ending token for userOne */
-export const userOneToken1 = new MockAccessTokenData({
+export const userOneForeverToken = new MockAccessTokenData({
   id: 1,
   token: "pouet",
   expiresAt: new Date("2099-12-31T23:59:59"),
@@ -25,8 +25,15 @@ export const userOneToken1 = new MockAccessTokenData({
 
 /** Should not work.... */
 export const userOneExpiredToken = new MockAccessTokenData({
-  id: userOneToken1.id + 1,
+  id: userOneForeverToken.id + 1,
   token: "expired",
   expiresAt: new Date("2019-12-31T23:59:59"),
   userId: userOne.id,
+});
+
+export const userTwoForeverToken = new MockAccessTokenData({
+  id: userOneExpiredToken.id + 1,
+  token: "user-two-forever",
+  expiresAt: new Date("2099-12-31T23:59:59"),
+  userId: userTwo.id,
 });

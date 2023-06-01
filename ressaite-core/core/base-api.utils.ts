@@ -6,7 +6,7 @@ export const buildRouteWithParam = (
 
   if (pathParams) {
     for (let [paramKey, paramValue] of Object.entries(pathParams)) {
-      route.replace(`:${paramKey}`, paramValue);
+      route = route.replace(`:${paramKey}`, paramValue);
     }
   }
 
