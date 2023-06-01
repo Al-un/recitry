@@ -97,7 +97,7 @@ export async function render(pageContext: any) {
       </body>
     </html>`
 
-  console.log('SERVER RENDER:', documentHtml)
+  // console.log('SERVER RENDER:', documentHtml)
 
   return {
     documentHtml,

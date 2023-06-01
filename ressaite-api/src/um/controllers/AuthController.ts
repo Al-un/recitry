@@ -56,7 +56,7 @@ export const login: AuthControllerTypes["login"] = (req, res, next) => {
       return res.status(400).json({ message: info?.message });
     }
 
-    res.json({ token: authInfo.token });
+    res.setHeader("Set-Cookie", `token=${authInfo.token}`).json({ token: authInfo.token });
   };
 
   // https://stackoverflow.com/a/32002327/4906586

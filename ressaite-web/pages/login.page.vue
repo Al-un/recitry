@@ -17,25 +17,31 @@
 import { reactive } from 'vue'
 import { navigate } from 'vite-plugin-ssr/client/router'
 
-import type { LoginReq } from '@al-un/ressaite-core/um/models/Auth'
+import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/auth.endpoints'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
 import { useAppStore } from '@/stores/app'
+import { callEndpoint } from '@/api'
 
 const app = useAppStore()
 
-const form: LoginReq = reactive({
+const form: AuthEndpointTypes['login']['request'] = reactive({
   username: '',
   password: ''
 })
 
 async function submitLogin() {
-  await app.login({
+  const resp = await callEndpoint('login', null, {
     username: form.username,
     password: form.password
   })
 
-  // navigate('/')
+  if (resp.status === 200) {
+    app.$patch({
+      token: resp.data.token
+    })
+    navigate('/')
+  }
 }
 </script>
 
