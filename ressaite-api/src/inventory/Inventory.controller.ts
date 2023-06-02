@@ -15,7 +15,25 @@ import * as InventoryService from "./Inventory.service";
 
 // ----------------------------------------------------------------------------
 
-type InventoryControllerTypes = ExpressController<InventoryEndpointTypes>;
+type InventoryControllerTypes = ExpressController<
+  InventoryEndpointTypes,
+  {
+    inventoryContainerCreate: {};
+    inventoryContainerUpdate: {};
+    inventoryContainerDelete: {};
+    inventoryCreate: {};
+    inventoryUpdate: {};
+    inventoryDisplay: {};
+    inventoryList: {};
+    inventoryDelete: {
+      user: UserModel;
+      inventory: InventoryModel;
+    };
+    inventoryItemCreate: {};
+    inventoryItemUpdate: {};
+    inventoryItemDelete: {};
+  }
+>;
 
 // ----------------------------------------------------------------------------
 
@@ -52,10 +70,16 @@ export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
 
 export const deleteInventory: InventoryControllerTypes["inventoryDelete"] =
   async (req, res) => {
+    const authorId = req.user?.id;
+    if (!authorId) throw new Error("req.user.id is not defined");
+
+    req.res?.locals
+
     const inventoryId = req.params.inventoryId;
     const deletedCount = await InventoryModel.destroy({
       where: { id: inventoryId },
     });
+    res.locals;
 
     if (deletedCount > 0) {
       res.status(204).send();

@@ -11,6 +11,12 @@ import { AccessTokenModel } from "../models/AccessToken";
 
 // ----------------------------------------------------------------------------
 
+export interface AuthLocal {
+  user: UserModel;
+}
+
+// ----------------------------------------------------------------------------
+
 const bearerVerify: VerifyFunction = async function verify(token, cb) {
   try {
     const validToken = await AccessTokenModel.findOne({
@@ -52,6 +58,8 @@ const AuthMiddleware: RequestHandler = (req, res, next) => {
       id: authInfo.user.id,
       token: authInfo.token,
     };
+    res.locals.user = authInfo.user;
+    // res.locals.token = authInfo.token;
 
     next();
   };

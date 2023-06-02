@@ -4,6 +4,7 @@ import { InventoryRoutes } from "@al-un/ressaite-core/inventory/inventory.routes
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import AuthMiddleware from "@/um/middlewares/AuthMiddleware";
 import * as InventoryController from "./Inventory.controller";
+import { canManageInventory } from "./Inventory.middleware";
 
 // ----------------------------------------------------------------------------
 
@@ -26,12 +27,12 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   inventoryUpdate: {
     route: InventoryRoutes["inventoryUpdate"],
     controller: InventoryController.updateInventory,
-    middlewares: [AuthMiddleware],
+    middlewares: [AuthMiddleware, canManageInventory],
   },
   inventoryDelete: {
     route: InventoryRoutes["inventoryDelete"],
     controller: InventoryController.deleteInventory,
-    middlewares: [AuthMiddleware],
+    middlewares: [AuthMiddleware, canManageInventory],
   },
   inventoryContainerCreate: {
     route: InventoryRoutes["inventoryContainerCreate"],
