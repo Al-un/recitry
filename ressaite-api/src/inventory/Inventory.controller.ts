@@ -26,8 +26,6 @@ type InventoryControllerTypes = ExpressController<
     inventoryDisplay: {};
     inventoryList: {};
     inventoryDelete: {
-      user: UserModel;
-      inventory: InventoryModel;
     };
     inventoryItemCreate: {};
     inventoryItemUpdate: {};

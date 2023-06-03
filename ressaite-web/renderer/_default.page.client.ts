@@ -32,10 +32,10 @@ export function onHydrationEnd() {
 
 export function onPageTransitionStart() {
   console.log('Page transition start')
-  document.querySelector('.layout-page')!.classList.add('page-transition')
+  document.querySelector('#app')!.classList.add('page-transition')
 }
 
 export function onPageTransitionEnd() {
   console.log('Page transition end')
-  document.querySelector('.layout-page')!.classList.remove('page-transition')
+  document.querySelector('#app')!.classList.remove('page-transition')
 }
