@@ -7,4 +7,3 @@
 <script lang="ts" setup>
 import RstLayout from '@/layout/RstLayout.vue'
 </script>
-

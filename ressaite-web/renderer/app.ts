@@ -40,7 +40,7 @@ import { createI18n } from 'vue-i18n'
 
 import i18nMessages from '@/i18n'
 import '@/styles/main.scss'
-import PageShell from './PageShell.vue'
+import RstApp from '@/layout/RstApp.vue'
 import type { PageContext } from './types'
 import { setPageContext } from './usePageContext'
 
@@ -66,7 +66,7 @@ export function createApp(pageContext: PageContext) {
     },
     render() {
       return h(
-        PageShell,
+        RstApp,
         {},
         {
           default: () => {
