@@ -1,6 +1,4 @@
-import { RequestHandler } from "express";
-
-import { MiscEndpointTypes } from "@al-un/ressaite-core/core/api/Misc";
+import { MiscEndpointTypes } from "@al-un/ressaite-core/core/misc.endpoints";
 import { ExpressController } from "../express";
 
 // ----------------------------------------------------------------------------

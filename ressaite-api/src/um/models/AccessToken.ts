@@ -8,14 +8,15 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { User } from "./User";
+import { UserModel } from "./User";
+import { AccessToken } from "@al-un/ressaite-core/um/access-token.models";
 
 export const tableName = "access_token";
 
 @Table({
   tableName,
 })
-export class AccessToken extends Model {
+export class AccessTokenModel extends Model implements AccessToken {
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -28,16 +29,16 @@ export class AccessToken extends Model {
   token!: string;
 
   @Column({ allowNull: false, type: DataType.INTEGER })
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserModel)
   userId!: number;
 
-  @BelongsTo(() => User)
-  user!: User;
+  @BelongsTo(() => UserModel)
+  user!: UserModel;
 
   @Column({ allowNull: false, type: DataType.DATE })
   expiresAt!: Date;
 
-  init(user: User): void {
+  init(user: UserModel): void {
     this.token = randomUUID();
     this.userId = user.id;
     this.expiresAt = new Date();

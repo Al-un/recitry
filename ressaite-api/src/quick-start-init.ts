@@ -1,5 +1,44 @@
 import fs from "fs";
+import path from "path";
 
+/**
+ * Create local dotenv file or override it by deleting the existing
+ * file if it already exists
+ */
+const writeDotEnv = (folderName: string, vars: string[]): string => {
+  const folderRoot = path.resolve(__dirname, `./../../${folderName}`);
+  const quickStartEnv = path.join(folderRoot, ".env.quick-start.local");
+  if (fs.existsSync(quickStartEnv)) {
+    fs.unlinkSync(quickStartEnv);
+    console.log(`Deleted file ${quickStartEnv}`);
+  }
+
+  const data = new Uint8Array(Buffer.from(vars.join("\n")));
+
+  fs.writeFileSync(quickStartEnv, data, { encoding: "utf-8" });
+  console.log(`Wrote in file ${quickStartEnv}`, vars);
+
+  return quickStartEnv;
+};
+
+const apiDotEnvFile = writeDotEnv("ressaite-api", [
+  'DB_DIALECT: "sqlite"',
+  'DB_STORAGE: "../ressaite-db/data/quick.db"',
+  "PORT:8000",
+  'CORS_WHITELISTED_ORIGIN: "http://localhost:3000"',
+]);
+writeDotEnv("ressaite-web", ['VITE_API_BASE_URL: "http://localhost:8000"']);
+
+// ----------------------------------------------------------------------------
+
+// https://github.com/motdotla/dotenv#%EF%B8%8F-usage
+import * as DotEnv from "dotenv";
+const config = DotEnv.config({
+  path: apiDotEnvFile,
+});
+console.log("Loaded dotenv config:", config);
+
+// ----------------------------------------------------------------------------
 import { executeAllMigrations, executeAllSeeds } from "@/umzug";
 
 const sqlite_db_file = process.env.DB_STORAGE;

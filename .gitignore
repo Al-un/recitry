@@ -4,6 +4,9 @@
 # Dependencies
 node_modules
 
+# Dev stuff
+.env.*.local
+
 # Build
 dist
 .vercel

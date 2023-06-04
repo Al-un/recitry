@@ -1,0 +1,47 @@
+<template>
+  <label class="rst-input-search">
+    <div v-if="$attrs['label']" class="rst-input-search__label">{{ $attrs['label'] }}</div>
+    <slot></slot>
+    <input
+      v-bind="$attrs"
+      class="rst-input-search__input"
+      :value="$attrs.modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+    />
+  </label>
+</template>
+
+<script lang="ts" setup>
+// import { defineProps } from 'vue'
+
+// defineProps({
+//   title: {
+//     type: String,
+//     default: null
+//   }
+// })
+</script>
+
+<style lang="scss">
+@forward './RstInput.scss';
+
+.rst-input-search__label{
+  color: var(--rst-txt-sub);
+  font-size: var(--rst-font-size-small);
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.rst-input-search__input {
+  padding: 7px; // 8-1
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  width: 100%; // fill the label
+
+  &:focus,
+  &:focus-visible {
+    border-color: var(--rst-primary);
+    outline: none; // override default Firefox behaviour
+  }
+}
+</style>

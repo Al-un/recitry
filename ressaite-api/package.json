@@ -9,14 +9,16 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "dev:quick-start": "DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db PORT=8000 CORS_WHITELISTED_ORIGIN=\"http://localhost:3000\" nodemon src/index.ts",
+    "dev:quick-start": "DOTENV_MODE=quick-start.local nodemon src/index.ts ",
     "build": "node esbuild.mjs",
-    "test": "npm run test:in-memory src/**/*.spec.ts",
+    "test": "npm run test:in-memory 'src/**/*.spec.ts'",
     "test:in-memory": "DB_DIALECT=sqlite DB_STORAGE=:memory: npm run test:run",
     "test:run": "mocha -r ts-node/register -r src/mocha-root.ts --timeout 10000 --exit",
-    "db:migrate": "node --loader esbuild-register/loader -r esbuild-register src/migrator.ts up",
-    "db:seed": "node --loader esbuild-register/loader -r esbuild-register src/seeder.ts up",
-    "setup:quick-start": "DB_DIALECT=sqlite DB_STORAGE=../ressaite-db/data/quick.db node --loader esbuild-register/loader -r esbuild-register src/quick-start-init.ts"
+    "db:migrate": "node --loader esbuild-register/loader -r esbuild-register src/migrator.ts",
+    "db:migrate:up": "node --loader esbuild-register/loader -r esbuild-register src/migrator.ts up",
+    "db:seed": "node --loader esbuild-register/loader -r esbuild-register src/seeder.ts",
+    "db:seed:up": "node --loader esbuild-register/loader -r esbuild-register src/seeder.ts up",
+    "setup:quick-start": "node --loader esbuild-register/loader -r esbuild-register src/quick-start-init.ts"
   },
   "dependencies": {
     "bcrypt": "5.1.0",

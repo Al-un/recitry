@@ -1,7 +1,11 @@
 import { Sequelize } from "sequelize-typescript";
 
-import { AccessToken } from "@/um/models/AccessToken";
-import { User } from "@/um/models/User";
+import { InventoryModel } from "@/inventory/Inventory.model";
+import { InventoryContainerModel } from "@/inventory/InventoryContainer.model";
+import { InventoryItemModel } from "@/inventory/InventoryItem.model";
+import { MaterialModel } from "@/recipe/Material.model";
+import { AccessTokenModel } from "@/um/models/AccessToken";
+import { UserModel } from "@/um/models/User";
 
 let sequelize: Sequelize;
 
@@ -24,7 +28,7 @@ const initSequelize = () => {
 
   //
   if (db_url) {
-    console.debug("DB_URL provided, other DB_* variables will be ignored");
+    console.log("DB_URL provided, other DB_* variables will be ignored");
     sequelize = new Sequelize(db_url, { logging });
   }
   //
@@ -33,6 +37,7 @@ const initSequelize = () => {
       throw new Error("Need DB_STORAGE for sqlite");
     }
 
+    console.log(`Sqlite DB initialised at ${db_storage}`);
     sequelize = new Sequelize({
       dialect: db_dialect,
       storage: db_storage,
@@ -53,7 +58,7 @@ const initSequelize = () => {
       db_port = 5432;
       console.log("Using 5432 as default port");
     }
-
+    console.log(`Sqlite DB initialised at ${db_host}:${db_port}`);
     sequelize = new Sequelize({
       dialect: db_dialect,
       username: db_username,
@@ -65,7 +70,14 @@ const initSequelize = () => {
     });
   }
 
-  sequelize.addModels([User, AccessToken]);
+  sequelize.addModels([
+    InventoryModel,
+    InventoryContainerModel,
+    InventoryItemModel,
+    MaterialModel,
+    UserModel,
+    AccessTokenModel,
+  ]);
 };
 
 export const getSequelizeInstance = (): Sequelize => {

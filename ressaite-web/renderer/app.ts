@@ -34,21 +34,25 @@
 //   return app
 // }
 
+import { createPinia } from 'pinia'
 import { createSSRApp, defineComponent, h, markRaw, reactive } from 'vue'
-import PageShell from './PageShell.vue'
+import { createI18n } from 'vue-i18n'
+
+import i18nMessages from '@/i18n'
+import '@/styles/main.scss'
+import RstApp from '@/layout/RstApp.vue'
 import type { PageContext } from './types'
 import { setPageContext } from './usePageContext'
 
-import { createPinia } from 'pinia'
-import '@/styles/main.scss'
-
-export { createApp }
-
-function createApp(pageContext: PageContext) {
+/**
+ *
+ * @param pageContext
+ * @returns
+ *
+ * @see https://github.com/brillout/vite-plugin-ssr/blob/main/examples/vue-full/renderer/app.ts
+ */
+export function createApp(pageContext: PageContext) {
   const { Page } = pageContext
-
-  // // https://github.com/brillout/vite-plugin-ssr/blob/main/examples/layouts-vue/renderer/app.js
-  // const Layout = pageContext.exports.Layout || PageShell
 
   // let rootComponent:  Component
   let rootComponent: any
@@ -56,14 +60,13 @@ function createApp(pageContext: PageContext) {
     data: () => ({
       Page: markRaw(Page),
       pageProps: markRaw(pageContext.pageProps || {})
-      // Layout
     }),
     created() {
       rootComponent = this
     },
     render() {
       return h(
-        PageShell,
+        RstApp,
         {},
         {
           default: () => {
@@ -71,18 +74,6 @@ function createApp(pageContext: PageContext) {
           }
         }
       )
-      // render() {
-      //   return this.Layout
-      //     ? h(
-      //         this.Layout,
-      //         {},
-      //         {
-      //           default: () => {
-      //             return h(this.Page, this.pageProps)
-      //           }
-      //         }
-      //       )
-      //     : h(this.Page, this.pageProps)
     }
   })
 
@@ -91,6 +82,14 @@ function createApp(pageContext: PageContext) {
   // https://github.com/brillout/vite-plugin-ssr/blob/main/examples/vue-pinia/renderer/app.js
   const store = createPinia()
   app.use(store)
+
+  // https://vue-i18n.intlify.dev/guide/installation.html
+  const i18n = createI18n({
+    locale: 'en',
+    fallbackLocale: 'en',
+    messages: i18nMessages
+  })
+  app.use(i18n)
 
   // We use `app.changePage()` to do Client Routing, see `_default.page.client.js`
   objectAssign(app, {
@@ -108,7 +107,7 @@ function createApp(pageContext: PageContext) {
   // Make `pageContext` accessible from any Vue component
   setPageContext(app, pageContextReactive)
 
-  return app
+  return { app, store }
 }
 
 // Same as `Object.assign()` but with type inference

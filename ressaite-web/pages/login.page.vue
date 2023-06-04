@@ -1,12 +1,15 @@
 <template>
   <div class="login-page">
-    <div class="login-card rst-card">
+    <form class="login-card rst-card" @submit.prevent="submitLogin">
       <rst-input v-model="form.username" />
       <rst-input v-model="form.password" type="password" />
 
-      <button class="rst-button" @click="submitLogin">Login!</button>
-      <button class="rst-button" @click="submitSignUp">Signup!</button>
-    </div>
+      <button class="rst-button" type="submit">Login!</button>
+
+      <div>
+        <p>No account? Sign up <a href="/signup">there</a></p>
+      </div>
+    </form>
   </div>
 </template>
 
@@ -14,34 +17,31 @@
 import { reactive } from 'vue'
 import { navigate } from 'vite-plugin-ssr/client/router'
 
-import type { LoginReq } from '@al-un/ressaite-core/um/models/Auth'
+import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/auth.endpoints'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
 import { useAppStore } from '@/stores/app'
+import { callEndpoint } from '@/api'
 
 const app = useAppStore()
 
-const form: LoginReq = reactive({
+const form: AuthEndpointTypes['login']['request'] = reactive({
   username: '',
   password: ''
 })
 
-const submitLogin = async () => {
-  await app.login({
+async function submitLogin() {
+  const resp = await callEndpoint('login', null, {
     username: form.username,
     password: form.password
   })
 
-  // navigate('/')
-}
-
-const submitSignUp = async () => {
-  await app.signUp({
-    username: form.username,
-    password: form.password
-  })
-
-  // navigate('/')
+  if (resp.status === 200) {
+    app.$patch({
+      token: resp.data.token
+    })
+    navigate('/')
+  }
 }
 </script>
 

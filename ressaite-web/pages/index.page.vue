@@ -1,15 +1,19 @@
 <template>
-  <div>Hello, this is a copied home page</div>
-  <p>Counter is {{ store.count }} and doubled is {{ store.doubleCount }}</p>
-  <div><button @click="pouet">Click to boost the counter</button></div>
+  <div class="central-aligned-page">
+    <h2>{{ $t('dashboard.quick_menu.title') }}</h2>
+    <div class="dashboard-quick-cards-container">
+      <a class="rst-card padded" href="/inventories">{{ $t('dashboard.quick_menu.inventories') }}</a>
+      <a class="rst-card padded" href="/materials">{{ $t('dashboard.quick_menu.materials') }}</a>
+    </div>
+  </div>
 </template>
 
-<script setup>
-import { useCounterStore } from '../src/stores/counter'
+<script setup></script>
 
-const store = useCounterStore()
-
-const pouet = () => {
-  store.increment()
+<style lang="scss">
+.dashboard-quick-cards-container {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-</script>
+</style>

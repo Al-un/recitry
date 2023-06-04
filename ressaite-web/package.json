@@ -2,10 +2,10 @@
   "name": "@al-un/ressaite-web",
   "version": "0.0.0",
   "private": true,
-  "type" :"module",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:quick-start": "VITE_API_BASE_URL=http://localhost:8000 npm run dev",
+    "dev:quick-start": "npm run dev -- --mode=quick-start",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "test": "echo \"TODO\"",
@@ -24,7 +24,8 @@
     "pinia": "2.0.33",
     "sass": "1.60.0",
     "vite-plugin-ssr": "0.4.106",
-    "vue": "3.2.47"
+    "vue": "3.2.47",
+    "vue-i18n": "9.2.2"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "1.2.0",

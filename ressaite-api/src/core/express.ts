@@ -1,28 +1,30 @@
 import { RequestHandler, Router } from "express";
 import type { ParsedQs } from "qs";
 
-import {
-  EndpointType,
-  EndpointTypes,
-  Route,
-  RstResp,
-} from "@al-un/ressaite-core/core/models/api";
+import { EndpointTypes } from "@al-un/ressaite-core/core/base-api.endpoints";
+import { Route } from "@al-un/ressaite-core/core/base-api.routes";
+import { RstResp } from "@al-un/ressaite-core/core/base-api.models";
 
-export type ExpressController<AllEndpoints extends EndpointTypes> = {
+export type ExpressController<
+  AllEndpoints extends EndpointTypes,
+  Locals extends { [key in keyof AllEndpoints]: Record<string, any> } = {
+    [key in keyof AllEndpoints]: {};
+  }
+> = {
   [EndpointName in keyof AllEndpoints]: AllEndpoints[EndpointName]["method"] extends "GET"
     ? RequestHandler<
         AllEndpoints[EndpointName]["pathParams"],
         RstResp<AllEndpoints[EndpointName]["response"]>,
         unknown,
         AllEndpoints[EndpointName]["request"],
-        Record<string, number>
+        Locals[EndpointName]
       >
     : RequestHandler<
         AllEndpoints[EndpointName]["pathParams"],
         RstResp<AllEndpoints[EndpointName]["response"]>,
         AllEndpoints[EndpointName]["request"],
         ParsedQs,
-        Record<string, number>
+        Locals[EndpointName]
       >;
 };
 

@@ -1,11 +1,11 @@
 import { DataTypes } from "sequelize";
 
+import { tableName as accessTokenTableName } from "@/um/models/AccessToken";
 import { tableName as userTableName } from "@/um/models/User";
-import { tableName } from "@/um/models/AccessToken";
 import { Migration } from "@/umzug";
 
 export const up: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().createTable(tableName, {
+  await sequelize.getQueryInterface().createTable(accessTokenTableName, {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -40,5 +40,5 @@ export const up: Migration = async ({ context: sequelize }) => {
 };
 
 export const down: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().dropTable(tableName);
+  await sequelize.getQueryInterface().dropTable(accessTokenTableName);
 };

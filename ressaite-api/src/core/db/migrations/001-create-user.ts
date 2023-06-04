@@ -1,10 +1,10 @@
 import { Migration } from "@/umzug";
 import { DataTypes } from "sequelize";
 
-import { tableName } from "@/um/models/User";
+import { tableName as userTableName} from "@/um/models/User";
 
 export const up: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().createTable(tableName, {
+  await sequelize.getQueryInterface().createTable(userTableName, {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -17,6 +17,8 @@ export const up: Migration = async ({ context: sequelize }) => {
       type: DataTypes.STRING,
     },
     email: {
+      allowNull: true,
+      unique: true,
       type: DataTypes.STRING,
     },
     password: {
@@ -39,5 +41,5 @@ export const up: Migration = async ({ context: sequelize }) => {
 };
 
 export const down: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().dropTable(tableName);
+  await sequelize.getQueryInterface().dropTable(userTableName);
 };

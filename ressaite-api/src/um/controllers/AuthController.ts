@@ -3,9 +3,9 @@ import { ParamsDictionary } from "express-serve-static-core";
 import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
-import { AuthEndpointTypes } from "@al-un/ressaite-core/um/api/Auth";
-import { AccessToken } from "../models/AccessToken";
-import { hashPassword, User } from "../models/User";
+import { AuthEndpointTypes } from "@al-un/ressaite-core/um/auth.endpoints";
+import { AccessTokenModel } from "../models/AccessToken";
+import { hashPassword, UserModel } from "../models/User";
 import { ExpressController } from "@/core/express";
 
 // ----------------------------------------------------------------------------
@@ -15,9 +15,9 @@ type AuthControllerTypes = ExpressController<AuthEndpointTypes>;
 // ----------------------------------------------------------------------------
 
 const localVerify: VerifyFunction = async (username, password, cb) => {
-  let user: User | null;
+  let user: UserModel | null;
   try {
-    user = await User.findOne({ where: { username } });
+    user = await UserModel.findOne({ where: { username } });
     if (!user) {
       return cb(null, false, { message: "Incorrect username or password" });
     }
@@ -31,7 +31,7 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
     return cb(null, false, { message: "Incorrect username or password" });
   }
 
-  let newAccessToken = new AccessToken();
+  let newAccessToken = new AccessTokenModel();
   newAccessToken.init(user);
 
   try {
@@ -56,7 +56,7 @@ export const login: AuthControllerTypes["login"] = (req, res, next) => {
       return res.status(400).json({ message: info?.message });
     }
 
-    res.json({ token: authInfo.token });
+    res.setHeader("Set-Cookie", `token=${authInfo.token}`).json({ token: authInfo.token });
   };
 
   // https://stackoverflow.com/a/32002327/4906586
@@ -78,13 +78,13 @@ type LogoutHandler = RequestHandler<ParamsDictionary, any, any>;
  *
  * @see https://stackoverflow.com/a/6937030/4906586
  */
-export const logout: AuthControllerTypes['logout'] = async (req, res) => {
+export const logout: AuthControllerTypes["logout"] = async (req, res) => {
   const token = req?.user?.token;
   if (!token) {
     throw new Error("No access token provided!");
   }
 
-  let accessToken = await AccessToken.findOne({ where: { token } });
+  let accessToken = await AccessTokenModel.findOne({ where: { token } });
   if (!accessToken) {
     throw new Error("Token not found");
   }
@@ -101,13 +101,13 @@ export const logout: AuthControllerTypes['logout'] = async (req, res) => {
 export const signUp: AuthControllerTypes["signup"] = async (req, res, next) => {
   const { username, password } = req.body;
 
-  const existingUser = await User.findOne({ where: { username } });
+  const existingUser = await UserModel.findOne({ where: { username } });
   if (existingUser) {
     res.status(400).json({ message: "Username already taken" });
     return;
   }
 
-  let newUser = new User({
+  let newUser = new UserModel({
     username,
     password,
   });

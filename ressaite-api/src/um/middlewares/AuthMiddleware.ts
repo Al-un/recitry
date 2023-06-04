@@ -5,17 +5,23 @@ import {
   VerifyFunction,
 } from "passport-http-bearer";
 
-import { RstErrorResp } from "@al-un/ressaite-core/core/models/api";
-import { User } from "../models/User";
-import { AccessToken } from "../models/AccessToken";
+import { RstErrorResp } from "@al-un/ressaite-core/core/base-api.models";
+import { UserModel } from "../models/User";
+import { AccessTokenModel } from "../models/AccessToken";
+
+// ----------------------------------------------------------------------------
+
+export interface AuthLocal {
+  user: UserModel;
+}
 
 // ----------------------------------------------------------------------------
 
 const bearerVerify: VerifyFunction = async function verify(token, cb) {
   try {
-    const validToken = await AccessToken.findOne({
+    const validToken = await AccessTokenModel.findOne({
       where: { token },
-      include: User,
+      include: UserModel,
     });
     if (!validToken) {
       return cb(null, false, { scope: "all", message: "token not fond" });
@@ -52,6 +58,8 @@ const AuthMiddleware: RequestHandler = (req, res, next) => {
       id: authInfo.user.id,
       token: authInfo.token,
     };
+    res.locals.user = authInfo.user;
+    // res.locals.token = authInfo.token;
 
     next();
   };
