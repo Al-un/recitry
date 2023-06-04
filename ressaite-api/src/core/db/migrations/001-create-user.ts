@@ -18,6 +18,7 @@ export const up: Migration = async ({ context: sequelize }) => {
     },
     email: {
       allowNull: true,
+      unique: true,
       type: DataTypes.STRING,
     },
     password: {
