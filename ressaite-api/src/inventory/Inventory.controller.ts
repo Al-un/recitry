@@ -1,6 +1,8 @@
 import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory.endpoints";
 import {
+  InventoryContainerCreation,
   InventoryCreation,
+  InventoryItemCreation,
   Inventory as InventoryResponse,
 } from "@al-un/ressaite-core/inventory/inventory.models";
 import { PaginatedResp } from "@al-un/ressaite-core/core/base-api.models";
@@ -25,8 +27,7 @@ type InventoryControllerTypes = ExpressController<
     inventoryUpdate: {};
     inventoryDisplay: {};
     inventoryList: {};
-    inventoryDelete: {
-    };
+    inventoryDelete: {};
     inventoryItemCreate: {};
     inventoryItemUpdate: {};
     inventoryItemDelete: {};
@@ -51,15 +52,10 @@ export const createInventory: InventoryControllerTypes["inventoryCreate"] =
 
 export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
   async (req, res) => {
-    const inventoryId = req.params.inventoryId;
+    const inventory = (req.res?.locals as any).inventory as InventoryModel;
+
     const updateRequest = req.body as Partial<InventoryModel>;
-    let inventory = await InventoryModel.findByPk(inventoryId);
-    if (!inventory) {
-      res
-        .status(404)
-        .json({ message: `Inventory ID ${inventoryId} not found` });
-      return;
-    }
+    inventory.set(updateRequest);
 
     await inventory.save();
 
@@ -68,22 +64,11 @@ export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
 
 export const deleteInventory: InventoryControllerTypes["inventoryDelete"] =
   async (req, res) => {
-    const authorId = req.user?.id;
-    if (!authorId) throw new Error("req.user.id is not defined");
+    const inventory = (req.res?.locals as any).inventory as InventoryModel;
 
-    req.res?.locals
+    await inventory.destroy();
 
-    const inventoryId = req.params.inventoryId;
-    const deletedCount = await InventoryModel.destroy({
-      where: { id: inventoryId },
-    });
-    res.locals;
-
-    if (deletedCount > 0) {
-      res.status(204).send();
-    } else {
-      res.status(404).json({ message: "Nothing was deleted" });
-    }
+    res.sendStatus(204);
   };
 
 export const displayInventory: InventoryControllerTypes["inventoryDisplay"] =
@@ -119,30 +104,114 @@ export const listInventories: InventoryControllerTypes["inventoryList"] =
 
 export const createInventoryContainer: InventoryControllerTypes["inventoryContainerCreate"] =
   async (req, res) => {
-    res.status(503).json({ message: "not implemented yet" });
+    const userId = (req.res?.locals as any).user?.id;
+    if (!userId) {
+      res.status(400).send({ message: "userId parameter not found" });
+      return;
+    }
+
+    const { inventoryId } = req.params;
+    const inventory = await InventoryModel.findByPk(inventoryId, {
+      include: { model: UserModel, attributes: ["id", "username"] },
+    });
+    if (inventory === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const creationRequest = req.body as InventoryContainerCreation;
+    const c = await InventoryContainerModel.create({
+      name: creationRequest.name,
+      authorId: userId,
+      inventoryId: inventoryId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    res.status(201).json(c);
   };
 
 export const updateInventoryContainer: InventoryControllerTypes["inventoryContainerUpdate"] =
   async (req, res) => {
-    res.status(503).json({ message: "not implemented yet" });
+    const inventoryContainer = (req.res?.locals as any)
+      .inventoryContainer as InventoryContainerModel;
+
+    const updateRequest = req.body;
+    inventoryContainer.set(updateRequest);
+
+    await inventoryContainer.save();
+
+    res.status(200).json(inventoryContainer.toResponseFormat);
   };
 
 export const deleteInventoryContainer: InventoryControllerTypes["inventoryContainerDelete"] =
   async (req, res) => {
-    res.status(503).json({ message: "not implemented yet" });
+    const inventoryContainer = (req.res?.locals as any)
+      .inventoryContainer as InventoryContainerModel;
+
+    await inventoryContainer.destroy();
+
+    res.sendStatus(204);
   };
 
 export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"] =
   async (req, res) => {
     res.status(503).json({ message: "not implemented yet" });
+
+    const userId = (req.res?.locals as any).user?.id;
+    if (!userId) {
+      res.status(400).send({ message: "userId parameter not found" });
+      return;
+    }
+
+    const { inventoryId, inventoryContainerId } = req.params;
+    const inventory = await InventoryModel.findByPk(inventoryId);
+    if (inventory === null) {
+      res.sendStatus(404);
+      return;
+    }
+    const inventoryContainer = await InventoryContainerModel.findByPk(
+      inventoryContainerId
+    );
+    if (inventoryContainer === null) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const creationRequest = req.body as InventoryItemCreation;
+    const inventoryItem = await InventoryItemModel.create({
+      name: creationRequest.name,
+      quantity: creationRequest.quantity,
+      dueDate: creationRequest.dueDate,
+      materialId: creationRequest.materialId,
+      authorId: userId,
+      containerId: inventoryContainerId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    res.status(201).json(inventoryItem);
   };
 
 export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"] =
   async (req, res) => {
-    res.status(503).json({ message: "not implemented yet" });
+    const inventoryItem = (req.res?.locals as any)
+      .inventoryItem as InventoryItemModel;
+
+    const updateRequest = req.body;
+    inventoryItem.set(updateRequest);
+
+    await inventoryItem.save();
+
+    res.status(200).json(inventoryItem.toResponseFormat);
   };
 
 export const deleteInventoryItem: InventoryControllerTypes["inventoryItemDelete"] =
   async (req, res) => {
-    res.status(503).json({ message: "not implemented yet" });
+    const inventoryItem = (req.res?.locals as any)
+      .inventoryItem as InventoryItemModel;
+
+    await inventoryItem.destroy();
+
+    res.sendStatus(204);
   };

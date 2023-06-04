@@ -8,7 +8,7 @@ import { RstResp } from "@al-un/ressaite-core/core/base-api.models";
 export type ExpressController<
   AllEndpoints extends EndpointTypes,
   Locals extends { [key in keyof AllEndpoints]: Record<string, any> } = {
-    [key in keyof AllEndpoints]: {};
+    [key in keyof AllEndpoints]: Record<string, any>;
   }
 > = {
   [EndpointName in keyof AllEndpoints]: AllEndpoints[EndpointName]["method"] extends "GET"
