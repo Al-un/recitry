@@ -211,7 +211,7 @@ async function searchMaterial() {
   }
 }
 .material-table__lang {
-  width: 100%;
+  width: 10%;
 
   @include media('<tablet') {
     width: 10%;
