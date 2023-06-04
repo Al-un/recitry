@@ -22,6 +22,7 @@ const props = defineProps({
 #rst-navbar {
   background-color: var(--rst-bg-content);
   width: $rst-sidebar-width;
+  flex-shrink: 0;
   max-width: 80%;
   z-index: $rst-sidebar-bg-z-index;
   height: 100%;

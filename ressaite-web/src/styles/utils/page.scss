@@ -1,5 +1,11 @@
+@use "./../lib/include-media" as *;
+
 .central-aligned-page {
   // width: 80%;
   // margin: 24px auto 0px;
   padding: 24px 10% 0;
+
+  @include media('<tablet') {
+    padding: 12px 8px 24px;
+  }
 }
