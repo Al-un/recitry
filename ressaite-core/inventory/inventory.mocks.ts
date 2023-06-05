@@ -1,5 +1,6 @@
 import type { Inventory } from "./inventory.models";
 import { userOne } from "../um/users.mocks";
+import { dumMatCarrot } from "../recipe/material.mocks";
 
 type MockProfileData = {
   inventories: Inventory[];
@@ -32,6 +33,17 @@ export const userOneInventories: MockProfileData = {
               material: null,
               quantity: 42,
               dueDate: null,
+            },
+            {
+              id: 1213,
+              author: userOne.minimalProfile,
+              name: "Ma carotte",
+              material: {
+                id: dumMatCarrot.id,
+                name: dumMatCarrot.name,
+              },
+              quantity: 7,
+              dueDate: new Date("2023-03-23"),
             },
           ],
         },

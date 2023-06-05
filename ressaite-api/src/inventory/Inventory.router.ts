@@ -41,32 +41,48 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   inventoryContainerCreate: {
     route: InventoryRoutes["inventoryContainerCreate"],
     controller: InventoryController.createInventoryContainer,
-    middlewares: [AuthMiddleware,checkInventoryAuthor],
+    middlewares: [AuthMiddleware, checkInventoryAuthor],
   },
   inventoryContainerUpdate: {
     route: InventoryRoutes["inventoryContainerUpdate"],
     controller: InventoryController.updateInventoryContainer,
-    middlewares: [AuthMiddleware,checkInventoryContainerAuthor],
+    middlewares: [
+      AuthMiddleware,
+      checkInventoryAuthor,
+      checkInventoryContainerAuthor,
+    ],
   },
   inventoryContainerDelete: {
     route: InventoryRoutes["inventoryContainerDelete"],
     controller: InventoryController.deleteInventoryContainer,
-    middlewares: [AuthMiddleware,checkInventoryContainerAuthor],
+    middlewares: [
+      AuthMiddleware,
+      checkInventoryAuthor,
+      checkInventoryContainerAuthor,
+    ],
   },
   inventoryItemCreate: {
     route: InventoryRoutes["inventoryItemCreate"],
     controller: InventoryController.createInventoryItem,
-    middlewares: [AuthMiddleware,checkInventoryAuthor],
+    middlewares: [AuthMiddleware, checkInventoryAuthor],
   },
   inventoryItemUpdate: {
     route: InventoryRoutes["inventoryItemUpdate"],
     controller: InventoryController.updateInventoryItem,
-    middlewares: [AuthMiddleware,checkInventoryItemAuthor],
+    middlewares: [
+      AuthMiddleware,
+      checkInventoryAuthor,
+      checkInventoryItemAuthor,
+    ],
   },
   inventoryItemDelete: {
     route: InventoryRoutes["inventoryItemDelete"],
     controller: InventoryController.deleteInventoryItem,
-    middlewares: [AuthMiddleware,checkInventoryItemAuthor],
+    middlewares: [
+      AuthMiddleware,
+      checkInventoryAuthor,
+      checkInventoryItemAuthor,
+    ],
   },
 };
 

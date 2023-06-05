@@ -2,8 +2,6 @@ import {
   InventoryModel,
   tableName as inventoryTableName,
 } from "@/inventory/Inventory.model";
-import { tableName as inventoryContainerTableName } from "@/inventory/InventoryContainer.model";
-import { tableName as inventoryItemTableName } from "@/inventory/InventoryItem.model";
 import { UserModel } from "@/um/models/User";
 import { Seed } from "@/umzug";
 
@@ -54,6 +52,7 @@ export const up: Seed = async ({ context: sequelize }) => {
   };
 
   await createInventory(userOneInventories.inventories[0], firstUser);
+  await createInventory(userOneInventories.inventories[1], firstUser);
 };
 
 export const down: Seed = async ({ context: sequelize }) => {
