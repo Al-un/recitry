@@ -56,14 +56,14 @@ export class InventoryItemModel extends Model {
   @BelongsTo(() => MaterialModel)
   material!: MaterialModel | null;
 
-  get toResponseFormat(): InventoryItem {
+  get toInventoryItem(): InventoryItem {
     return {
       id: this.id,
       name: this.name,
       author: this.author.toMinimalProfile,
       quantity: this.quantity,
       dueDate: this.dueDate,
-      material: null, // not handled for now
+      material: this.material ? this.material.toShortInfo : null,
     };
   }
 }

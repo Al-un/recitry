@@ -7,7 +7,10 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { Material } from "@al-un/ressaite-core/recipe/material.models";
+import {
+  Material,
+  MaterialShortInfo,
+} from "@al-un/ressaite-core/recipe/material.models";
 import { UserModel } from "@/um/models/User";
 import { Lang, allLangs } from "@al-un/ressaite-core/core/models/lang";
 
@@ -40,6 +43,14 @@ export class MaterialModel extends Model {
 
   @BelongsTo(() => UserModel)
   author!: UserModel;
+
+  get toShortInfo(): MaterialShortInfo {
+    return {
+      id: this.id,
+      name: this.name,
+      lang: this.lang,
+    };
+  }
 
   get toJson(): Material {
     return {

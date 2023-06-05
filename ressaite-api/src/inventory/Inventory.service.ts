@@ -1,7 +1,9 @@
 import {
   Inventory,
   InventoryContainer,
+  InventoryContainerWithItems,
   InventoryCreation,
+  InventoryDetail,
   InventoryItem,
 } from "@al-un/ressaite-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
@@ -22,28 +24,28 @@ export const createInventory = async (
     updatedAt: new Date(),
   });
 
-  for (let container of inventory.containers) {
-    const c = await InventoryContainerModel.create({
-      name: container.name,
-      authorId: authorId,
-      inventoryId: i.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+  // for (let container of inventory.containers) {
+  //   const c = await InventoryContainerModel.create({
+  //     name: container.name,
+  //     authorId: authorId,
+  //     inventoryId: i.id,
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //   });
 
-    for (let item of container.items) {
-      await InventoryItemModel.create({
-        name: item.name,
-        quantity: item.quantity,
-        dueDate: item.dueDate,
-        authorId: authorId,
-        containerId: c.id,
-        materialId: item.materialId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    }
-  }
+  //   for (let item of container.items) {
+  //     await InventoryItemModel.create({
+  //       name: item.name,
+  //       quantity: item.quantity,
+  //       dueDate: item.dueDate,
+  //       authorId: authorId,
+  //       containerId: c.id,
+  //       materialId: item.materialId,
+  //       createdAt: new Date(),
+  //       updatedAt: new Date(),
+  //     });
+  //   }
+  // }
 
   const result = await fetchInventory(i.id);
   if (!result) throw new Error("Created inventory not found");
@@ -53,13 +55,13 @@ export const createInventory = async (
 
 export const fetchInventory = async (
   inventoryId: number
-): Promise<Inventory | null> => {
+): Promise<InventoryDetail | null> => {
   const i = await InventoryModel.findByPk(inventoryId, {
     include: [{ model: UserModel, attributes: ["id", "username"] }],
   });
   if (i === null) return null;
 
-  const inventory: Inventory = {
+  const inventory: InventoryDetail = {
     id: i.id,
     name: i.name,
     author: i.author.toMinimalProfile,
@@ -74,7 +76,7 @@ export const fetchInventory = async (
   });
 
   for (let c of containers) {
-    const formattedContainer: InventoryContainer = {
+    const formattedContainer: InventoryContainerWithItems = {
       id: c.id,
       name: c.name,
       author: c.author.toMinimalProfile,
@@ -97,9 +99,7 @@ export const fetchInventory = async (
         dueDate: item.dueDate,
         author: item.author.toMinimalProfile,
         quantity: item.quantity,
-        material: item.material
-          ? { id: item.material.id, name: item.material.name }
-          : null,
+        material: item.material ? item.material.toShortInfo : null,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
       };

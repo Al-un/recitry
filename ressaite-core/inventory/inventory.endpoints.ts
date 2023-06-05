@@ -6,8 +6,10 @@ import type {
   InventoryContainer,
   InventoryContainerCreation,
   InventoryCreation,
+  InventoryDetail,
   InventoryItem,
   InventoryItemCreation,
+  InventoryListItem,
 } from "./inventory.models";
 import type {
   PathWithInventoryContainerId,
@@ -26,13 +28,13 @@ export type InventoryEndpointTypes = {
     "GET",
     WithPagination,
     null,
-    PaginatedResp<Inventory[]>
+    PaginatedResp<InventoryListItem[]>
   >;
-  inventoryDisplay: EndpointType<"GET", PathWithInventoryId, null, Inventory>;
+  inventoryDisplay: EndpointType<"GET", PathWithInventoryId, null, InventoryDetail>;
   inventoryUpdate: EndpointType<
     "PATCH",
     PathWithInventoryId,
-    Partial<Inventory>,
+    Partial<InventoryCreation>,
     Inventory
   >;
   inventoryDelete: EndpointType<"DELETE", PathWithInventoryId, null, null>;
@@ -45,12 +47,12 @@ export type InventoryEndpointTypes = {
   inventoryContainerUpdate: EndpointType<
     "PATCH",
     PathWithInventoryId & PathWithInventoryContainerId,
-    Partial<InventoryContainer>,
+    Partial<InventoryContainerCreation>,
     InventoryContainer
   >;
   inventoryContainerDelete: EndpointType<
     "DELETE",
-    PathWithInventoryId,
+    PathWithInventoryId & PathWithInventoryContainerId,
     null,
     null
   >;
@@ -65,7 +67,7 @@ export type InventoryEndpointTypes = {
     PathWithInventoryId &
       PathWithInventoryContainerId &
       PathWithInventoryItemId,
-    Partial<InventoryItem>,
+    Partial<InventoryItemCreation>,
     InventoryItem
   >;
   inventoryItemDelete: EndpointType<

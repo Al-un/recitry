@@ -50,7 +50,7 @@ export const callEndpoint = async <K extends AllEndpointsKey>(
       }
     }
 
-    const response = await window.fetch(route, { method, body, headers })
+    const response = await fetch(route, { method, body, headers })
     const responseData = ![204].includes(response.status) ? await response.json() : null
 
     return {

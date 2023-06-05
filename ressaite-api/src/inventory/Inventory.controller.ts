@@ -3,7 +3,7 @@ import {
   InventoryContainerCreation,
   InventoryCreation,
   InventoryItemCreation,
-  Inventory as InventoryResponse,
+  InventoryListItem,
 } from "@al-un/ressaite-core/inventory/inventory.models";
 import { PaginatedResp } from "@al-un/ressaite-core/core/base-api.models";
 
@@ -59,7 +59,7 @@ export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
 
     await inventory.save();
 
-    res.status(200).json(inventory.toResponseFormat);
+    res.status(200).json(inventory.toInventory);
   };
 
 export const deleteInventory: InventoryControllerTypes["inventoryDelete"] =
@@ -76,14 +76,13 @@ export const displayInventory: InventoryControllerTypes["inventoryDisplay"] =
     const inventoryId = req.params.inventoryId;
     if (!inventoryId) throw new Error(`Invalid inventoryId: ${inventoryId}`);
 
-    const inventory = await InventoryModel.findByPk(inventoryId);
-
+    const inventory = await InventoryService.fetchInventory(inventoryId);
     if (inventory === null) {
       res.status(404).json({ message: `Inventory ${inventoryId} not found` });
       return;
     }
 
-    res.status(200).json(inventory.toResponseFormat);
+    res.status(200).json(inventory);
   };
 
 export const listInventories: InventoryControllerTypes["inventoryList"] =
@@ -93,10 +92,11 @@ export const listInventories: InventoryControllerTypes["inventoryList"] =
 
     const inventories = await InventoryModel.findAll({
       where: { authorId: userId },
+      include: { model: UserModel, attributes: ["id", "username"] },
     });
 
-    const responseContent: PaginatedResp<InventoryResponse[]> = {
-      data: inventories.map((i) => i.toResponseFormat),
+    const responseContent: PaginatedResp<InventoryListItem[]> = {
+      data: inventories.map((i) => i.toInventoryListItem),
       totalCount: inventories.length,
     };
     res.status(200).json(responseContent);
@@ -120,15 +120,20 @@ export const createInventoryContainer: InventoryControllerTypes["inventoryContai
     }
 
     const creationRequest = req.body as InventoryContainerCreation;
-    const c = await InventoryContainerModel.create({
+    const created = await InventoryContainerModel.create({
       name: creationRequest.name,
       authorId: userId,
       inventoryId: inventoryId,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
+    const c = await InventoryContainerModel.findByPk(created.id, {
+      include: [{ model: UserModel, attributes: ["id", "username"] }],
+    });
+    if (c === null) throw new Error("Created container not found");
+    console.log("C", c.dataValues);
 
-    res.status(201).json(c);
+    res.status(201).json(c.toInventoryContainer);
   };
 
 export const updateInventoryContainer: InventoryControllerTypes["inventoryContainerUpdate"] =
@@ -141,7 +146,12 @@ export const updateInventoryContainer: InventoryControllerTypes["inventoryContai
 
     await inventoryContainer.save();
 
-    res.status(200).json(inventoryContainer.toResponseFormat);
+    // const c = await InventoryContainerModel.findByPk(inventoryContainer.id, {
+    //   include: [{ model: UserModel, attributes: ["id", "username"] }],
+    // });
+    // if (c === null) throw new Error(`Container not found during update`);
+
+    res.status(200).json(inventoryContainer.toInventoryContainer);
   };
 
 export const deleteInventoryContainer: InventoryControllerTypes["inventoryContainerDelete"] =
@@ -179,18 +189,21 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
     }
 
     const creationRequest = req.body as InventoryItemCreation;
-    const inventoryItem = await InventoryItemModel.create({
-      name: creationRequest.name,
-      quantity: creationRequest.quantity,
-      dueDate: creationRequest.dueDate,
-      materialId: creationRequest.materialId,
-      authorId: userId,
-      containerId: inventoryContainerId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    const inventoryItem = await InventoryItemModel.create(
+      {
+        name: creationRequest.name,
+        quantity: creationRequest.quantity,
+        dueDate: creationRequest.dueDate,
+        materialId: creationRequest.materialId,
+        authorId: userId,
+        containerId: inventoryContainerId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { include: [{ model: UserModel, attributes: ["id", "username"] }] }
+    );
 
-    res.status(201).json(inventoryItem);
+    res.status(201).json(inventoryItem.toInventoryItem);
   };
 
 export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"] =
@@ -203,7 +216,7 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
 
     await inventoryItem.save();
 
-    res.status(200).json(inventoryItem.toResponseFormat);
+    res.status(200).json(inventoryItem.toInventoryItem);
   };
 
 export const deleteInventoryItem: InventoryControllerTypes["inventoryItemDelete"] =
