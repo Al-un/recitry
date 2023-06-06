@@ -12,6 +12,8 @@ declare global {
       /** The authentication token used in the request */
       token: string;
     }
+
+    interface Locals{}
   }
 }
 

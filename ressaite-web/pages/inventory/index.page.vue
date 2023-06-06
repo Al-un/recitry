@@ -41,7 +41,31 @@
         </div>
 
         <div v-for="containerItem in container.items" :key="containerItem.id" class="rst-table-row">
-          <template v-if="state.editItem?.id === containerItem.id">
+          <form
+            v-if="state.editItem && state.editItem?.id === containerItem.id"
+            @submit.prevent="editItem"
+          >
+            <div class="inventory-item-table__id">{{ containerItem.id }}</div>
+            <div class="inventory-item-table__name">
+              <rst-input v-model="state.editItem.name" />
+            </div>
+            <div class="inventory-item-table__material">{{ containerItem.material?.name }}</div>
+            <div class="inventory-item-table__quantity">
+              <rst-input v-model="state.editItem.quantity" type="number" />
+            </div>
+            <div class="inventory-item-table__dueDate">
+              <rst-input v-model="state.editItem.dueDate" type="date" />
+            </div>
+            <div class="inventory-item-table__created">{{ containerItem.createdAt }}</div>
+            <div class="inventory-item-table__update">{{ containerItem.updatedAt }}</div>
+            <div class="inventory-item-table__action">
+              <button @click="stopEditItem" class="rst-button secondary" type="reset">
+                Cancel
+              </button>
+              <button class="rst-button primary" type="submit">Edit</button>
+            </div>
+          </form>
+          <template v-else>
             <div class="inventory-item-table__id">{{ containerItem.id }}</div>
             <div class="inventory-item-table__name">{{ containerItem.name }}</div>
             <div class="inventory-item-table__material">{{ containerItem.material?.name }}</div>
@@ -66,28 +90,6 @@
               </button>
             </div>
           </template>
-          <form v-if="state.editItem" @submit.prevent="editItem">
-            <div class="inventory-item-table__id">{{ containerItem.id }}</div>
-            <div class="inventory-item-table__name">
-              <rst-input v-model="state.editItem.name" />
-            </div>
-            <div class="inventory-item-table__material">{{ containerItem.material?.name }}</div>
-            <div class="inventory-item-table__quantity">
-              <rst-input v-model="state.editItem.quantity" type="number" />
-            </div>
-            <div class="inventory-item-table__dueDate">
-              <rst-input v-model="state.editItem.dueDate" type="date" />
-            </div>
-            <div class="inventory-item-table__created">{{ containerItem.createdAt }}</div>
-            <div class="inventory-item-table__update">{{ containerItem.updatedAt }}</div>
-            <div class="inventory-item-table__action">
-              <button @click="stopEditItem" class="rst-button secondary" type="reset">
-                Cancel
-              </button>
-              <button class="rst-button primary" type="submit">Edit</button>
-            </div>
-          </form>
-          <div v-else>Sorry, something wrong happened...</div>
         </div>
       </main>
     </div>
@@ -96,8 +98,6 @@
       <rst-input v-model="state.newContainer.name" label="Container name" />
       <button class="rst-button primary" type="submit">Add container</button>
     </form>
-
-    <pre>{{ inventoryStore.current }}</pre>
   </div>
   <div v-else>Loading inventory...</div>
 </template>
@@ -190,12 +190,14 @@ function prepareToEditItem(containerId: number, item: InventoryItem) {
 }
 
 function stopEditItem() {
+  state.editItem = null
   state.editContainer = null
 }
 
 async function editItem() {
   if (state.editItem) {
-    await inventoryStore.updateInventoryItem(inventoryId, state.editItemContainerId, state.editItem)
+    await inventoryStore.updateInventoryItem(inventoryId, state.containerId, state.editItem)
+    stopEditItem()
   }
 }
 

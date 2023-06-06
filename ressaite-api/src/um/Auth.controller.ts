@@ -41,6 +41,7 @@ const localVerify: VerifyFunction = async (email, password, cb) => {
 };
 
 passport.use(
+  "local",
   new LocalStrategy(
     { usernameField: "email", passwordField: "password" },
     localVerify
@@ -50,6 +51,8 @@ passport.use(
 // ----------------------------------------------------------------------------
 
 export const login: AuthControllerTypes["login"] = (req, res, next) => {
+  // console.log(`${req.res?.locals.requestId}: Logging with`, req.body);
+
   type LocalCallback = Parameters<VerifyFunction>[2];
   const callbackHandler: LocalCallback = (err, authInfo, info) => {
     if (err) {

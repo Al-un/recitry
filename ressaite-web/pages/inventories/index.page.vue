@@ -2,32 +2,39 @@
   <div class="central-aligned-page">
     <h2>{{ $t('inventories.list.title') }}</h2>
 
-    <div v-if="inventoryStore.list?.length" class="inventories-container">
-      <div v-for="inventory in inventoryStore.list" :key="inventory.id" class="rst-card padded">
-        <form v-if="state.editInventory?.id === inventory.id" @submit.prevent="editInventory()">
-          <rst-input v-model="state.editInventory.name" label="Inventory name" />
+    <div v-if="!appStore.isAuthenticated">Please login first...</div>
 
-          <section>
-            <button @click="state.editInventory = null" rst="rst-button danger" type="reset">
-              Cancel
-            </button>
-            <button rst="rst-button primary" type="submit">Edit</button>
-          </section>
-        </form>
+    <template v-else>
+      <div v-if="inventoryStore.list?.length" class="inventories-container">
+        <div v-for="inventory in inventoryStore.list" :key="inventory.id" class="rst-card padded">
+          <form v-if="state.editInventory?.id === inventory.id" @submit.prevent="editInventory()">
+            <rst-input v-model="state.editInventory.name" label="Inventory name" />
 
-        <template v-else>
-          <a :href="`/inventory/${inventory.id}`">
-            <p>{{ inventory.name }}</p>
-          </a>
-          <section>
-            <button @click="prepareToEdit(inventory)" rst="rst-button secondary" type="button">
-              Edit
-            </button>
-            <button @click="deleteInventory(inventory)" rst="rst-button danger" type="button">
-              Delete
-            </button>
-          </section>
-        </template>
+            <section>
+              <button @click="state.editInventory = null" rst="rst-button danger" type="reset">
+                Cancel
+              </button>
+              <button rst="rst-button primary" type="submit">Edit</button>
+            </section>
+          </form>
+
+          <template v-else>
+            <a :href="`/inventory/${inventory.id}`">
+              <p>{{ inventory.name }}</p>
+            </a>
+            <section>
+              <button @click="prepareToEdit(inventory)" rst="rst-button secondary" type="button">
+                Edit
+              </button>
+              <button @click="deleteInventory(inventory)" rst="rst-button danger" type="button">
+                Delete
+              </button>
+            </section>
+          </template>
+        </div>
+      </div>
+      <div v-else>
+        <p>Hey, looks like there is inventory here! Let's create one below!</p>
       </div>
 
       <form @submit.prevent="createInventory" class="rst-card padded">
@@ -35,7 +42,7 @@
 
         <button class="rst-button primary" type="submit">Create</button>
       </form>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -44,8 +51,11 @@ import { onMounted, onServerPrefetch, reactive } from 'vue'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
 
+import { useAppStore } from '@/stores/app'
 import { useInventoryStore } from '@/stores/inventories'
 import type { Inventory, InventoryCreation } from '@al-un/ressaite-core/inventory/inventory.models'
+
+const appStore = useAppStore()
 const inventoryStore = useInventoryStore()
 
 interface State {

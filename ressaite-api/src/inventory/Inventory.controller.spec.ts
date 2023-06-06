@@ -58,7 +58,13 @@ describe("InventoryController", () => {
 
     describe("updateInventory", async () => {});
 
-    describe("deleteInventory", async () => {});
+    describe("deleteInventory", async () => {
+      describe("When is not found", () => {});
+
+      describe("When an inventory has no container", () => {});
+
+      describe("When an inventory has one container", () => {});
+    });
 
     describe("displayInventory", async () => {});
 

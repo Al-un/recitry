@@ -65,6 +65,7 @@ export const up: Migration = async ({ context: sequelize }) => {
         model: inventoryTableName,
         key: "id",
       },
+      onDelete: 'CASCADE'
     },
     createdAt: {
       allowNull: false,
@@ -111,6 +112,7 @@ export const up: Migration = async ({ context: sequelize }) => {
         model: inventoryContainerTableName,
         key: "id",
       },
+      onDelete: 'CASCADE'
     },
     materialId: {
       allowNull: true,

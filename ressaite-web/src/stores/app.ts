@@ -7,27 +7,25 @@ import { callEndpoint } from '@/api'
 export const useAppStore = defineStore('app', () => {
   // ---------- State ---------------------------------------------------------
   let savedToken: string | null = null
-  if(typeof window !== 'undefined' && window.localStorage){
-     savedToken = window.localStorage.getItem("token") ? `${ window.localStorage.getItem("token")}` : null
+  if (typeof window !== 'undefined' && window.localStorage) {
+    savedToken = window.localStorage.getItem('token')
   }
   const token = ref<string | null>(savedToken)
 
   // ---------- Computed ------------------------------------------------------
-  const isAuthenticated = computed(() => token.value !== null)
+  const isAuthenticated = computed(() => {
+    console.log('Computed', token.value)
+    return token.value !== null
+  })
 
   // ---------- Actions -------------------------------------------------------
-  async function login(
-    loginReq: AuthEndpointTypes['login']['request'],
-    rememberMe: boolean,
-  ) {
+  async function login(loginReq: AuthEndpointTypes['login']['request'], rememberMe: boolean) {
     const resp = await callEndpoint('login', null, loginReq)
 
-    // console.log('login status', resp.status)
-    // console.log('login resp', resp.data)
-    if(resp.status === 200){
+    if (resp.status === 200) {
       token.value = resp.data.token
 
-      if(rememberMe){
+      if (rememberMe) {
         // find a better way T_T
         localStorage.setItem('token', token.value)
       }
@@ -43,9 +41,10 @@ export const useAppStore = defineStore('app', () => {
 
   async function logout() {
     const resp = await callEndpoint('logout', null, null)
-    
-    if(resp.status === 204){
-      token.value == null
+
+    if (resp.status === 204) {
+      localStorage.removeItem('token')
+      token.value = null
     }
   }
 

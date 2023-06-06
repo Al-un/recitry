@@ -2,11 +2,28 @@
   <div class="login-page">
     <form class="rst-form rst-card padded" @submit.prevent="submitLogin">
       <div class="rst-form__input-group">
-        <rst-input v-model="form.username" type="email" label="Email" autocomplete="email" required />
+        <rst-input
+          v-model="state.loginForm.email"
+          type="email"
+          label="Email"
+          autocomplete="email"
+          required
+        />
       </div>
       <div class="rst-form__input-group">
-        <rst-input v-model="form.password" type="password" label="Password" autocomplete="current-password" required />
+        <rst-input
+          v-model="state.loginForm.password"
+          type="password"
+          label="Password"
+          autocomplete="current-password"
+          required
+        />
       </div>
+
+      <label class="rst-form__input-group">
+        <input v-model="state.loginForm.rememberMe" type="checkbox" />
+        Remember me
+      </label>
 
       <div class="rst-form__input-group rst-button-group fluid">
         <button class="rst-button primary" type="submit">Login!</button>
@@ -29,24 +46,26 @@ import RstInput from '@/components/ui/form/RstInput.vue'
 import { useAppStore } from '@/stores/app'
 import { callEndpoint } from '@/api'
 
-const app = useAppStore()
+const appStore = useAppStore()
 
-const form: AuthEndpointTypes['login']['request'] = reactive({
-  username: '',
-  password: ''
+interface State {
+  loginForm: AuthEndpointTypes['login']['request'] & { rememberMe: boolean }
+  signupForm: AuthEndpointTypes['signup']['request']
+}
+
+const redirectUrl: string | null = null
+
+const state = reactive<State>({
+  loginForm: { email: '', password: '', rememberMe: false },
+  signupForm: { email: '', password: '' }
 })
 
 async function submitLogin() {
-  const resp = await callEndpoint('login', null, {
-    username: form.username,
-    password: form.password
-  })
+  await appStore.login(state.loginForm, state.loginForm.rememberMe)
 
-  if (resp.status === 200) {
-    app.$patch({
-      token: resp.data.token
-    })
-    navigate('/')
+  if (appStore.isAuthenticated) {
+    const toRedirect = redirectUrl || '/'
+    navigate(toRedirect)
   }
 }
 </script>

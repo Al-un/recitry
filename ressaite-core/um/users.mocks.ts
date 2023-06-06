@@ -1,8 +1,4 @@
-import type {
-  UserFullProfile,
-  UserMinimalProfile,
-  User,
-} from "./users.models";
+import type { UserFullProfile, UserMinimalProfile, User } from "./users.models";
 
 interface MockUser extends User {
   clearPassword: string;
