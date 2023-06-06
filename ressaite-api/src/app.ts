@@ -3,7 +3,7 @@ import cors from "cors";
 
 import InternalErrorMiddleware from "@/core/middlewares/InternalErrorMiddleware";
 import MiscRouter from "@/core/routers/MiscRouter";
-import AuthRouter from "@/um/routers/AuthRouter";
+import AuthRouter from "@/um/Auth.router";
 import InventoryRouter from "@/inventory/Inventory.router";
 import MaterialRouter from "@/recipe/Material.router";
 import UnknownRouteMiddleware from "./core/middlewares/UnknownRouteMiddleware";

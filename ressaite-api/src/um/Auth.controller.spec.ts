@@ -3,14 +3,14 @@ import request from "supertest";
 
 import { AllRoutes } from "@al-un/ressaite-core/";
 import app from "@/app";
-import { AccessTokenModel } from "../models/AccessToken";
+import { AccessTokenModel } from "./AccessToken.model";
 import { userOne } from "@al-un/ressaite-core/um/users.mocks";
 
 describe("AuthController", () => {
   describe("login", () => {
     it("logins with proper credentials", async () => {
       const res = await request(app).post(AllRoutes.login.path).send({
-        username: userOne.username,
+        email: userOne.email,
         password: userOne.clearPassword,
       });
 
@@ -20,7 +20,7 @@ describe("AuthController", () => {
 
     it("rejects incorrect credentials", async () => {
       const res = await request(app).post(AllRoutes.login.path).send({
-        username: userOne.username,
+        email: userOne.email,
         password: "wrong password",
       });
 
@@ -36,7 +36,7 @@ describe("AuthController", () => {
       // from v1/login test
       const res = await request(app)
         .post(AllRoutes.login.path)
-        .send({ username: userOne.username, password: userOne.clearPassword });
+        .send({ email: userOne.email, password: userOne.clearPassword });
 
       token = res.body.token;
     });
@@ -61,7 +61,7 @@ describe("AuthController", () => {
   describe("sign up", () => {
     let signUpResponse: request.Response;
 
-    const signedUpUser = { username: "blah", password: "pouicpouic" };
+    const signedUpUser = { email: "blah", password: "pouicpouic" };
 
     before(async () => {
       signUpResponse = await request(app)
@@ -83,10 +83,10 @@ describe("AuthController", () => {
       expect(res.status).to.equal(200);
     });
 
-    it("does not allow another user to signup with the same username", async () => {
+    it("does not allow another user to signup with the same email", async () => {
       const res = await request(app)
         .post(AllRoutes.signup.path)
-        .send({ username: signedUpUser.username, password: "another-password" })
+        .send({ email: signedUpUser.email, password: "another-password" })
         .set("Accept", "application/json");
 
       expect(res.status).to.equal(400);

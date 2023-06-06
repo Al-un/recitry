@@ -3,7 +3,7 @@ import { expect } from "chai";
 import request from "supertest";
 
 import { RequestHandler } from "express";
-import AuthMiddleware from "./AuthMiddleware";
+import {isAuthenticated} from "./Auth.middleware";
 
 let app: Express;
 
@@ -15,7 +15,7 @@ describe("AuthMiddleware", () => {
     app.use(express.json());
 
     const something: RequestHandler = (_, res) => res.sendStatus(200);
-    app.get(protectedGetEndPoint, AuthMiddleware, something);
+    app.get(protectedGetEndPoint, isAuthenticated, something);
   });
 
   it("let valid token going through", async () => {

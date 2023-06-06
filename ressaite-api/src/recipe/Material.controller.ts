@@ -1,9 +1,10 @@
+import { Op } from "sequelize";
+
 import { MaterialEndpointTypes } from "@al-un/ressaite-core/recipe/material.endpoints";
 
 import { ExpressController } from "@/core/express";
+import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
 import { MaterialModel } from "./Material.model";
-import { Op } from "sequelize";
-import { UserModel } from "@/um/models/User";
 
 // ----------------------------------------------------------------------------
 
@@ -23,10 +24,10 @@ export const searchMaterial: MaterialControllerTypes["materialSearch"] = async (
     where,
     offset: (page - 1) * limit,
     limit,
-    include: [{ model: UserModel, attributes: ["id", "username"] }],
+    include: [includeUserMinimalProfile],
   });
 
-  const data = rows.map((m) => m.toJson);
+  const data = rows.map((m) => m.toMaterial);
 
   res.status(200).json({ data, totalCount: count });
 };
@@ -62,7 +63,7 @@ export const createMaterial: MaterialControllerTypes["materialCreate"] = async (
   if (createdMaterial === null)
     throw new Error(`Newly created material ${material.id} not found`);
 
-  res.status(201).json(createdMaterial.toJson);
+  res.status(201).json(createdMaterial.toMaterial);
 };
 
 export const updateMaterial: MaterialControllerTypes["materialUpdate"] = async (
@@ -75,7 +76,9 @@ export const updateMaterial: MaterialControllerTypes["materialUpdate"] = async (
   const materialId = req.params.materialId;
   if (!materialId) throw new Error("materialId is not defined");
 
-  let material = await MaterialModel.findByPk(materialId);
+  let material = await MaterialModel.findByPk(materialId, {
+    include: [includeUserMinimalProfile],
+  });
   if (material === null) {
     res.status(404).json({ message: `Material ${materialId} not found` });
     return;
@@ -89,7 +92,7 @@ export const updateMaterial: MaterialControllerTypes["materialUpdate"] = async (
   material.set(updateRequest);
 
   await material.save();
-  res.status(200).json(material);
+  res.status(200).json(material.toMaterial);
 };
 
 export const deleteMaterial: MaterialControllerTypes["materialDelete"] = async (

@@ -1,4 +1,4 @@
-import { tableName as userTableName } from "@/um/models/User";
+import { tableName as userTableName } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
 import { userOne, userTwo } from "@al-un/ressaite-core/um/users.mocks";

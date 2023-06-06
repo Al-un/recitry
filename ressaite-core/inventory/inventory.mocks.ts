@@ -1,9 +1,9 @@
-import type { Inventory } from "./inventory.models";
+import type { InventoryDetail } from "./inventory.models";
 import { userOne } from "../um/users.mocks";
 import { dumMatCarrot } from "../recipe/material.mocks";
 
 type MockProfileData = {
-  inventories: Inventory[];
+  inventories: InventoryDetail[];
 };
 
 export const userOneInventories: MockProfileData = {
@@ -41,6 +41,7 @@ export const userOneInventories: MockProfileData = {
               material: {
                 id: dumMatCarrot.id,
                 name: dumMatCarrot.name,
+                lang: "fr",
               },
               quantity: 7,
               dueDate: new Date("2023-03-23"),

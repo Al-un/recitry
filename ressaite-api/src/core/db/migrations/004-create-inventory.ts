@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 
-import { tableName as userTableName } from "@/um/models/User";
+import { tableName as userTableName } from "@/um/User.model";
 import { tableName as inventoryTableName } from "@/inventory/Inventory.model";
 import { tableName as inventoryContainerTableName } from "@/inventory/InventoryContainer.model";
 import { tableName as inventoryItemTableName } from "@/inventory/InventoryItem.model";

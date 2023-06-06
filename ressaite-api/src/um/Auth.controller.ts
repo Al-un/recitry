@@ -1,11 +1,9 @@
-import { RequestHandler } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
 import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
 import { AuthEndpointTypes } from "@al-un/ressaite-core/um/auth.endpoints";
-import { AccessTokenModel } from "../models/AccessToken";
-import { hashPassword, UserModel } from "../models/User";
+import { AccessTokenModel } from "./AccessToken.model";
+import { hashPassword, UserModel } from "./User.model";
 import { ExpressController } from "@/core/express";
 
 // ----------------------------------------------------------------------------
@@ -14,12 +12,12 @@ type AuthControllerTypes = ExpressController<AuthEndpointTypes>;
 
 // ----------------------------------------------------------------------------
 
-const localVerify: VerifyFunction = async (username, password, cb) => {
+const localVerify: VerifyFunction = async (email, password, cb) => {
   let user: UserModel | null;
   try {
-    user = await UserModel.findOne({ where: { username } });
+    user = await UserModel.findOne({ where: { email } });
     if (!user) {
-      return cb(null, false, { message: "Incorrect username or password" });
+      return cb(null, false, { message: "Incorrect email or password" });
     }
   } catch (err) {
     return cb(err, false, { message: `An error happened: ${err}` });
@@ -28,7 +26,7 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
   const salt = user.salt;
   const hashedPassword = hashPassword(password, salt);
   if (hashedPassword !== user.password) {
-    return cb(null, false, { message: "Incorrect username or password" });
+    return cb(null, false, { message: "Incorrect email or password" });
   }
 
   let newAccessToken = new AccessTokenModel();
@@ -42,7 +40,12 @@ const localVerify: VerifyFunction = async (username, password, cb) => {
   }
 };
 
-passport.use(new LocalStrategy(localVerify));
+passport.use(
+  new LocalStrategy(
+    { usernameField: "email", passwordField: "password" },
+    localVerify
+  )
+);
 
 // ----------------------------------------------------------------------------
 
@@ -56,7 +59,9 @@ export const login: AuthControllerTypes["login"] = (req, res, next) => {
       return res.status(400).json({ message: info?.message });
     }
 
-    res.setHeader("Set-Cookie", `token=${authInfo.token}`).json({ token: authInfo.token });
+    res
+      .setHeader("Set-Cookie", `token=${authInfo.token}`)
+      .json({ token: authInfo.token });
   };
 
   // https://stackoverflow.com/a/32002327/4906586
@@ -67,9 +72,6 @@ export const login: AuthControllerTypes["login"] = (req, res, next) => {
   );
   passportAugment(req, res, next);
 };
-
-// For some reason, the ParamsDictionary has to be explicitly defined...
-type LogoutHandler = RequestHandler<ParamsDictionary, any, any>;
 
 /**
  * Handle the logout flow by expiring the valid token.
@@ -99,16 +101,16 @@ export const logout: AuthControllerTypes["logout"] = async (req, res) => {
 };
 
 export const signUp: AuthControllerTypes["signup"] = async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  const existingUser = await UserModel.findOne({ where: { username } });
+  const existingUser = await UserModel.findOne({ where: { email } });
   if (existingUser) {
-    res.status(400).json({ message: "Username already taken" });
+    res.status(400).json({ message: "Email already taken" });
     return;
   }
 
   let newUser = new UserModel({
-    username,
+    email,
     password,
   });
 

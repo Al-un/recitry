@@ -1,5 +1,5 @@
-import { tableName as accessTokenTableName } from "@/um/models/AccessToken";
-import { UserModel } from "@/um/models/User";
+import { tableName as accessTokenTableName } from "@/um/AccessToken.model";
+import { UserModel } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
 import {

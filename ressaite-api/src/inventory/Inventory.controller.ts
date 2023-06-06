@@ -11,7 +11,7 @@ import { ExpressController } from "@/core/express";
 import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";
-import { UserModel } from "@/um/models/User";
+import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
 
 import * as InventoryService from "./Inventory.service";
 
@@ -92,7 +92,7 @@ export const listInventories: InventoryControllerTypes["inventoryList"] =
 
     const inventories = await InventoryModel.findAll({
       where: { authorId: userId },
-      include: { model: UserModel, attributes: ["id", "username"] },
+      include: [includeUserMinimalProfile],
     });
 
     const responseContent: PaginatedResp<InventoryListItem[]> = {
@@ -112,7 +112,7 @@ export const createInventoryContainer: InventoryControllerTypes["inventoryContai
 
     const { inventoryId } = req.params;
     const inventory = await InventoryModel.findByPk(inventoryId, {
-      include: { model: UserModel, attributes: ["id", "username"] },
+      include: [includeUserMinimalProfile],
     });
     if (inventory === null) {
       res.sendStatus(404);
@@ -128,7 +128,7 @@ export const createInventoryContainer: InventoryControllerTypes["inventoryContai
       updatedAt: new Date(),
     });
     const c = await InventoryContainerModel.findByPk(created.id, {
-      include: [{ model: UserModel, attributes: ["id", "username"] }],
+      include: [includeUserMinimalProfile],
     });
     if (c === null) throw new Error("Created container not found");
     console.log("C", c.dataValues);
@@ -147,7 +147,7 @@ export const updateInventoryContainer: InventoryControllerTypes["inventoryContai
     await inventoryContainer.save();
 
     // const c = await InventoryContainerModel.findByPk(inventoryContainer.id, {
-    //   include: [{ model: UserModel, attributes: ["id", "username"] }],
+    //   include: [includeUserMinimalProfile],
     // });
     // if (c === null) throw new Error(`Container not found during update`);
 
@@ -200,7 +200,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-      { include: [{ model: UserModel, attributes: ["id", "username"] }] }
+      { include: [includeUserMinimalProfile] }
     );
 
     res.status(201).json(inventoryItem.toInventoryItem);

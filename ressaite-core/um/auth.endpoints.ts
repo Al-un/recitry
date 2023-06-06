@@ -9,12 +9,12 @@ export type AuthEndpointTypes = {
 // ----------------------------------------------------------------------------
 
 interface SignUpReq {
-  username: string;
+  email: string;
   password: string;
 }
 
 interface LoginReq {
-  username: string;
+  email: string;
   password: string;
 }
 

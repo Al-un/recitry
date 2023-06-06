@@ -1,5 +1,5 @@
 import { tableName as materialTableName } from "@/recipe/Material.model";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
 import { userOne } from "@al-un/ressaite-core/um/users.mocks";

@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 
 export const checkInventoryAuthor: RequestHandler<{
   inventoryId: number;

@@ -1,0 +1,8 @@
+.rst-form {
+}
+
+.rst-form__input-group {
+  & + .rst-form__input-group {
+    margin-top: 8px;
+  }
+}

@@ -6,37 +6,47 @@ import { callEndpoint } from '@/api'
 
 export const useAppStore = defineStore('app', () => {
   // ---------- State ---------------------------------------------------------
-  const userInfo = ref<number | null>(null)
-  const token = ref<string | null>(null)
+  let savedToken: string | null = null
+  if(typeof window !== 'undefined' && window.localStorage){
+     savedToken = window.localStorage.getItem("token") ? `${ window.localStorage.getItem("token")}` : null
+  }
+  const token = ref<string | null>(savedToken)
 
   // ---------- Computed ------------------------------------------------------
   const isAuthenticated = computed(() => token.value !== null)
 
   // ---------- Actions -------------------------------------------------------
-  async function login(loginReq: AuthEndpointTypes['login']['request']) {
-    // console.log('Logging', loginReq)
-
+  async function login(
+    loginReq: AuthEndpointTypes['login']['request'],
+    rememberMe: boolean,
+  ) {
     const resp = await callEndpoint('login', null, loginReq)
 
     // console.log('login status', resp.status)
     // console.log('login resp', resp.data)
-    userInfo.value = 1
-    token.value = resp.data.token
+    if(resp.status === 200){
+      token.value = resp.data.token
+
+      if(rememberMe){
+        // find a better way T_T
+        localStorage.setItem('token', token.value)
+      }
+    }
   }
 
   async function signUp(signUpReq: AuthEndpointTypes['signup']['request']) {
     const resp = await callEndpoint('signup', null, signUpReq)
     // console.log('signup status', resp.status)
     // console.log('signup resp', resp.data)
-    // userInfo.value = 1
     // token.value = data.token
   }
 
   async function logout() {
     const resp = await callEndpoint('logout', null, null)
-    // console.log('logout status', resp.status)
-    // console.log('logout resp', resp.data)
-    userInfo.value = null
+    
+    if(resp.status === 204){
+      token.value == null
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -45,7 +55,6 @@ export const useAppStore = defineStore('app', () => {
     login,
     logout,
     signUp,
-    userInfo,
     token
   }
 })

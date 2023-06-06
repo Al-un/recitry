@@ -1,10 +1,16 @@
 <template>
   <div class="login-page">
-    <form class="login-card rst-card" @submit.prevent="submitLogin">
-      <rst-input v-model="form.username" />
-      <rst-input v-model="form.password" type="password" />
+    <form class="rst-form rst-card padded" @submit.prevent="submitLogin">
+      <div class="rst-form__input-group">
+        <rst-input v-model="form.username" type="email" label="Email" autocomplete="email" required />
+      </div>
+      <div class="rst-form__input-group">
+        <rst-input v-model="form.password" type="password" label="Password" autocomplete="current-password" required />
+      </div>
 
-      <button class="rst-button" type="submit">Login!</button>
+      <div class="rst-form__input-group rst-button-group fluid">
+        <button class="rst-button primary" type="submit">Login!</button>
+      </div>
 
       <div>
         <p>No account? Sign up <a href="/signup">there</a></p>
@@ -51,7 +57,7 @@ async function submitLogin() {
   width: 100%;
   height: 100%;
 }
-.login-card {
-  @include flex-col;
-}
+// .login-card {
+//   @include flex-col;
+// }
 </style>

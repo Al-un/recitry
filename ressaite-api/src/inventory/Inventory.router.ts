@@ -2,7 +2,7 @@ import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory
 import { InventoryRoutes } from "@al-un/ressaite-core/inventory/inventory.routes";
 
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
-import AuthMiddleware from "@/um/middlewares/AuthMiddleware";
+import {isAuthenticated} from "@/um/Auth.middleware";
 import * as InventoryController from "./Inventory.controller";
 import {
   checkInventoryAuthor,
@@ -16,38 +16,38 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   inventoryCreate: {
     route: InventoryRoutes["inventoryCreate"],
     controller: InventoryController.createInventory,
-    middlewares: [AuthMiddleware],
+    middlewares: [isAuthenticated],
   },
   inventoryList: {
     route: InventoryRoutes["inventoryList"],
     controller: InventoryController.listInventories,
-    middlewares: [AuthMiddleware],
+    middlewares: [isAuthenticated],
   },
   inventoryDisplay: {
     route: InventoryRoutes["inventoryDisplay"],
     controller: InventoryController.displayInventory,
-    middlewares: [AuthMiddleware],
+    middlewares: [isAuthenticated],
   },
   inventoryUpdate: {
     route: InventoryRoutes["inventoryUpdate"],
     controller: InventoryController.updateInventory,
-    middlewares: [AuthMiddleware, checkInventoryAuthor],
+    middlewares: [isAuthenticated, checkInventoryAuthor],
   },
   inventoryDelete: {
     route: InventoryRoutes["inventoryDelete"],
     controller: InventoryController.deleteInventory,
-    middlewares: [AuthMiddleware, checkInventoryAuthor],
+    middlewares: [isAuthenticated, checkInventoryAuthor],
   },
   inventoryContainerCreate: {
     route: InventoryRoutes["inventoryContainerCreate"],
     controller: InventoryController.createInventoryContainer,
-    middlewares: [AuthMiddleware, checkInventoryAuthor],
+    middlewares: [isAuthenticated, checkInventoryAuthor],
   },
   inventoryContainerUpdate: {
     route: InventoryRoutes["inventoryContainerUpdate"],
     controller: InventoryController.updateInventoryContainer,
     middlewares: [
-      AuthMiddleware,
+      isAuthenticated,
       checkInventoryAuthor,
       checkInventoryContainerAuthor,
     ],
@@ -56,7 +56,7 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
     route: InventoryRoutes["inventoryContainerDelete"],
     controller: InventoryController.deleteInventoryContainer,
     middlewares: [
-      AuthMiddleware,
+      isAuthenticated,
       checkInventoryAuthor,
       checkInventoryContainerAuthor,
     ],
@@ -64,13 +64,13 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   inventoryItemCreate: {
     route: InventoryRoutes["inventoryItemCreate"],
     controller: InventoryController.createInventoryItem,
-    middlewares: [AuthMiddleware, checkInventoryAuthor],
+    middlewares: [isAuthenticated, checkInventoryAuthor],
   },
   inventoryItemUpdate: {
     route: InventoryRoutes["inventoryItemUpdate"],
     controller: InventoryController.updateInventoryItem,
     middlewares: [
-      AuthMiddleware,
+      isAuthenticated,
       checkInventoryAuthor,
       checkInventoryItemAuthor,
     ],
@@ -79,7 +79,7 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
     route: InventoryRoutes["inventoryItemDelete"],
     controller: InventoryController.deleteInventoryItem,
     middlewares: [
-      AuthMiddleware,
+      isAuthenticated,
       checkInventoryAuthor,
       checkInventoryItemAuthor,
     ],

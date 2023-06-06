@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
-import { tableName as accessTokenTableName } from "@/um/models/AccessToken";
-import { tableName as userTableName } from "@/um/models/User";
+import { tableName as accessTokenTableName } from "@/um/AccessToken.model";
+import { tableName as userTableName } from "@/um/User.model";
 import { Migration } from "@/umzug";
 
 export const up: Migration = async ({ context: sequelize }) => {

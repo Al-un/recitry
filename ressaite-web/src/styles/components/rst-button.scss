@@ -29,4 +29,12 @@
 }
 
 .rst-button-group {
+  &.fluid {
+    display: flex;
+    width: 100%;
+
+    .rst-button {
+      flex-grow: 1;
+    }
+  }
 }

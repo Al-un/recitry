@@ -13,7 +13,7 @@ import {
   InventoryDetail,
   InventoryListItem,
 } from "@al-un/ressaite-core/inventory/inventory.models";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 
 export const tableName = "inventory";

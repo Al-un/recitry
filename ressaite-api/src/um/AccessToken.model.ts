@@ -8,7 +8,7 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { UserModel } from "./User";
+import { UserModel } from "./User.model";
 import { AccessToken } from "@al-un/ressaite-core/um/access-token.models";
 
 export const tableName = "access_token";

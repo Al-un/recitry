@@ -12,8 +12,8 @@ interface MockUser extends User {
 
 class MockUserData implements MockUser {
   id: number;
-  username: string;
-  email: string | null;
+  username: string | null;
+  email: string;
   password: string;
   clearPassword: string;
   salt: string;
@@ -32,7 +32,7 @@ class MockUserData implements MockUser {
   get minimalProfile(): UserMinimalProfile {
     return {
       id: this.id,
-      username: this.username,
+      username: this.username || this.email,
     };
   }
 

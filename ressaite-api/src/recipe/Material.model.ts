@@ -11,8 +11,9 @@ import {
   Material,
   MaterialShortInfo,
 } from "@al-un/ressaite-core/recipe/material.models";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 import { Lang, allLangs } from "@al-un/ressaite-core/core/models/lang";
+import { Includeable } from "sequelize";
 
 export const tableName = "material";
 
@@ -52,7 +53,7 @@ export class MaterialModel extends Model {
     };
   }
 
-  get toJson(): Material {
+  get toMaterial(): Material {
     return {
       id: this.id,
       name: this.name,
@@ -63,3 +64,8 @@ export class MaterialModel extends Model {
     };
   }
 }
+
+export const includeMaterialShortInfo: Includeable = {
+  model: MaterialModel,
+  attributes: ["id", "name", "lang"],
+};

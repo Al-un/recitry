@@ -1,7 +1,7 @@
 export interface User {
   id: number;
-  username: string;
-  email: string | null;
+  username: string | null;
+  email: string;
   password: string;
   salt: string;
 }
@@ -12,7 +12,7 @@ export interface UserMinimalProfile {
 }
 
 export interface UserFullProfile extends UserMinimalProfile {
-  email: string | null
+  email: string
 }
 
 export interface HasAuthor {

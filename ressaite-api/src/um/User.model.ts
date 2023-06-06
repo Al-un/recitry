@@ -1,8 +1,9 @@
 import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import bcrypt from "bcrypt";
 
-import { AccessTokenModel } from "./AccessToken";
+import { AccessTokenModel } from "./AccessToken.model";
 import { UserMinimalProfile, User } from "@al-un/ressaite-core/um/users.models";
+import { Includeable } from "sequelize";
 
 export const tableName = "users";
 
@@ -28,8 +29,11 @@ export class UserModel extends Model implements User {
   })
   id!: number;
 
-  @Column({ allowNull: false, type: DataType.STRING })
-  username!: string;
+  @Column({ allowNull: false, type: DataType.STRING, unique: true })
+  email!: string;
+
+  @Column({ allowNull: true, unique: true, type: DataType.STRING })
+  username!: string | null;
 
   @Column({ allowNull: false, type: DataType.STRING })
   get password(): string {
@@ -50,19 +54,18 @@ export class UserModel extends Model implements User {
     throw new Error("Do not set salt value directly");
   }
 
-  @Column({
-    type: DataType.STRING,
-    unique: true
-  })
-  email!: string | null;
-
   @HasMany(() => AccessTokenModel)
   accessTokens!: AccessTokenModel[];
 
   get toMinimalProfile(): UserMinimalProfile {
     return {
       id: this.id,
-      username: this.username,
+      username: this.username || this.email,
     };
   }
 }
+
+export const includeUserMinimalProfile: Includeable = {
+  model: UserModel,
+  attributes: ["id", "username", "email"],
+};

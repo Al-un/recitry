@@ -6,7 +6,7 @@ import { buildRouteWithParam } from "@al-un/ressaite-core/core/base-api.utils";
 import { userOneForeverToken } from "@al-un/ressaite-core/um/access-token.mocks";
 
 import app from "@/app";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 import { userOne } from "@al-un/ressaite-core/um/users.mocks";
 import { InventoryCreation } from "@al-un/ressaite-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
@@ -36,33 +36,6 @@ describe("InventoryController", () => {
   describe("for inventories", () => {
     const toCreateInventory: InventoryCreation = {
       name: "Inventory name",
-      containers: [
-        {
-          name: "Container 1 name",
-          inventoryId: null,
-          items: [
-            {
-              name: "Item 1-1 name",
-              quantity: 2,
-              dueDate: null,
-              inventoryContainerId: null,
-              materialId: null,
-            },
-            {
-              name: "Item 1-2 name",
-              quantity: 16,
-              dueDate: new Date(),
-              inventoryContainerId: null,
-              materialId: null,
-            },
-          ],
-        },
-        {
-          name: "Container 2 name",
-          inventoryId: null,
-          items: [],
-        },
-      ],
     };
 
     describe("createInventory", async () => {

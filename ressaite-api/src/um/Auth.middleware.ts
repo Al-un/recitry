@@ -6,8 +6,8 @@ import {
 } from "passport-http-bearer";
 
 import { RstErrorResp } from "@al-un/ressaite-core/core/base-api.models";
-import { UserModel } from "../models/User";
-import { AccessTokenModel } from "../models/AccessToken";
+import { UserModel } from "./User.model";
+import { AccessTokenModel } from "./AccessToken.model";
 
 // ----------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ const bearerVerify: VerifyFunction = async function verify(token, cb) {
 
 passport.use(new BearerStrategy(bearerVerify));
 
-const AuthMiddleware: RequestHandler = (req, res, next) => {
+export const isAuthenticated: RequestHandler = (req, res, next) => {
   type BearerCallback = Parameters<VerifyFunction>[1];
   const cbHandler: BearerCallback = (err, authInfo, opts) => {
     if (err) {
@@ -74,4 +74,3 @@ const AuthMiddleware: RequestHandler = (req, res, next) => {
 
 // ----------------------------------------------------------------------------
 
-export default AuthMiddleware;

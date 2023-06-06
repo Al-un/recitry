@@ -1,6 +1,5 @@
 import {
   Inventory,
-  InventoryContainer,
   InventoryContainerWithItems,
   InventoryCreation,
   InventoryDetail,
@@ -9,8 +8,11 @@ import {
 import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";
-import { UserModel } from "@/um/models/User";
-import { MaterialModel } from "@/recipe/Material.model";
+import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
+import {
+  MaterialModel,
+  includeMaterialShortInfo,
+} from "@/recipe/Material.model";
 
 export const createInventory = async (
   inventory: InventoryCreation,
@@ -57,7 +59,7 @@ export const fetchInventory = async (
   inventoryId: number
 ): Promise<InventoryDetail | null> => {
   const i = await InventoryModel.findByPk(inventoryId, {
-    include: [{ model: UserModel, attributes: ["id", "username"] }],
+    include: [includeUserMinimalProfile],
   });
   if (i === null) return null;
 
@@ -72,7 +74,7 @@ export const fetchInventory = async (
 
   const containers = await InventoryContainerModel.findAll({
     where: { inventoryId: i.id },
-    include: [{ model: UserModel, attributes: ["id", "username"] }],
+    include: [includeUserMinimalProfile],
   });
 
   for (let c of containers) {
@@ -87,10 +89,7 @@ export const fetchInventory = async (
 
     const items = await InventoryItemModel.findAll({
       where: { containerId: c.id },
-      include: [
-        { model: UserModel, attributes: ["id", "username"] },
-        { model: MaterialModel, attributes: ["id", "name", "lang"] },
-      ],
+      include: [includeUserMinimalProfile, includeMaterialShortInfo],
     });
     for (let item of items) {
       const formattedItem: InventoryItem = {

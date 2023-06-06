@@ -2,7 +2,7 @@ import { expect } from "chai";
 import request from "supertest";
 
 import { userOne } from "@al-un/ressaite-core/um/users.mocks";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 
 import app from "@/app";
 import { MaterialModel } from "./Material.model";
