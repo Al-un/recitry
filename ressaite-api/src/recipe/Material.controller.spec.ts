@@ -14,10 +14,10 @@ import {
 } from "@al-un/ressaite-core/um/access-token.mocks";
 import { MaterialCreation } from "@al-un/ressaite-core/recipe/material.models";
 import { dumMatCarrot } from "@al-un/ressaite-core/recipe/material.mocks";
+import { testAuthentication } from "@/um/Auth.middleware.spec";
 
 describe("MaterialController", () => {
   let firstUser: UserModel;
-  let route: string;
 
   before(async () => {
     const userCandidate = await UserModel.findOne({
@@ -36,20 +36,11 @@ describe("MaterialController", () => {
       lang: "en",
     };
 
-    it("requires authentication", async () => {
-      let res = await request(app)
-        .post(AllRoutes.materialCreate.path)
-        .send(creationRequest);
-      expect(res.status).to.eq(401);
+    testAuthentication(
+      request(app).post(AllRoutes.materialCreate.path).send(creationRequest)
+    );
 
-      res = await request(app)
-        .post(AllRoutes.materialCreate.path)
-        .auth("some invalid token", { type: "bearer" })
-        .send(creationRequest);
-      expect(res.status).to.eq(401);
-    });
-
-    it("creates the material", async () => {
+    it("creates the material and returns 201", async () => {
       const res = await request(app)
         .post(AllRoutes.materialCreate.path)
         .auth(userOneForeverToken.token, { type: "bearer" })
@@ -57,12 +48,11 @@ describe("MaterialController", () => {
 
       expect(res.status).to.eq(201);
       const m = res.body;
-
       expect(m.id).to.not.be.undefined;
       expect(m.author.id).to.equal(firstUser.id);
     });
 
-    it("cannot create a material whose name already exists", async () => {
+    it("cannot create a material whose name already exists and returns 400", async () => {
       const res = await request(app)
         .post(AllRoutes.materialCreate.path)
         .auth(userOneForeverToken.token, { type: "bearer" })
@@ -74,6 +64,7 @@ describe("MaterialController", () => {
 
   describe("updateMaterial", () => {
     let someMaterial: MaterialModel;
+    let route: string;
 
     before(async () => {
       someMaterial = await MaterialModel.create({
@@ -86,15 +77,15 @@ describe("MaterialController", () => {
       });
     });
 
-    it("requires authentication", async () => {
-      let res = await request(app).patch(route);
-      expect(res.status).to.eq(401);
-
-      res = await request(app)
-        .patch(route)
-        .auth("some invalid token", { type: "bearer" });
-      expect(res.status).to.eq(401);
-    });
+    testAuthentication(
+      request(app)
+        .patch(
+          buildRouteWithParam(AllRoutes.materialUpdate.path, {
+            materialId: 1,
+          })
+        )
+        .send({ name: "a" })
+    );
 
     it("requires owner to perform the action", async () => {
       let res = await request(app)
@@ -117,6 +108,7 @@ describe("MaterialController", () => {
 
   describe("deleteMaterial", () => {
     let someMaterial: MaterialModel;
+    let route: string;
 
     before(async () => {
       someMaterial = await MaterialModel.create({
@@ -129,15 +121,13 @@ describe("MaterialController", () => {
       });
     });
 
-    it("requires authentication", async () => {
-      let res = await request(app).delete(route);
-      expect(res.status).to.eq(401);
-
-      res = await request(app)
-        .delete(route)
-        .auth("some invalid token", { type: "bearer" });
-      expect(res.status).to.eq(401);
-    });
+    testAuthentication(
+      request(app).delete(
+        buildRouteWithParam(AllRoutes.materialDelete.path, {
+          materialId: 1,
+        })
+      )
+    );
 
     it("requires owner to perform the action", async () => {
       let res = await request(app)

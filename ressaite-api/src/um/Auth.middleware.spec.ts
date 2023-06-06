@@ -3,7 +3,7 @@ import { expect } from "chai";
 import request from "supertest";
 
 import { RequestHandler } from "express";
-import {isAuthenticated} from "./Auth.middleware";
+import { isAuthenticated } from "./Auth.middleware";
 
 let app: Express;
 
@@ -42,3 +42,17 @@ describe("AuthMiddleware", () => {
     expect(res.status).to.equal(401);
   });
 });
+
+export const testAuthentication = (test: request.Test) => {
+  describe("with authentication middleware", () => {
+    it("returns 401 when authentication is not provided", async () => {
+      const res = await test;
+      expect(res.status).to.eq(401);
+    });
+
+    it("returns 401 when incorrect token is provided", async () => {
+      const res = await test.auth("some invalid token", { type: "bearer" });
+      expect(res.status).to.eq(401);
+    });
+  });
+};

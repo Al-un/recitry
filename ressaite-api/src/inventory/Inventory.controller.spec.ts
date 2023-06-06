@@ -11,6 +11,7 @@ import { userOne } from "@al-un/ressaite-core/um/users.mocks";
 import { InventoryCreation } from "@al-un/ressaite-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
 import { userOneInventories } from "@al-un/ressaite-core/inventory/inventory.mocks";
+import { testAuthentication } from "@/um/Auth.middleware.spec";
 
 describe("InventoryController", () => {
   let firstUser: UserModel;
@@ -30,7 +31,7 @@ describe("InventoryController", () => {
       },
     });
     if (inventoryCandidate === null) throw new Error("Inventory one not found");
-    firstInventory = inventoryCandidate
+    firstInventory = inventoryCandidate;
   });
 
   describe("for inventories", () => {
@@ -39,6 +40,12 @@ describe("InventoryController", () => {
     };
 
     describe("createInventory", async () => {
+      testAuthentication(
+        request(app)
+          .post(AllRoutes.inventoryCreate.path)
+          .send(toCreateInventory)
+      );
+
       it("creates inventory", async () => {
         const res = await request(app)
           .post(AllRoutes.inventoryCreate.path)
