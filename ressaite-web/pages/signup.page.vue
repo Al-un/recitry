@@ -15,6 +15,7 @@
           v-model="signUpForm.username"
           type="text"
           label="Username"
+          autocomplete="username"
         />
       </div>
       <div class="rst-form__input-group">
