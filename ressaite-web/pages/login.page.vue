@@ -44,7 +44,6 @@ import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/auth.endpoints'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
 import { useAppStore } from '@/stores/app'
-import { callEndpoint } from '@/api'
 
 const appStore = useAppStore()
 

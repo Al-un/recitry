@@ -1,11 +1,35 @@
 <template>
   <div class="login-page">
-    <form class="login-card rst-card" @submit.prevent="submitSignUp">
-      <rst-input v-model="form.username" />
-      <rst-input v-model="form.password" type="password" />
-      <rst-input v-model="form.passwordConfirm" type="password" />
+    <form class="rst-form rst-card padded" @submit.prevent="submitSignUp">
+      <div class="rst-form__input-group">
+        <rst-input
+          v-model="signUpForm.email"
+          type="email"
+          label="Email"
+          autocomplete="email"
+          required
+        />
+      </div>
+      <div class="rst-form__input-group">
+        <rst-input
+          v-model="signUpForm.username"
+          type="text"
+          label="Username"
+        />
+      </div>
+      <div class="rst-form__input-group">
+        <rst-input
+          v-model="signUpForm.password"
+          type="password"
+          label="Password"
+          autocomplete="new-password"
+          required
+        />
+      </div>
 
-      <button class="rst-button" type="submit">Signup!</button>
+      <div class="rst-form__input-group rst-button-group fluid">
+        <button class="rst-button primary" type="submit">Signup!</button>
+      </div>
     </form>
   </div>
 </template>
@@ -14,26 +38,23 @@
 import { reactive } from 'vue'
 import { navigate } from 'vite-plugin-ssr/client/router'
 
-import type { LoginReq } from '@al-un/ressaite-core/um/models/Auth'
+import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/auth.endpoints'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
 import { useAppStore } from '@/stores/app'
 
 const app = useAppStore()
 
-const form: LoginReq = reactive({
+const signUpForm = reactive<AuthEndpointTypes['signup']['request']>({
   username: '',
-  password: '',
-  passwordConfirm: ''
+  email: '',
+  password: ''
 })
 
 async function submitSignUp() {
-  await app.signUp({
-    username: form.username,
-    password: form.password
-  })
+  await app.signUp(signUpForm)
 
-  // navigate('/')
+  navigate('/login')
 }
 </script>
 
@@ -42,8 +63,5 @@ async function submitSignUp() {
   @include flex-center-all;
   width: 100%;
   height: 100%;
-}
-.login-card {
-  @include flex-col;
 }
 </style>
