@@ -5,7 +5,7 @@ const LoggerMiddleware: RequestHandler = (req, res, next) => {
   const reqId = randomUUID();
   res.locals.requestId = reqId;
 
-  console.log(`${reqId}: reaching ${req.path}`);
+  console.log(`${reqId}: start ${req.method} ${req.path}`);
   next();
   console.log(`${reqId}: end`);
 };
