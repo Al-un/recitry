@@ -131,7 +131,6 @@ export const createInventoryContainer: InventoryControllerTypes["inventoryContai
       include: [includeUserMinimalProfile],
     });
     if (c === null) throw new Error("Created container not found");
-    console.log("C", c.dataValues);
 
     res.status(201).json(c.toInventoryContainer);
   };
@@ -189,7 +188,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
     }
 
     const creationRequest = req.body as InventoryItemCreation;
-    const inventoryItem = await InventoryItemModel.create(
+    const created = await InventoryItemModel.create(
       {
         name: creationRequest.name,
         quantity: creationRequest.quantity,
@@ -202,8 +201,12 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
       },
       { include: [includeUserMinimalProfile] }
     );
+    const ii = await InventoryItemModel.findByPk(created.id, {
+      include: [includeUserMinimalProfile],
+    });
+    if (ii === null) throw new Error("Created container not found");
 
-    res.status(201).json(inventoryItem.toInventoryItem);
+    res.status(201).json(ii.toInventoryItem);
   };
 
 export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"] =

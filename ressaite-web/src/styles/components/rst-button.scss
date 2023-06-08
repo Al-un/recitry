@@ -1,9 +1,10 @@
 .rst-button {
   border-radius: 8px;
   border: none;
-  padding: 8px 16px;
+  padding: 4px 16px;
   text-align: center;
   transition: background-color 0.25s;
+  min-width: 80px;
 }
 
 .rst-button:hover,
@@ -14,27 +15,49 @@
 .rst-button.primary {
   background-color: var(--rst-primary);
   color: var(--rst-txt-color-alternate);
-}
-.rst-button.primary:hover {
-  background-color: var(--rst-primary-active);
+  border: 1px solid var(--rst-primary);
+
+  &:hover {
+    background-color: var(--rst-primary-active);
+  }
 }
 
 .rst-button.secondary {
   background-color: var(--rst-bg-content);
-  color: var(--rst-txt-color);
+  color: var(--rst-primary);
+  border: 1px solid var(--rst-primary);
+
+  &:hover {
+    background-color: var(--rst-bg-content-hover);
+  }
 }
 
-.rst-button.secondary:hover {
-  background-color: var(--rst-bg-content-hover);
+.rst-button.danger{
+  background-color: var(--rst-danger);
+  color: white;
+  border: 1px solid var(--rst-danger);
+
+  &:hover {
+    background-color: var(--rst-bg-content-hover);
+  }
 }
 
 .rst-button-group {
+  display: flex;
+
   &.fluid {
-    display: flex;
     width: 100%;
 
     .rst-button {
       flex-grow: 1;
     }
+  }
+
+  &.align-right {
+    justify-content: flex-end;
+  }
+
+  .rst-button + .rst-button {
+    margin-inline-start: 8px;
   }
 }

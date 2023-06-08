@@ -1,5 +1,7 @@
 <template>
   <div class="central-aligned-page">
+    <h1>Inventories</h1>
+
     <h2>{{ $t('inventories.list.title') }}</h2>
 
     <div v-if="!appStore.isAuthenticated">Please login first...</div>
@@ -7,14 +9,20 @@
     <template v-else>
       <div v-if="inventoryStore.list?.length" class="inventories-container">
         <div v-for="inventory in inventoryStore.list" :key="inventory.id" class="rst-card padded">
-          <form v-if="state.editInventory?.id === inventory.id" @submit.prevent="editInventory()">
-            <rst-input v-model="state.editInventory.name" label="Inventory name" />
+          <form
+            v-if="state.editInventory?.id === inventory.id"
+            @submit.prevent="editInventory()"
+            class="rst-form"
+          >
+            <section class="rst-form__input-group">
+              <rst-input v-model="state.editInventory.name" label="Inventory name" />
+            </section>
 
-            <section>
-              <button @click="state.editInventory = null" rst="rst-button danger" type="reset">
+            <section class="rst-form__input-group rst-button-group align-right">
+              <button @click="state.editInventory = null" class="rst-button danger" type="reset">
                 Cancel
               </button>
-              <button rst="rst-button primary" type="submit">Edit</button>
+              <button class="rst-button primary" type="submit">Edit</button>
             </section>
           </form>
 
@@ -22,11 +30,11 @@
             <a :href="`/inventory/${inventory.id}`">
               <p>{{ inventory.name }}</p>
             </a>
-            <section>
-              <button @click="prepareToEdit(inventory)" rst="rst-button secondary" type="button">
+            <section class="rst-button-group align-right">
+              <button @click="prepareToEdit(inventory)" class="rst-button secondary" type="button">
                 Edit
               </button>
-              <button @click="deleteInventory(inventory)" rst="rst-button danger" type="button">
+              <button @click="deleteInventory(inventory)" class="rst-button danger" type="button">
                 Delete
               </button>
             </section>
@@ -37,10 +45,15 @@
         <p>Hey, looks like there is inventory here! Let's create one below!</p>
       </div>
 
-      <form @submit.prevent="createInventory" class="rst-card padded">
-        <rst-input v-model="state.newInventory.name" label="Inventory name" />
+      <h2>Create a new inventory</h2>
+      <form @submit.prevent="createInventory" class="rst-card padded rst-form">
+        <section class="rst-form__input-group">
+          <rst-input v-model="state.newInventory.name" label="Inventory name" />
+        </section>
 
-        <button class="rst-button primary" type="submit">Create</button>
+        <section class="rst-form__input-group rst-button-group align-right">
+          <button class="rst-button primary" type="submit">Create</button>
+        </section>
       </form>
     </template>
   </div>

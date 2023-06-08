@@ -1,14 +1,20 @@
 <template>
   <div v-if="inventoryStore.current" class="central-aligned-page">
-    <h2>{{ inventoryStore.current.name }}</h2>
+    <h1>{{ inventoryStore.current.name }}</h1>
 
-    <div
+    <main v-if="inventoryStore.current.containers.length === 0" class="rst-card padded">
+      There is no container at the moment, let's create one!
+    </main>
+
+    <main
       v-for="container in inventoryStore.current.containers"
       :key="container.id"
       class="rst-card padded"
     >
-      <header v-if="state.editContainer?.id !== container.id">
-        <h3>{{ container.name }}</h3>
+      <!-- Container name -->
+      <header v-if="state.editContainer?.id !== container.id" class="container-header">
+        <h2>{{ container.name }}</h2>
+        <div class="flex-spacer"></div>
         <button
           @click="prepareToEditContainer(container)"
           class="rst-button secondary"
@@ -20,7 +26,7 @@
           Delete
         </button>
       </header>
-      <form v-else @submit.prevent="editContainer">
+      <form v-else @submit.prevent="editContainer" class="container-header rst-form">
         <rst-input v-model="state.editContainer.name" />
         <button @click="stopEditContainer" class="rst-button secondary" type="cancel">
           Cancel
@@ -28,6 +34,7 @@
         <button class="rst-button primary" type="submit">Edit</button>
       </form>
 
+      <!-- Material table -->
       <main class="rst-table inventory-item-table">
         <div class="rst-table-row">
           <div class="inventory-item-table__id">Id</div>
@@ -92,11 +99,43 @@
           </template>
         </div>
       </main>
-    </div>
 
-    <form @submit.prevent="createContainer" class="rst-card padded">
-      <rst-input v-model="state.newContainer.name" label="Container name" />
-      <button class="rst-button primary" type="submit">Add container</button>
+      <!-- Create new material -->
+      <form @submit.prevent="createItem(container.id)" class="rst-form">
+        <rst-input
+          v-model="state.newItem[container.id].name"
+          class="inventory-item__name"
+          label="Name"
+          type="text"
+        />
+        <rst-input
+          v-model="state.newItem[container.id].quantity"
+          class="inventory-item__quantity"
+          label="Quantity"
+          type="number"
+        />
+        <rst-input
+          v-model="state.newItem[container.id].dueDate"
+          class="inventory-item__due-date"
+          label="Best before"
+          type="date"
+        />
+
+        <section class="rst-button-group">
+          <button type="submit" class="rst-button primary">Create</button>
+        </section>
+      </form>
+    </main>
+
+    <h2>Create an inventory container</h2>
+
+    <form @submit.prevent="createContainer" class="rst-card padded rst-form">
+      <section class="rst-form__input-group">
+        <rst-input v-model="state.newContainer.name" label="Container name" />
+      </section>
+      <section class="rst-form__input-group rst-button-group align-right">
+        <button class="rst-button primary" type="submit">Add container</button>
+      </section>
     </form>
   </div>
   <div v-else>Loading inventory...</div>
@@ -123,25 +162,49 @@ const inventoryId = parseInt((pageContext as any).routeParams.inventoryId)
 interface State {
   newContainer: InventoryContainerCreation
   editContainer: InventoryContainer | null
-  newItem: InventoryItemCreation | null
+  newItem: { [id: number]: InventoryItemCreation }
   editItem: InventoryItem | null
+  /** To save the container ID of an edited item */
   containerId: number
 }
 
 const state = reactive<State>({
   newContainer: { name: '' },
   editContainer: null,
-  newItem: null,
+  newItem: {},
   editItem: null,
   containerId: -1
 })
 
-const loadInventory = async () => await inventoryStore.loadInventoryById(inventoryId)
+const loadInventory = async () => {
+  await inventoryStore.loadInventoryById(inventoryId)
+  if (inventoryStore.current) {
+    state.newItem = inventoryStore.current.containers.reduce(
+      (acc, cur) => ({
+        ...acc,
+        [cur.id]: { name: '', quantity: 1, dueDate: null, materialId: null }
+      }),
+      {} as { [id: number]: InventoryItemCreation }
+    )
+  }
+}
+
 onMounted(loadInventory)
 // onServerPrefetch(loadInventory)
 
 async function createContainer() {
   await inventoryStore.createInventoryContainer(inventoryId, state.newContainer)
+
+  if (inventoryStore.current) {
+    const { containers } = inventoryStore.current
+    const lastContainer = containers[containers.length - 1]
+    state.newItem[lastContainer.id] = {
+      name: '',
+      quantity: 1,
+      dueDate: null,
+      materialId: null
+    }
+  }
 }
 
 function prepareToEditContainer(container: InventoryContainer) {
@@ -163,8 +226,8 @@ async function deleteContainer(container: InventoryContainer) {
   await inventoryStore.deleteInventoryContainer(inventoryId, container.id)
 }
 
-function prepateToCreateItem(containerId: number) {
-  state.newItem = {
+function stopCreateItem(containerId: number) {
+  state.newItem[containerId] = {
     name: '',
     quantity: 1,
     dueDate: null,
@@ -172,16 +235,15 @@ function prepateToCreateItem(containerId: number) {
   }
 }
 
-function stopCreateItem() {
-  state.newItem = null
-}
+async function createItem(containerId: number) {
+  await inventoryStore.createInventoryItem(inventoryId, containerId, state.newItem[containerId])
 
-async function createItem() {
-  if (state.newItem === null) {
-    throw new Error('Cannot create a null item')
+  state.newItem[containerId] = {
+    name: '',
+    quantity: 1,
+    dueDate: null,
+    materialId: null
   }
-
-  await inventoryStore.createInventoryItem(inventoryId, state.containerId, state.newItem)
 }
 
 function prepareToEditItem(containerId: number, item: InventoryItem) {
@@ -207,6 +269,20 @@ async function deleteItem(containerId: number, item: InventoryItem) {
 </script>
 
 <style lang="scss">
+.container-header {
+  @include flex-row;
+  margin-block-end: 16px;
+
+  .rst-input {
+    flex-grow: 1;
+    margin-inline-end: 8px;
+  }
+
+  .rst-button + .rst-button {
+    margin-inline-start: 8px;
+  }
+}
+
 .inventory-item-table {
   justify-content: space-between;
 }
