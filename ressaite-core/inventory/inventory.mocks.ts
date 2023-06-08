@@ -1,4 +1,4 @@
-import type { InventoryDetail } from "./inventory.models";
+import type { InventoryCreation, InventoryDetail } from "./inventory.models";
 import { userOne } from "../um/users.mocks";
 import { dumMatCarrot } from "../recipe/material.mocks";
 
@@ -74,3 +74,12 @@ export const userOneInventories: MockProfileData = {
     },
   ],
 };
+
+export const mockCreateInventory: InventoryCreation = {
+  name: "Inventory Name",
+};
+
+export const mockUpdateInventory: InventoryCreation = {
+  name: "To be updated name",
+};
+
