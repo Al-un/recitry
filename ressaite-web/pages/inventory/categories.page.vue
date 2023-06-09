@@ -29,12 +29,10 @@
           <p>{{ container.name }}</p>
 
           <section class="rst-button-group align-right">
-            <rst-button @click="prepareToEditContainer(container)" class="rst-button secondary"
-              >Edit</rst-button
-            >
-            <rst-button @click="deleteContainer(container)" class="rst-button danger"
-              >Delete</rst-button
-            >
+            <button @click="prepareToEditContainer(container)" class="rst-button secondary">
+              Edit
+            </button>
+            <button @click="deleteContainer(container)" class="rst-button danger">Delete</button>
           </section>
         </template>
       </div>

@@ -33,6 +33,7 @@
 }
 
 .rst-input__input {
+  background-color: var(--rst-bg-content);
   padding: 7px; // 8-1
   border: 1px solid var(--rst-divider);
   border-radius: 4px;

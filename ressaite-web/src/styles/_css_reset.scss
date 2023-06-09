@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  font-size: var(--rst-font-size-body);
+font-size: var(--rst-font-size-body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -20,6 +20,10 @@ html,
 body,
 #app {
   height: 100%;
+}
+
+* {
+  color: var(--rst-txt-color);
 }
 
 *,

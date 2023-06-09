@@ -10,11 +10,12 @@
 :root {
   --rst-layout-header-height: 40px;
 
-  --rst-primary: #d38c28;
-  --rst-primary-active: #b7761b;
-  --rst-danger: #ff3300;
+  --rst-primary: rgba(0, 167, 116, 1);
+  --rst-primary-active: rgba(39, 185, 115, 1);
+  --rst-danger: rgba(253, 121, 118, 1);
+  --rst-danger-active: rgba(253, 121, 118, 0.8);
 
-  --rst-bg-app: #fafafa;
+  --rst-bg-app: #fafafa; // https://dribbble.com/shots/14190307-Recipe-app/attachments/5824756?mode=media
   --rst-bg-content: #ffffff;
   --rst-bg-content-hover: #efefef;
   --rst-divider: #aaa;
@@ -29,4 +30,36 @@
   --rst-font-size-h3: 18px;
   --rst-font-size-h2: 24px;
   --rst-font-size-h1: 36px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rst-layout-header-height: 40px;
+
+    // https://dribbble.com/shots/20792040-Cookpedia-Food-Recipe-Mobile-App
+    --rst-primary: rgba(0, 167, 116, 1);
+    // https://dribbble.com/shots/14190307-Recipe-app/attachments/5824756?mode=media
+    --rst-primary-active: rgba(39, 185, 115, 1);
+    // https://dribbble.com/shots/17501406-Cooking-App
+    --rst-danger: rgba(253, 121, 118, 1);
+    --rst-danger-active: rgba(253, 121, 118, 0.8);
+
+    --rst-bg-app: #121212; // https://m2.material.io/design/color/dark-theme.html#properties
+    // https://m2.material.io/design/color/dark-theme.html#properties
+    // Need to blend bg-app with 8% of primary color
+    --rst-bg-content: #1f1b24;
+    --rst-bg-content-hover: #221c34;
+    --rst-divider: #aaa;
+
+    --rst-txt-color: #ffffff;
+    --rst-txt-sub: #eee;
+    --rst-txt-color-alternate: #ffffff;
+
+    // https://banc.digital/blog/typography-font-sizes-styles-formats
+    --rst-font-size-small: 12px;
+    --rst-font-size-body: 14px;
+    --rst-font-size-h3: 18px;
+    --rst-font-size-h2: 24px;
+    --rst-font-size-h1: 36px;
+  }
 }
