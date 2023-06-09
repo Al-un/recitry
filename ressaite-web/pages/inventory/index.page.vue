@@ -2,6 +2,8 @@
   <div v-if="inventoryStore.current" class="central-aligned-page">
     <h1>{{ inventoryStore.current.name }}</h1>
 
+    <a class="rst-button secondary" :href="`/inventory/${inventoryId}/categories`">Manage containers</a>
+
     <CurrentInventoryItemsList
       :inventory="inventoryStore.current"
       @create="createItem"
