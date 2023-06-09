@@ -7,9 +7,9 @@
   flex-wrap: wrap;
   width: 100%;
 
-  border-top: 1px solid #aaa;
+  border-top: 1px solid var(--rst-divider);
 
   &:last-of-type{
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid var(--rst-divider);
   }
 }

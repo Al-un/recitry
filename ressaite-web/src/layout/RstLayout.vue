@@ -74,7 +74,7 @@ async function submitLogout() {
 .rst-layout__content__slot {
   height: 100%;
   flex-grow: 1;
-  overflow: auto;
+  // overflow: auto; // duplicate with parent overflow
 }
 
 .layout-my-profile {

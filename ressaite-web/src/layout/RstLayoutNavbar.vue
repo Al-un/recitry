@@ -4,7 +4,9 @@
     id="rst-navbar-backdrop"
     :class="{ 'show-navbar': showNavbar }"
   ></div>
-  <nav id="rst-navbar" :class="{ 'show-navbar': showNavbar }"></nav>
+  <menu id="rst-navbar" :class="{ 'show-navbar': showNavbar }">
+    <li><a href="/materials">Materials</a></li>
+  </menu>
 </template>
 
 <script lang="ts" setup>
@@ -27,6 +29,7 @@ const props = defineProps({
   z-index: $rst-sidebar-bg-z-index;
   height: 100%;
   margin-left: -$rst-sidebar-width;
+  padding: 0;
   transition: margin-left 0.25s;
 
   &.show-navbar {
@@ -35,6 +38,25 @@ const props = defineProps({
 
   @include media('<tablet') {
     position: absolute;
+  }
+
+  li {
+    border-top: 1px solid var(--rst-divider);
+    transition: background-color 0.25s;
+
+    &:last-of-type {
+      border-bottom: 1px solid var(--rst-divider);
+    }
+
+    &:hover {
+      background-color: var(--rst-bg-content-hover);
+    }
+  }
+  a {
+    display: flex;
+    align-items: center;
+    padding-inline-start: 16px;
+    height: 36px;
   }
 }
 

@@ -165,8 +165,6 @@ export const deleteInventoryContainer: InventoryControllerTypes["inventoryContai
 
 export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"] =
   async (req, res) => {
-    res.status(503).json({ message: "not implemented yet" });
-
     const userId = (req.res?.locals as any).user?.id;
     if (!userId) {
       res.status(400).send({ message: "userId parameter not found" });

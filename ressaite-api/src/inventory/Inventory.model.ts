@@ -53,6 +53,8 @@ export class InventoryModel extends Model {
       // containers: (this.containers || []).map(
       //   (container) => container.toResponseFormat
       // ),
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 

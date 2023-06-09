@@ -55,6 +55,8 @@ export class InventoryContainerModel extends Model {
       id: this.id,
       name: this.name,
       author: this.author.toMinimalProfile,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 

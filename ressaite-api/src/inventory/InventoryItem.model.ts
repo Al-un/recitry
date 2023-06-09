@@ -64,6 +64,8 @@ export class InventoryItemModel extends Model {
       quantity: this.quantity,
       dueDate: this.dueDate,
       material: this.material ? this.material.toShortInfo : null,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 }
