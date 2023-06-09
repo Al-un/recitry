@@ -65,7 +65,7 @@ export const up: Migration = async ({ context: sequelize }) => {
         model: inventoryTableName,
         key: "id",
       },
-      onDelete: 'CASCADE'
+      onDelete: "CASCADE",
     },
     createdAt: {
       allowNull: false,
@@ -112,7 +112,7 @@ export const up: Migration = async ({ context: sequelize }) => {
         model: inventoryContainerTableName,
         key: "id",
       },
-      onDelete: 'CASCADE'
+      onDelete: "CASCADE",
     },
     materialId: {
       allowNull: true,
@@ -134,7 +134,7 @@ export const up: Migration = async ({ context: sequelize }) => {
 };
 
 export const down: Migration = async ({ context: sequelize }) => {
-  await sequelize.getQueryInterface().dropTable(inventoryTableName);
-  await sequelize.getQueryInterface().dropTable(inventoryContainerTableName);
   await sequelize.getQueryInterface().dropTable(inventoryItemTableName);
+  await sequelize.getQueryInterface().dropTable(inventoryContainerTableName);
+  await sequelize.getQueryInterface().dropTable(inventoryTableName);
 };

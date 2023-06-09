@@ -5,7 +5,7 @@ import { AccessTokenModel } from "./AccessToken.model";
 import { UserMinimalProfile, User } from "@al-un/ressaite-core/um/users.models";
 import { Includeable } from "sequelize";
 
-export const tableName = "users";
+export const tableName = "user";
 
 export const generateSalt = (): string => {
   const salt = bcrypt.genSaltSync(10);
