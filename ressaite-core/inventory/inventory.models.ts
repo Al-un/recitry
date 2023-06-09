@@ -24,8 +24,7 @@ interface InventoryContainerBase {
   name: string;
 }
 
-export interface InventoryContainerCreation extends InventoryContainerBase {
-}
+export interface InventoryContainerCreation extends InventoryContainerBase {}
 
 export interface InventoryContainer
   extends InventoryContainerBase,
@@ -52,6 +51,7 @@ interface InventoryItemBase {
 }
 
 export interface InventoryItemCreation extends InventoryItemBase {
+  id: number | null;
   materialId: number | null;
 }
 

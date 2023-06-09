@@ -210,13 +210,14 @@ export const useInventoryStore = defineStore('inventory', () => {
   async function updateInventoryItem(
     inventoryId: number,
     inventoryContainerId: number,
-    item: InventoryItem
+    itemId: number,
+    item: Partial<InventoryItemCreation>
   ) {
     loading.value = true
 
     const resp = await callEndpoint(
       'inventoryItemUpdate',
-      { inventoryId, inventoryContainerId, inventoryItemId: item.id },
+      { inventoryId, inventoryContainerId, inventoryItemId: itemId },
       item
     )
     if (resp.status === 200) {

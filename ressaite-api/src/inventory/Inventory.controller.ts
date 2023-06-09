@@ -14,6 +14,7 @@ import { InventoryItemModel } from "./InventoryItem.model";
 import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
 
 import * as InventoryService from "./Inventory.service";
+import { includeMaterialShortInfo } from "@/recipe/Material.model";
 
 // ----------------------------------------------------------------------------
 
@@ -200,7 +201,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
       { include: [includeUserMinimalProfile] }
     );
     const ii = await InventoryItemModel.findByPk(created.id, {
-      include: [includeUserMinimalProfile],
+      include: [includeUserMinimalProfile, includeMaterialShortInfo],
     });
     if (ii === null) throw new Error("Created container not found");
 

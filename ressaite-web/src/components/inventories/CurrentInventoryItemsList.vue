@@ -4,53 +4,43 @@
   </main>
 
   <form v-else @submit.prevent="saveItem()" class="items-container">
-    <div>ID</div>
-    <div>Container</div>
+    <!-- <div>Container</div>
     <div>Quantity</div>
     <div>Name</div>
     <div>Material</div>
     <div>Best before</div>
     <div>Created date</div>
     <div>Updated date</div>
-    <div>Action</div>
+    <div>Action</div> -->
 
     <template v-for="item in items" :key="item.id">
-      <template v-if="state.itemForm && (state.itemForm as InventoryItemEditForm).id === item.id">
-        <div>{{ item.id }}</div>
-        <div>
-          <select v-model="state.itemForm.containerId">
-            <option v-for="c in inventory.containers" :key="c.id" :value="c.id">
-              {{ c.name }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <rst-input v-model="state.itemForm.quantity" type="number" />
-        </div>
-        <div>
-          <rst-input v-model="state.itemForm.name" type="text" />
-        </div>
-        <div>{{ item.material?.name }}</div>
-        <div>
-          <rst-input v-model="state.itemForm.dueDate" type="date" />
-        </div>
-        <div>{{ item.formattedCreatedAt }}</div>
-        <div>{{ item.formattedUpdatedAt }}</div>
-        <div class="rst-button-group">
+      <template v-if="state.itemForm && state.itemForm.id === item.id">
+        <select v-model="state.itemForm.containerId" class="item__container">
+          <option v-for="c in inventory.containers" :key="c.id" :value="c.id">
+            {{ c.name }}
+          </option>
+        </select>
+        <rst-input v-model="state.itemForm.quantity" class="item__quantity" type="number" />
+        <rst-input v-model="state.itemForm.name" class="item__name" type="text" />
+        <!-- <div class="item__material">{{ item.material?.name }}</div> -->
+        <MaterialSelect v-model="state.itemForm.materialId" />
+        <rst-input v-model="state.itemForm.dueDate" class="item__duedate" type="date" />
+        <div class="item__created">{{ item.formattedCreatedAt }}</div>
+        <div class="item__updated">{{ item.formattedUpdatedAt }}</div>
+        <div class="item__actions rst-button-group">
           <button @click="stopItemForm()" class="rst-button secondary" type="reset">Cancel</button>
           <button class="rst-button primary" type="submit">Edit</button>
         </div>
       </template>
       <template v-else>
-        <div>{{ item.id }}</div>
-        <div>{{ item.containerName }}</div>
-        <div>{{ item.quantity }}</div>
-        <div>{{ item.name }}</div>
-        <div>{{ item.material?.name }}</div>
-        <div>{{ item.formattedDueDate }}</div>
-        <div>{{ item.formattedCreatedAt }}</div>
-        <div>{{ item.formattedUpdatedAt }}</div>
-        <div class="rst-button-group">
+        <div class="item__container">{{ item.containerName }}</div>
+        <div class="item__quantity">{{ item.quantity }}</div>
+        <div class="item__name">{{ item.name }}</div>
+        <div class="item__material">{{ item.material?.name }}</div>
+        <div class="item__duedate">{{ item.formattedDueDate }}</div>
+        <div class="item__created">{{ item.formattedCreatedAt }}</div>
+        <div class="item__updated">{{ item.formattedUpdatedAt }}</div>
+        <div class="item__actions rst-button-group">
           <button @click="prepareToEditItem(item)" class="rst-button primary" type="button">
             Edit
           </button>
@@ -59,7 +49,7 @@
       </template>
     </template>
 
-    <template v-if="state.itemForm && (state.itemForm as InventoryItemEditForm).id === undefined">
+    <template v-if="state.itemForm && state.itemForm.id === null">
       <div></div>
       <div>
         <select v-model="state.itemForm.containerId">
@@ -74,7 +64,7 @@
       <div>
         <rst-input v-model="state.itemForm.name" type="text" />
       </div>
-      <div></div>
+      <MaterialSelect v-model="state.itemForm.materialId" />
       <div>
         <rst-input v-model="state.itemForm.dueDate" type="date" />
       </div>
@@ -87,7 +77,9 @@
     </template>
   </form>
 
-  <div v-if="state.itemForm === null" @click="prepareToCreateItem()">Click to add an item</div>
+  <div v-if="state.itemForm === null" @click="prepareToCreateItem()" class="rst-button secondary">
+    Click to add an item
+  </div>
 
   <!-- <main
       v-for="container in inventoryStore.current.containers"
@@ -214,6 +206,7 @@ import { computed, onMounted, onServerPrefetch, reactive, type PropType } from '
 import { useAppStore } from '@/stores/app'
 import { useInventoryStore } from '@/stores/inventories'
 import RstInput from '@/components/ui/form/RstInput.vue'
+import MaterialSelect from '@/components/recipe/MaterialSelect.vue'
 import type {
   InventoryContainer,
   InventoryContainerCreation,
@@ -248,16 +241,12 @@ interface FormattedItem extends InventoryItem {
   formattedUpdatedAt: string | null
 }
 
-interface InventoryItemEditForm extends InventoryItem {
-  containerId: number
-}
-
-interface InventoryItemCreateForm extends InventoryItemCreation {
+interface InventoryItemForm extends InventoryItemCreation {
   containerId: number
 }
 
 interface State {
-  itemForm: InventoryItemCreateForm | InventoryItemEditForm | null
+  itemForm: InventoryItemForm | null
 }
 
 const state = reactive<State>({
@@ -289,10 +278,9 @@ const items = computed<FormattedItem[]>(() => {
 
 // ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-
 function prepareToCreateItem() {
   state.itemForm = {
+    id: null,
     name: '',
     quantity: 1,
     containerId: props.inventory.containers[0].id,
@@ -317,9 +305,12 @@ function stopItemForm() {
 }
 
 function saveItem() {
-  if (state.itemForm) {
-    const event = (state.itemForm as InventoryItemEditForm).id !== undefined ? 'edit' : 'create'
-    emit(event, state.itemForm.containerId, state.itemForm)
+  if (!state.itemForm) return
+
+  if (state.itemForm.id !== null) {
+    emit('edit', state.itemForm.containerId, state.itemForm.id, state.itemForm)
+  } else {
+    emit('create', state.itemForm.containerId, state.itemForm)
   }
   stopItemForm()
 }
@@ -332,9 +323,39 @@ async function deleteItem(item: FormattedItem) {
 <style lang="scss">
 .items-container {
   display: grid;
-  grid-template-columns: repeat(9, auto);
+  grid-template-areas: 'container quantity name material duedate created updated actions';
+  align-items: center;
+  margin-block: 16px;
 
   @include media('<tablet') {
+    grid-template-areas:
+      'quantity name material actions'
+      'duedate created updated actions';
   }
+}
+
+.items__container {
+  grid-area: container;
+}
+.items__quantity {
+  grid-area: quantity;
+}
+.items__name {
+  grid-area: name;
+}
+.items__material {
+  grid-area: material;
+}
+.items__duedate {
+  grid-area: duedate;
+}
+.items__created {
+  grid-area: created;
+}
+.items__updated {
+  grid-area: updated;
+}
+.items__actions {
+  grid-area: actions;
 }
 </style>
