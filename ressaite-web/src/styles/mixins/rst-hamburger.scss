@@ -8,15 +8,17 @@
  */
 
 @mixin rst-hamburger($size) {
-  $bun-width: 0.6 * $size;
+  /** Percentage of the size used as padding */
+  $hamburger-padding-factor: 0.2;
+  $bun-width: (1 - 2 * $hamburger-padding-factor) * $size;
   $bun-height: 2px;
-  $bun-spacing: 10px;
+  $bun-spacing: math.div($bun-width - 2*$bun-height, 2);
   $bun-growth: 1.1;
 
   width: $size;
   height: $size;
   position: relative;
-  padding: 0.2 * $size;
+  padding: $hamburger-padding-factor * $size;
 
   span {
     background-color: var(--rst-primary);
