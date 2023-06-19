@@ -1,5 +1,5 @@
 <template>
-  <rst-header @menu:click="showSidebar = !showSidebar" :show-sidebar="showSidebar"/>
+  <rst-header @menu:click="showSidebar = !showSidebar" :show-sidebar="showSidebar" />
 
   <div class="rst-layout__content__container">
     <rst-layout-navbar
@@ -8,7 +8,7 @@
     ></rst-layout-navbar>
 
     <!-- <main class="rst-layout__content__slot"> -->
-      <slot></slot>
+    <slot></slot>
     <!-- </main> -->
   </div>
 </template>
@@ -35,10 +35,12 @@ onMounted(async () => {
 @use './RstLayout.scss' as *;
 @use 'sass:math';
 
+/**
 .rst-layout__content__slot {
   flex-grow: 1;
   // overflow: auto; // duplicate with parent overflow
 }
+ */
 
 .rst-layout__content__container {
   @include flex-row;

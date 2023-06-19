@@ -32,6 +32,7 @@ const props = defineProps({
   max-width: 80%;
   z-index: $rst-sidebar-bg-z-index;
   height: 100%;
+  margin-top: 0; /** need to override a default value? */ 
   margin-left: -$rst-sidebar-width;
   padding: 0;
   transition: margin-left 0.25s;

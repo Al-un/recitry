@@ -7,7 +7,7 @@
       class="rst-header__menu-toggler rst-hamburger"
       :class="{ active: showSidebar }"
     >
-      Menu
+      <span></span>
     </div>
 
     <div class="flex-spacer rst-header__spacer"></div>
@@ -51,13 +51,13 @@ async function submitLogout() {
 @use './RstLayout.scss' as *;
 @use 'sass:math';
 
+
 .rst-header {
   @include flex-row;
   align-items: center;
   background-color: var(--rst-bg-content);
   height: $rst-layout-header-height;
   position: relative;
-  //   border-bottom: 1px solid black;
   z-index: $rst-sidebar-z-index;
 }
 
@@ -81,6 +81,8 @@ async function submitLogout() {
 }
 
 .rst-header__menu-toggler {
+  @include rst-hamburger($rst-layout-header-height);
+
   @include media('<tablet') {
     order: 1;
   }
