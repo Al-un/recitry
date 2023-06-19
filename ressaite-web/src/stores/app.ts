@@ -14,7 +14,6 @@ export const useAppStore = defineStore('app', () => {
 
   // ---------- Computed ------------------------------------------------------
   const isAuthenticated = computed(() => {
-    console.log('Computed', token.value)
     return token.value !== null
   })
 

@@ -1,17 +1,21 @@
 <template>
   <div
     @click="$emit('click:backdrop')"
-    id="rst-navbar-backdrop"
-    :class="{ 'show-navbar': showNavbar }"
+    id="rst-sidebar-backdrop"
+    :class="{ 'show-sidebar': showSidebar }"
   ></div>
-  <menu id="rst-navbar" :class="{ 'show-navbar': showNavbar }">
+  <menu id="rst-sidebar" :class="{ 'show-sidebar': showSidebar }">
     <li><a href="/materials">Materials</a></li>
   </menu>
 </template>
 
 <script lang="ts" setup>
+import { defineEmits } from 'vue'
+
+defineEmits(['click:backdrop'])
+
 const props = defineProps({
-  showNavbar: {
+  showSidebar: {
     type: Boolean,
     default: true
   }
@@ -21,7 +25,7 @@ const props = defineProps({
 <style lang="scss">
 @use './RstLayout.scss' as *;
 
-#rst-navbar {
+#rst-sidebar {
   background-color: var(--rst-bg-content);
   width: $rst-sidebar-width;
   flex-shrink: 0;
@@ -32,7 +36,7 @@ const props = defineProps({
   padding: 0;
   transition: margin-left 0.25s;
 
-  &.show-navbar {
+  &.show-sidebar {
     margin-left: 0;
   }
 
@@ -60,7 +64,7 @@ const props = defineProps({
   }
 }
 
-#rst-navbar-backdrop {
+#rst-sidebar-backdrop {
   display: none;
   background-color: rgba(0, 0, 0, 0.2);
   position: absolute;
@@ -70,7 +74,7 @@ const props = defineProps({
   right: 0;
   z-index: $rst-sidebar-bg-z-index;
 
-  &.show-navbar {
+  &.show-sidebar {
     @include media('<tablet') {
       display: block;
     }
