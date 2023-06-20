@@ -2,6 +2,11 @@
   <div v-if="inventoryStore.current" class="central-aligned-page">
     <h1>{{ inventoryStore.current.name }}</h1>
 
+    <section>
+      <div>Name</div>
+      <div></div>
+    </section>
+
     <h2>Create an inventory container</h2>
 
     <main class="containers-container">

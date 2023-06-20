@@ -1,10 +1,12 @@
 <template>
   <div v-if="inventoryStore.current" class="central-aligned-page">
-    <h1>{{ inventoryStore.current.name }}</h1>
+    <header class="inventory__header">
+      <h1>{{ inventoryStore.current.name }}</h1>
 
-    <a class="rst-button secondary" :href="`/inventory/${inventoryId}/categories`"
-      >Manage containers</a
-    >
+      <a class="rst-button secondary" :href="`/inventory/${inventoryId}/settings`"
+        >Inventory settings</a
+      >
+    </header>
 
     <CurrentInventoryItemsList
       :inventory="inventoryStore.current"
@@ -55,4 +57,10 @@ async function deleteItem(containerId: number, itemId: number) {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.inventory__header {
+  @include flex-row;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>
