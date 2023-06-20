@@ -3,8 +3,13 @@
     <h1>{{ inventoryStore.current.name }}</h1>
 
     <section>
-      <div>Name</div>
-      <div></div>
+      <form @submit.prevent="saveInventory">
+        <rst-input v-model="state.inventoryForm.name" label="Inventory name"></rst-input>
+
+        <div class="rst-button-group">
+          <button class="rst-button primary" type="submit">Save</button>
+        </div>
+      </form>
     </section>
 
     <h2>Create an inventory container</h2>
@@ -85,6 +90,7 @@ import RstInput from '@/components/ui/form/RstInput.vue'
 import type {
   InventoryContainer,
   InventoryContainerCreation,
+  InventoryCreation,
   InventoryItem,
   InventoryItemCreation
 } from '@al-un/ressaite-core/inventory/inventory.models'
@@ -99,14 +105,21 @@ const inventoryId = parseInt((pageContext as any).routeParams.inventoryId)
 type ContainerForm = InventoryContainerCreation | InventoryContainer | null
 
 interface State {
+  inventoryForm: InventoryCreation
   containerForm: ContainerForm
 }
-const state = reactive<State>({ containerForm: null })
+const state = reactive<State>({ inventoryForm: { name: '' }, containerForm: null })
 
 // ----------------------------------------------------------------------------
 
 const loadInventory = async () => {
   await inventoryStore.loadInventoryById(inventoryId)
+
+  if (inventoryStore.current) {
+    state.inventoryForm = {
+      name: inventoryStore.current.name
+    }
+  }
 }
 
 onMounted(loadInventory)
@@ -127,6 +140,19 @@ const isEditing = computed(() => {
 })
 
 // ----------------------------------------------------------------------------
+async function saveInventory() {
+  if (inventoryStore.current) {
+    const toUpdate = {
+      ...inventoryStore.current,
+      ...state.inventoryForm
+    }
+    await inventoryStore.updateInventory(toUpdate)
+
+    state.inventoryForm = {
+      name: inventoryStore.current.name
+    }
+  }
+}
 
 function prepareToCreateContainer() {
   state.containerForm = {

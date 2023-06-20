@@ -34,13 +34,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onServerPrefetch, reactive } from 'vue'
+import { onMounted, /* onServerPrefetch,*/ reactive } from 'vue'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
 
 import { useAppStore } from '@/stores/app'
 import { useInventoryStore } from '@/stores/inventories'
-import type { Inventory, InventoryCreation } from '@al-un/ressaite-core/inventory/inventory.models'
+import type { InventoryCreation } from '@al-un/ressaite-core/inventory/inventory.models'
 
 const appStore = useAppStore()
 const inventoryStore = useInventoryStore()

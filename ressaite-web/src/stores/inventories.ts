@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 import type {
   Inventory,
@@ -17,6 +17,7 @@ import { callEndpoint } from '@/api'
 export const useInventoryStore = defineStore('inventory', () => {
   // ---------- State ---------------------------------------------------------
   const list = ref<InventoryListItem[] | null>(null)
+  const cache = reactive<{ [key: number]: InventoryDetail }>({})
   const current = ref<InventoryDetail | null>(null)
   const loading = ref(false)
 
@@ -43,11 +44,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       const inventory = resp.data
       current.value = inventory
 
-      if (list.value) {
-        list.value = list.value.map((i) => (i.id === inventory.id ? inventory : i))
-      } else {
-        list.value = [inventory]
-      }
+      cache[inventoryId] = inventory
     }
     loading.value = false
   }
@@ -59,7 +56,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     console.log('resp', resp)
     if (resp.status === 201) {
       const createdInventory = resp.data
-      list.value = [...(list.value || []), createdInventory]
+      cache[createdInventory.id] = { ...createdInventory, containers: [] }
     }
 
     loading.value = false
@@ -72,10 +69,9 @@ export const useInventoryStore = defineStore('inventory', () => {
     if (resp.status === 200) {
       const updatedInventory = resp.data
 
-      if (list.value) {
-        list.value = list.value.map((i) => (i.id === inventory.id ? updatedInventory : i))
-      } else {
-        list.value = [updatedInventory]
+      cache[updatedInventory.id] = { ...cache[updatedInventory.id], ...updatedInventory }
+      if (current.value) {
+        current.value = cache[current.value.id]
       }
     }
 
@@ -87,9 +83,7 @@ export const useInventoryStore = defineStore('inventory', () => {
 
     const resp = await callEndpoint('inventoryDelete', { inventoryId })
     if (resp.status === 204) {
-      if (list.value) {
-        list.value = list.value.filter((i) => i.id !== inventoryId)
-      }
+      delete cache[inventoryId]
     }
 
     loading.value = false
@@ -102,8 +96,8 @@ export const useInventoryStore = defineStore('inventory', () => {
     loading.value = true
 
     const resp = await callEndpoint('inventoryContainerCreate', { inventoryId }, container)
-    console.log("RESP", resp)
-    console.log("current", current)
+    console.log('RESP', resp)
+    console.log('current', current)
     if (resp.status === 201) {
       const createdContainer = resp.data
 
@@ -111,7 +105,7 @@ export const useInventoryStore = defineStore('inventory', () => {
         current.value.containers.push({ ...createdContainer, items: [] })
       }
     }
-    console.log("current", current)
+    console.log('current', current)
 
     loading.value = false
   }
