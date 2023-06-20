@@ -1,10 +1,12 @@
 .rst-form {
+  display: grid;
+  gap: 16px;
 }
 
 .rst-form__input-group {
   // display: grid;
 
-  & + .rst-form__input-group {
-    margin-top: 8px;
-  }
+  // & + .rst-form__input-group {
+  //   margin-top: 8px;
+  // }
 }

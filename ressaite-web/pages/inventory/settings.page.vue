@@ -3,7 +3,7 @@
     <h1>{{ inventoryStore.current.name }}</h1>
 
     <section>
-      <form @submit.prevent="saveInventory">
+      <form @submit.prevent="saveInventory" class="rst-form">
         <rst-input v-model="state.inventoryForm.name" label="Inventory name"></rst-input>
 
         <div class="rst-button-group">
