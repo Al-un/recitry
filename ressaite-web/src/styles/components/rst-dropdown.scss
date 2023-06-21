@@ -9,7 +9,9 @@
   background-color: var(--rst-bg-content);
 }
 
-.rst-dropdown:hover {
+.rst-dropdown:hover,
+.rst-dropdown:active,
+.rst-dropdown:focus {
   .rst-dropdown-content {
     display: block;
   }

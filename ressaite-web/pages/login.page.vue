@@ -1,7 +1,9 @@
 <template>
   <div class="login-page">
-    <form class="rst-form rst-card padded" @submit.prevent="submitLogin">
-      <div class="rst-form__input-group">
+    <form class="rst-form rst-card padded login-form" @submit.prevent="submitLogin">
+      <h2>Login</h2>
+
+      <section class="rst-form__input-group">
         <rst-input
           v-model="state.loginForm.email"
           type="email"
@@ -9,8 +11,8 @@
           autocomplete="email"
           required
         />
-      </div>
-      <div class="rst-form__input-group">
+      </section>
+      <section class="rst-form__input-group">
         <rst-input
           v-model="state.loginForm.password"
           type="password"
@@ -18,20 +20,20 @@
           autocomplete="current-password"
           required
         />
-      </div>
+      </section>
 
       <label class="rst-form__input-group">
         <input v-model="state.loginForm.rememberMe" type="checkbox" />
         Remember me
       </label>
 
-      <div class="rst-form__input-group rst-button-group fluid">
+      <section class="rst-form__input-group rst-button-group fluid">
         <button class="rst-button primary" type="submit">Login!</button>
-      </div>
+      </section>
 
-      <div>
-        <p>No account? Sign up <a href="/signup">there</a></p>
-      </div>
+      <footer>
+        <p>No account? Sign up <a href="/signup" class="rst-link">there</a></p>
+      </footer>
     </form>
   </div>
 </template>
@@ -49,14 +51,12 @@ const appStore = useAppStore()
 
 interface State {
   loginForm: AuthEndpointTypes['login']['request'] & { rememberMe: boolean }
-  signupForm: AuthEndpointTypes['signup']['request']
 }
 
 const redirectUrl: string | null = null
 
 const state = reactive<State>({
-  loginForm: { email: '', password: '', rememberMe: false },
-  signupForm: { email: '', password: '' }
+  loginForm: { email: '', password: '', rememberMe: true },
 })
 
 async function submitLogin() {
@@ -74,8 +74,15 @@ async function submitLogin() {
   @include flex-center-all;
   width: 100%;
   height: 100%;
+  padding: 16px;
+
+  @include media('<tablet') {
+    align-items: flex-start;
+  }
 }
-// .login-card {
-//   @include flex-col;
-// }
+
+.login-form {
+  width: 100%;
+  max-width: 320px;
+}
 </style>

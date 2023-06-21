@@ -1,7 +1,9 @@
 <template>
-  <div class="login-page">
-    <form class="rst-form rst-card padded" @submit.prevent="submitSignUp">
-      <div class="rst-form__input-group">
+  <div class="signup-page">
+    <form class="rst-form rst-card padded signup-form " @submit.prevent="submitSignUp">
+      <h2>Sign up</h2>
+
+      <section class="rst-form__input-group">
         <rst-input
           v-model="signUpForm.email"
           type="email"
@@ -9,16 +11,16 @@
           autocomplete="email"
           required
         />
-      </div>
-      <div class="rst-form__input-group">
+      </section>
+      <section class="rst-form__input-group">
         <rst-input
           v-model="signUpForm.username"
           type="text"
           label="Username"
           autocomplete="username"
         />
-      </div>
-      <div class="rst-form__input-group">
+      </section>
+      <section class="rst-form__input-group">
         <rst-input
           v-model="signUpForm.password"
           type="password"
@@ -26,11 +28,15 @@
           autocomplete="new-password"
           required
         />
-      </div>
+      </section>
 
-      <div class="rst-form__input-group rst-button-group fluid">
+      <section class="rst-form__input-group rst-button-group fluid">
         <button class="rst-button primary" type="submit">Signup!</button>
-      </div>
+      </section>
+
+      <footer>
+        <p>Already got an account? Login <a href="/login" class="rst-link">there</a></p>
+      </footer>
     </form>
   </div>
 </template>
@@ -60,9 +66,19 @@ async function submitSignUp() {
 </script>
 
 <style lang="scss">
-.login-page {
+.signup-page {
   @include flex-center-all;
   width: 100%;
   height: 100%;
+  padding: 16px;
+  
+  @include media('<tablet') {
+    align-items: flex-start;
+  }
+}
+
+.signup-form {
+  width: 100%;
+  max-width: 320px;
 }
 </style>

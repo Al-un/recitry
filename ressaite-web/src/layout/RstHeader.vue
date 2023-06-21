@@ -12,11 +12,17 @@
 
     <div class="flex-spacer rst-header__spacer"></div>
 
-    <a v-if="!appStore.isAuthenticated" href="/login" class="rst-header__profile">Login</a>
+    <div v-if="!appStore.isAuthenticated" class="rst-header__login">
+      <a href="/login" class="rst-button secondary">Login</a>
+    </div>
     <div v-else class="rst-dropdown rst-header__profile">
-      <div class="layout-my-profile">My profile</div>
+      <div class="layout-my-profile">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
 
-      <ul class="rst-dropdown-content" style="background: magenta">
+      <ul class="rst-dropdown-content">
         <li @click="submitLogout">Logout</li>
       </ul>
     </div>
@@ -50,7 +56,6 @@ async function submitLogout() {
 <style lang="scss">
 @use './RstLayout.scss' as *;
 @use 'sass:math';
-
 
 .rst-header {
   @include flex-row;
@@ -94,13 +99,56 @@ async function submitLogout() {
   }
 }
 
+.rst-header__login,
 .rst-header__profile {
   @include media('<tablet') {
     order: 4;
   }
 }
 
-.layout-my-profile {
+.rst-header__login {
+  padding-inline: 16px;
+}
+
+.rst-header__profile {
+  width: $rst-layout-header-height;
   height: $rst-layout-header-height;
+
+  &:hover {
+    background-color: var(--rst-bg-content-hover);
+  }
+
+  .rst-dropdown-content {
+    right: 0;
+    width: 180px;
+
+    li {
+      padding: 8px 16px;
+
+      &:hover {
+        background-color: var(--rst-bg-content-hover);
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.layout-my-profile {
+  @include flex-col;
+  align-items: center;
+  justify-content: center;
+  width: $rst-layout-header-height;
+  height: $rst-layout-header-height;
+
+  span.dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--rst-primary);
+  }
+
+  span.dot + span.dot {
+    margin-block-start: 4px;
+  }
 }
 </style>
