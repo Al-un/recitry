@@ -1,7 +1,6 @@
 @forward './lib/_include-media.scss';
 @forward './mixins/rst-hamburger.scss';
-
-$plop: magenta;
+@forward './variables/z-index';
 
 @mixin flex-col {
   display: flex;

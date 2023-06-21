@@ -5,6 +5,7 @@
     :class="{ 'show-sidebar': showSidebar }"
   ></div>
   <menu id="rst-sidebar" :class="{ 'show-sidebar': showSidebar }">
+    <li><a href="/inventories">Inventory</a></li>
     <li><a href="/materials">Materials</a></li>
   </menu>
 </template>

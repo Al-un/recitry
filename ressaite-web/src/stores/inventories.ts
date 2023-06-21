@@ -16,7 +16,7 @@ import { callEndpoint } from '@/api'
 
 export const useInventoryStore = defineStore('inventory', () => {
   // ---------- State ---------------------------------------------------------
-  const list = ref<InventoryListItem[] | null>(null)
+  const list = ref<InventoryListItem[]>([])
   const cache = reactive<{ [key: number]: InventoryDetail }>({})
   const current = ref<InventoryDetail | null>(null)
   const loading = ref(false)
@@ -56,6 +56,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     console.log('resp', resp)
     if (resp.status === 201) {
       const createdInventory = resp.data
+      list.value.push(createdInventory)
       cache[createdInventory.id] = { ...createdInventory, containers: [] }
     }
 
@@ -96,8 +97,6 @@ export const useInventoryStore = defineStore('inventory', () => {
     loading.value = true
 
     const resp = await callEndpoint('inventoryContainerCreate', { inventoryId }, container)
-    console.log('RESP', resp)
-    console.log('current', current)
     if (resp.status === 201) {
       const createdContainer = resp.data
 
@@ -105,7 +104,6 @@ export const useInventoryStore = defineStore('inventory', () => {
         current.value.containers.push({ ...createdContainer, items: [] })
       }
     }
-    console.log('current', current)
 
     loading.value = false
   }

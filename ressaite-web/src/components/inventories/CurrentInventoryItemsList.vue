@@ -1,6 +1,6 @@
 <template>
   <main v-if="inventory.containers.length === 0" class="rst-card padded">
-    There is no container at the moment, let's create one!
+    There is no container at the moment, let's create one in the Inventory settings.
   </main>
 
   <form v-else @submit.prevent="saveItem()" class="items-container">
@@ -77,9 +77,17 @@
     </template>
   </form>
 
-  <div v-if="state.itemForm === null" @click="prepareToCreateItem()" class="rst-button secondary">
+  <div
+    v-if="inventory.containers.length > 0 && state.itemForm === null"
+    @click="prepareToCreateItem()"
+    class="rst-button secondary"
+  >
     Click to add an item
   </div>
+
+  <RstModal @close="state.itemForm = null" :show="state.itemForm !== null">
+    Plouf, un formulaire
+  </RstModal>
 
   <!-- <main
       v-for="container in inventoryStore.current.containers"
@@ -206,6 +214,7 @@ import { computed, onMounted, onServerPrefetch, reactive, type PropType } from '
 import { useAppStore } from '@/stores/app'
 import { useInventoryStore } from '@/stores/inventories'
 import RstInput from '@/components/ui/form/RstInput.vue'
+import RstModal from '../ui/container/RstModal.vue'
 import MaterialSelect from '@/components/recipe/MaterialSelect.vue'
 import type {
   InventoryContainer,

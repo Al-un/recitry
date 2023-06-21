@@ -2,74 +2,83 @@
   <div v-if="inventoryStore.current" class="central-aligned-page">
     <h1>{{ inventoryStore.current.name }}</h1>
 
-    <section>
+    <section class="setting-section">
+      <h2>Inventory properties</h2>
+
       <form @submit.prevent="saveInventory" class="rst-form">
         <rst-input v-model="state.inventoryForm.name" label="Inventory name"></rst-input>
 
         <div class="rst-button-group">
-          <button class="rst-button primary" type="submit">Save</button>
+          <button class="rst-button primary" type="submit">Rename</button>
         </div>
       </form>
     </section>
 
-    <h2>Create an inventory container</h2>
+    <section class="setting-section">
+      <h2>Inventory access</h2>
 
-    <main class="containers-container">
-      <div
-        v-for="container in inventoryStore.current.containers"
-        :key="container.id"
-        class="rst-card padded"
-      >
+      <div>Inventory owner: {{ inventoryStore.current.author.username }}</div>
+    </section>
+
+    <section class="setting-section">
+      <h2>Create an inventory container</h2>
+
+      <main class="containers-container">
+        <div
+          v-for="container in inventoryStore.current.containers"
+          :key="container.id"
+          class="rst-card padded"
+        >
+          <form
+            v-if="state.containerForm !== null && (state.containerForm as InventoryContainer).id === container.id"
+            @submit.prevent="saveContainer()"
+          >
+            <section class="rst-form__input-group">
+              <rst-input v-model="state.containerForm.name" label="Container name" />
+            </section>
+
+            <section class="rst-form__input-group rst-button-group align-right">
+              <button @click="stopContainerForm" class="rst-button secondary" type="reset">
+                Cancel
+              </button>
+              <button class="rst-button primary" type="submit">Edit</button>
+            </section>
+          </form>
+          <template v-else>
+            <p>{{ container.name }}</p>
+
+            <section class="rst-button-group align-right">
+              <button @click="prepareToEditContainer(container)" class="rst-button secondary">
+                Edit
+              </button>
+              <button @click="deleteContainer(container)" class="rst-button danger">Delete</button>
+            </section>
+          </template>
+        </div>
+
+        <div
+          v-if="state.containerForm === null"
+          @click="prepareToCreateContainer"
+          class="rst-card padded"
+        >
+          Create a new container
+        </div>
         <form
-          v-if="state.containerForm !== null && (state.containerForm as InventoryContainer).id === container.id"
-          @submit.prevent="saveContainer()"
+          v-if="state.containerForm && isCreating"
+          @submit.prevent="saveContainer"
+          class="rst-form rst-card padded"
         >
           <section class="rst-form__input-group">
             <rst-input v-model="state.containerForm.name" label="Container name" />
           </section>
 
           <section class="rst-form__input-group rst-button-group align-right">
-            <button @click="stopContainerForm" class="rst-button secondary" type="reset">
-              Cancel
-            </button>
-            <button class="rst-button primary" type="submit">Edit</button>
+            <button class="rst-button primary" type="submit">Add container</button>
           </section>
         </form>
-        <template v-else>
-          <p>{{ container.name }}</p>
+      </main>
 
-          <section class="rst-button-group align-right">
-            <button @click="prepareToEditContainer(container)" class="rst-button secondary">
-              Edit
-            </button>
-            <button @click="deleteContainer(container)" class="rst-button danger">Delete</button>
-          </section>
-        </template>
-      </div>
-
-      <div
-        v-if="state.containerForm === null"
-        @click="prepareToCreateContainer"
-        class="rst-card padded"
-      >
-        Create a new container
-      </div>
-      <form
-        v-if="state.containerForm && isCreating"
-        @submit.prevent="saveContainer"
-        class="rst-form rst-card padded"
-      >
-        <section class="rst-form__input-group">
-          <rst-input v-model="state.containerForm.name" label="Container name" />
-        </section>
-
-        <section class="rst-form__input-group rst-button-group align-right">
-          <button class="rst-button primary" type="submit">Add container</button>
-        </section>
-      </form>
-    </main>
-
-    <!-- <form @submit.prevent="createContainer" class="rst-card padded rst-form">
+      <!-- <form @submit.prevent="createContainer" class="rst-card padded rst-form">
       <section class="rst-form__input-group">
         <rst-input v-model="state.newContainer.name" label="Container name" />
       </section>
@@ -77,6 +86,18 @@
         <button class="rst-button primary" type="submit">Add container</button>
       </section>
     </form> -->
+    </section>
+
+    <section id="danger-zone" class="setting-section">
+      <h2>Danger zone</h2>
+
+      <form @submit.prevent="deleteInventory" class="delete-inventory-form rst-form">
+        <p>
+          Make sure you are ready to delete this inventory: all containers and items will be lost!
+        </p>
+        <button class="rst-button danger" type="submit">Delete</button>
+      </form>
+    </section>
   </div>
   <div v-else>Loading inventory...</div>
 </template>
@@ -95,6 +116,7 @@ import type {
   InventoryItemCreation
 } from '@al-un/ressaite-core/inventory/inventory.models'
 import { formatDate } from '@/utils/datetime'
+import { navigate } from 'vite-plugin-ssr/client/router'
 
 const inventoryStore = useInventoryStore()
 const pageContext = usePageContext()
@@ -154,6 +176,13 @@ async function saveInventory() {
   }
 }
 
+async function deleteInventory() {
+  if (inventoryStore.current) {
+    await inventoryStore.deleteInventory(inventoryStore.current.id)
+    navigate('/')
+  }
+}
+
 function prepareToCreateContainer() {
   state.containerForm = {
     name: ''
@@ -198,5 +227,29 @@ async function deleteContainer(container: InventoryContainer) {
   @include media('<tablet') {
     grid-template-columns: 1fr;
   }
+}
+
+.setting-section {
+  h2 {
+    margin-block-end: 8px;
+  }
+
+  & + .setting-section {
+    margin-block-start: 24px;
+  }
+}
+
+#danger-zone {
+  h2 {
+    color: var(--rst-danger);
+  }
+}
+
+.delete-inventory-form {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  border: 1px solid var(--rst-danger);
+  border-radius: 8px;
+  padding: 8px;
 }
 </style>

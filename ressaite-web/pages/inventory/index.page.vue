@@ -1,5 +1,5 @@
 <template>
-  <div v-if="inventoryStore.current" class="central-aligned-page">
+  <div v-if="inventoryStore.current" class="inventory-detail-page central-aligned-page">
     <header class="inventory__header">
       <h1>{{ inventoryStore.current.name }}</h1>
 
@@ -62,5 +62,6 @@ async function deleteItem(containerId: number, itemId: number) {
   @include flex-row;
   align-items: center;
   justify-content: space-between;
+  margin-block-end: 16px;
 }
 </style>
