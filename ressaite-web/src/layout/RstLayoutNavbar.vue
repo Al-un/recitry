@@ -7,17 +7,13 @@
   <menu id="rst-sidebar" :class="{ 'show-sidebar': showSidebar }">
     <li><a href="/inventories">Inventory</a></li>
     <li><a href="/materials">Materials</a></li>
-    <pre>{{ appStore.sessionInfo }}</pre>
   </menu>
 </template>
 
 <script lang="ts" setup>
-import { useAppStore } from '@/stores/app';
 import { defineEmits } from 'vue'
 
 defineEmits(['click:backdrop'])
-
-const appStore = useAppStore()
 
 const props = defineProps({
   showSidebar: {
@@ -37,7 +33,7 @@ const props = defineProps({
   max-width: 80%;
   z-index: $rst-sidebar-bg-z-index;
   height: 100%;
-  margin-top: 0; /** need to override a default value? */ 
+  margin-top: 0; /** need to override a default value? */
   margin-left: -$rst-sidebar-width;
   padding: 0;
   transition: margin-left 0.25s;
