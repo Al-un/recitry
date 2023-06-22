@@ -16,6 +16,11 @@ const AuthRouterConfig: ExpressRouterConfig<AuthEndpointTypes> = {
     controller: AuthController.logout,
     middlewares: [AuthMiddleware.isAuthenticated],
   },
+  sessionInfo: {
+    route: AuthRoutes["sessionInfo"],
+    controller: AuthController.sessionInfo,
+    middlewares: [AuthMiddleware.isAuthenticated],
+  },
   signup: {
     route: AuthRoutes["signup"],
     controller: AuthController.signUp,

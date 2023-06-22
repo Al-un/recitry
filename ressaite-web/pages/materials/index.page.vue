@@ -1,6 +1,16 @@
 <template>
   <div class="central-aligned-page">
-    <h1>{{ $t('materials.list.title') }}</h1>
+    <header class="materials__header">
+      <h1>{{ $t('materials.list.title') }}</h1>
+      <button
+        v-if="appStore.isAuthenticated"
+        @click="prepareToCreate"
+        class="rst-button primary"
+        type="button"
+      >
+        Add
+      </button>
+    </header>
 
     <p>
       This page lists all the materials available in this application. Only the person who created a
@@ -9,8 +19,6 @@
     </p>
 
     <section class="rst-card padded">
-      <h2>Searching material</h2>
-
       <form @submit.prevent="searchMaterial" class="material-search-form">
         <rst-input v-model="materialSearch" label="Search material name" />
         <button class="rst-button primary" type="submit">Search</button>
@@ -27,59 +35,49 @@
 
         <div v-for="material in state.list" :key="material.id" class="rst-table-row">
           <div class="material-table__id">{{ material.id }}</div>
-          <template v-if="state.editMaterial?.id === material.id">
-            <div class="material-table__name">
-              <rst-input v-model="state.editMaterial.name" />
-            </div>
-            <div class="material-table__lang">
-              <rst-input v-model="state.editMaterial.lang" />
-            </div>
-            <div class="material-table__action">
-              <button @click="cancelEdit" class="rst-button secondary">Cancel</button>
-              <button @click="editMaterial" class="rst-button primary">Edit</button>
-            </div>
-          </template>
-          <template v-else>
-            <div class="material-table__name">{{ material.name }}</div>
-            <div class="material-table__lang">{{ material.lang }}</div>
-            <div class="material-table__action">
-              <button
-                v-if="canManage(material)"
-                @click="prepareToEditMaterial(material)"
-                class="rst-button primary"
-              >
-                Edit
-              </button>
-              <button
-                v-if="canManage(material)"
-                @click="deleteMaterial(material)"
-                class="rst-button danger"
-              >
-                Delete
-              </button>
-            </div>
-          </template>
+          <div class="material-table__name">{{ material.name }}</div>
+          <div class="material-table__lang">{{ material.lang }}</div>
+          <div class="material-table__action">
+            <button
+              v-if="canManage(material)"
+              @click="prepareToEditMaterial(material)"
+              class="rst-button primary"
+            >
+              Edit
+            </button>
+            <button
+              v-if="canManage(material)"
+              @click="deleteMaterial(material)"
+              class="rst-button danger"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </section>
-
-    <section class="rst-card padded">
-      <h2>Create a new material</h2>
-      <form @submit.prevent="createMaterial" class="material-create-form">
-        <rst-input v-model="newMaterial.name" label="Material name" />
-        <rst-input v-model="newMaterial.lang" label="Language" />
-        <button class="rst-button primary" type="submit">Create</button>
-      </form>
-    </section>
   </div>
+
+  <RstModal v-if="state.materialForm" :show="state.materialForm !== null">
+    <material-form
+      @cancel="stopForm"
+      @update:model-value="saveMaterial"
+      :model-value="state.materialForm"
+    />
+  </RstModal>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
 
-import RstInput from '@/components/ui/form/RstInput.vue'
-import { callEndpoint } from '@/api'
 import type { Material, MaterialCreation } from '@al-un/ressaite-core/recipe/material.models'
+import { callEndpoint, type CallEndpointResponse } from '@/api'
+import RstInput from '@/components/ui/form/RstInput.vue'
+import { useAppStore } from '@/stores/app'
+import RstModal from '@/components/ui/container/RstModal.vue'
+import MaterialForm from '@/components/recipe/MaterialForm.vue'
+
+const appStore = useAppStore()
 
 interface State {
   list: Material[]
@@ -88,20 +86,16 @@ interface State {
     limit: number
     totalCount: number | null
   }
-  editMaterial: Material | null
+  materialForm: MaterialCreation | null
   loading: boolean
 }
 
 const materialSearch = ref('')
-const newMaterial = reactive<MaterialCreation>({
-  name: 'Material name',
-  lang: 'fr'
-})
 const state = reactive<State>({
   list: [],
   loading: false,
   pagination: { currentPage: 1, limit: 1000, totalCount: null },
-  editMaterial: null
+  materialForm: null
 })
 
 onMounted(async () => {
@@ -109,51 +103,59 @@ onMounted(async () => {
 })
 
 function canManage(material: Material): boolean {
-  return true
+  return material.author.id === appStore.sessionInfo?.user.id
 }
 
-async function createMaterial() {
-  state.loading = true
-  const res = await callEndpoint('materialCreate', null, {
-    name: newMaterial.name,
-    lang: newMaterial.lang
-  })
-
-  if (res.status === 201) {
-    state.list.push(res.data)
+function prepareToCreate() {
+  state.materialForm = {
+    name: '',
+    lang: 'fr'
   }
-  state.loading = false
 }
 
 function prepareToEditMaterial(material: Material) {
-  state.editMaterial = material
+  state.materialForm = {
+    ...material
+  }
 }
 
-function cancelEdit() {
-  state.editMaterial = null
+function stopForm() {
+  state.materialForm = null
 }
 
-async function editMaterial() {
-  if (state.editMaterial === null) {
+async function saveMaterial() {
+  if (state.materialForm === null) {
     return
   }
+  state.loading = true
 
-  const res = await callEndpoint(
-    'materialUpdate',
-    { materialId: state.editMaterial.id },
-    state.editMaterial
-  )
+  let resp: CallEndpointResponse<Material>
+  if (state.materialForm.id) {
+    resp = await callEndpoint(
+      'materialUpdate',
+      { materialId: state.materialForm.id },
+      state.materialForm
+    )
 
-  if (res.status === 200) {
-    state.list = state.list.map((m) => {
-      if (m.id !== state.editMaterial?.id) {
-        return m
-      }
+    if (resp.status === 200) {
+      state.list = state.list.map((m) => {
+        if (m.id !== state.materialForm?.id) {
+          return m
+        }
 
-      return res.data
-    })
-    state.editMaterial = null
+        return resp.data
+      })
+      state.materialForm = null
+    }
+  } else {
+    resp = await callEndpoint('materialCreate', null, state.materialForm)
+    if (resp.status === 201) {
+      state.list.push(resp.data)
+    }
   }
+
+  state.loading = false
+  stopForm()
 }
 
 async function deleteMaterial(material: Material) {
@@ -180,6 +182,14 @@ async function searchMaterial() {
 </script>
 
 <style lang="scss">
+.materials__header {
+  // same as .inventory__header
+  @include flex-row;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 16px;
+}
+
 .material-search-form {
   @include flex-row;
   .rst-input-search {

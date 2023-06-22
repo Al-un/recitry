@@ -32,6 +32,7 @@ describe("MaterialController", () => {
 
   describe("createMaterial", () => {
     let creationRequest: MaterialCreation = {
+      id: null,
       name: "plop",
       lang: "en",
     };

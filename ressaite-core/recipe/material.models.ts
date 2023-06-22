@@ -7,7 +7,9 @@ interface MaterialBase {
   lang: Lang;
 }
 
-export interface MaterialCreation extends MaterialBase {}
+export interface MaterialCreation extends MaterialBase {
+  id: number | null;
+}
 
 export interface MaterialShortInfo extends MaterialBase {
   id: number;

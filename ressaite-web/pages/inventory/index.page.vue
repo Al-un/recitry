@@ -59,6 +59,7 @@ async function deleteItem(containerId: number, itemId: number) {
 
 <style lang="scss">
 .inventory__header {
+  // same as .materials__header
   @include flex-row;
   align-items: center;
   justify-content: space-between;

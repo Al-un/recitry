@@ -12,9 +12,17 @@ export interface UserMinimalProfile {
 }
 
 export interface UserFullProfile extends UserMinimalProfile {
-  email: string
+  email: string;
 }
 
 export interface HasAuthor {
   author: UserMinimalProfile;
+}
+
+/**
+ * Given an user, via a token, provide the different information required
+ * for a session
+ */
+export interface SessionInfo {
+  user: UserMinimalProfile;
 }

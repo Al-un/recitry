@@ -3,10 +3,12 @@ import { computed, ref } from 'vue'
 
 import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/auth.endpoints'
 import { callEndpoint } from '@/api'
+import type { SessionInfo } from '@al-un/ressaite-core/um/users.models'
 
 export const useAppStore = defineStore('app', () => {
   // ---------- State ---------------------------------------------------------
   let savedToken: string | null = null
+  const sessionInfo = ref<SessionInfo | null>(null)
   if (typeof window !== 'undefined' && window.localStorage) {
     savedToken = window.localStorage.getItem('token')
   }
@@ -28,6 +30,17 @@ export const useAppStore = defineStore('app', () => {
         // find a better way T_T
         localStorage.setItem('token', token.value)
       }
+
+      await loadSessionInfo()
+    }
+  }
+
+  async function loadSessionInfo() {
+    if (token.value === null) return
+
+    const resp = await callEndpoint('sessionInfo')
+    if (resp.status === 200) {
+      sessionInfo.value = resp.data
     }
   }
 
@@ -44,14 +57,17 @@ export const useAppStore = defineStore('app', () => {
     if (resp.status === 204) {
       localStorage.removeItem('token')
       token.value = null
+      sessionInfo.value = null
     }
   }
 
   // --------------------------------------------------------------------------
   return {
     isAuthenticated,
+    loadSessionInfo,
     login,
     logout,
+    sessionInfo,
     signUp,
     token
   }

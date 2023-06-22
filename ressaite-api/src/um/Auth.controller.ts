@@ -5,6 +5,7 @@ import { AuthEndpointTypes } from "@al-un/ressaite-core/um/auth.endpoints";
 import { AccessTokenModel } from "./AccessToken.model";
 import { hashPassword, UserModel } from "./User.model";
 import { ExpressController } from "@/core/express";
+import { SessionInfo } from "@al-un/ressaite-core/um/users.models";
 
 // ----------------------------------------------------------------------------
 
@@ -101,6 +102,36 @@ export const logout: AuthControllerTypes["logout"] = async (req, res) => {
   accessToken = await accessToken.save();
 
   res.sendStatus(204);
+};
+
+export const sessionInfo: AuthControllerTypes["sessionInfo"] = async (
+  req,
+  res,
+  next
+) => {
+  const token = req?.user?.token;
+  if (!token) {
+    throw new Error("No access token provided!");
+  }
+
+  let user = await UserModel.findOne({
+    include: [
+      {
+        model: AccessTokenModel,
+        required: true,
+        where: { token },
+      },
+    ],
+  });
+  if (!user) {
+    throw new Error(`No user found for token`);
+  }
+
+  const sessionInfo: SessionInfo = {
+    user: user.toMinimalProfile,
+  };
+
+  res.status(200).json(sessionInfo);
 };
 
 export const signUp: AuthControllerTypes["signup"] = async (req, res, next) => {

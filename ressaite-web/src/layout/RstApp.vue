@@ -27,7 +27,8 @@ const appStore = useAppStore()
 const showSidebar = ref<boolean>(false)
 
 onMounted(async () => {
-  callEndpoint('health', null, null)
+  await callEndpoint('health', null, null)
+  await appStore.loadSessionInfo()
 })
 </script>
 

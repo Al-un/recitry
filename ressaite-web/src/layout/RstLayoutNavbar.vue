@@ -7,13 +7,17 @@
   <menu id="rst-sidebar" :class="{ 'show-sidebar': showSidebar }">
     <li><a href="/inventories">Inventory</a></li>
     <li><a href="/materials">Materials</a></li>
+    <pre>{{ appStore.sessionInfo }}</pre>
   </menu>
 </template>
 
 <script lang="ts" setup>
+import { useAppStore } from '@/stores/app';
 import { defineEmits } from 'vue'
 
 defineEmits(['click:backdrop'])
+
+const appStore = useAppStore()
 
 const props = defineProps({
   showSidebar: {
