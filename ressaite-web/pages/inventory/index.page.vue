@@ -4,7 +4,9 @@
       <h1>{{ inventoryStore.current.name }}</h1>
 
       <div class="inventory__header__actions">
-        <button @click="prepareToCreateItem" class="rst-button primary">Add item</button>
+        <button v-if="hasContainers" @click="prepareToCreateItem" class="rst-button primary">
+          Add item
+        </button>
         <a class="rst-button secondary" :href="`/inventory/${inventoryId}/settings`"
           >Inventory settings</a
         >
@@ -29,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onServerPrefetch, reactive } from 'vue'
+import { computed, onMounted, onServerPrefetch, reactive } from 'vue'
 
 import { useInventoryStore } from '@/stores/inventories'
 import { usePageContext } from '../../renderer/usePageContext'
@@ -57,6 +59,14 @@ interface State {
 
 const state = reactive<State>({
   itemForm: null
+})
+
+// ----------------------------------------------------------------------------
+
+const hasContainers = computed<boolean>(() => {
+  if (inventoryStore.current === null) return false
+
+  return inventoryStore.current.containers.length > 0
 })
 
 // ----------------------------------------------------------------------------

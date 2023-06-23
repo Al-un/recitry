@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submitForm">
-    <h2>Material form</h2>
+    <h2>Item form</h2>
 
     <section>
       <RstInput v-model="formData.name" label="Name" />
