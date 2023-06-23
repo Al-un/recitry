@@ -110,10 +110,8 @@ import { usePageContext } from '../../renderer/usePageContext'
 import RstInput from '@/components/ui/form/RstInput.vue'
 import type {
   InventoryContainer,
-  InventoryContainerCreation,
-  InventoryCreation,
-  InventoryItem,
-  InventoryItemCreation
+  InventoryContainerFormData,
+  InventoryFormData
 } from '@al-un/ressaite-core/inventory/inventory.models'
 import { formatDate } from '@/utils/datetime'
 import { navigate } from 'vite-plugin-ssr/client/router'
@@ -124,13 +122,13 @@ const inventoryId = parseInt((pageContext as any).routeParams.inventoryId)
 
 // ----------------------------------------------------------------------------
 
-type ContainerForm = InventoryContainerCreation | InventoryContainer | null
+type ContainerForm = InventoryContainerFormData | null
 
 interface State {
-  inventoryForm: InventoryCreation
+  inventoryForm: InventoryFormData
   containerForm: ContainerForm
 }
-const state = reactive<State>({ inventoryForm: { name: '' }, containerForm: null })
+const state = reactive<State>({ inventoryForm: { id: null, name: '' }, containerForm: null })
 
 // ----------------------------------------------------------------------------
 
@@ -139,6 +137,7 @@ const loadInventory = async () => {
 
   if (inventoryStore.current) {
     state.inventoryForm = {
+      id: inventoryStore.current.id,
       name: inventoryStore.current.name
     }
   }
@@ -148,7 +147,7 @@ onMounted(loadInventory)
 // onServerPrefetch(loadInventory)
 
 const isCreating = computed(() => {
-  const check = (form: ContainerForm): form is InventoryContainerCreation => {
+  const check = (form: ContainerForm): form is InventoryContainerFormData => {
     return form !== null && (form as InventoryContainer).id === undefined
   }
   return check(state.containerForm)
@@ -171,6 +170,7 @@ async function saveInventory() {
     await inventoryStore.updateInventory(toUpdate)
 
     state.inventoryForm = {
+      id: inventoryStore.current.id,
       name: inventoryStore.current.name
     }
   }

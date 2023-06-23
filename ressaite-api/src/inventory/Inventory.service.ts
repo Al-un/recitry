@@ -1,7 +1,7 @@
 import {
   Inventory,
   InventoryContainerWithItems,
-  InventoryCreation,
+  InventoryFormData,
   InventoryDetail,
   InventoryItem,
 } from "@al-un/ressaite-core/inventory/inventory.models";
@@ -15,7 +15,7 @@ import {
 } from "@/recipe/Material.model";
 
 export const createInventory = async (
-  inventory: InventoryCreation,
+  inventory: InventoryFormData,
   authorId: number
 ): Promise<Inventory> => {
   // console.log(`Creating inventory with author ${authorId}`, inventory);
@@ -80,6 +80,7 @@ export const fetchInventory = async (
   for (let c of containers) {
     const formattedContainer: InventoryContainerWithItems = {
       id: c.id,
+      inventoryId: i.id,
       name: c.name,
       author: c.author.toMinimalProfile,
       items: [],
@@ -94,6 +95,7 @@ export const fetchInventory = async (
     for (let item of items) {
       const formattedItem: InventoryItem = {
         id: item.id,
+        containerId: item.containerId,
         name: item.name,
         dueDate: item.dueDate,
         author: item.author.toMinimalProfile,

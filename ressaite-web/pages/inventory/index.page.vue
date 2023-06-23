@@ -37,7 +37,7 @@ import { useInventoryStore } from '@/stores/inventories'
 import { usePageContext } from '../../renderer/usePageContext'
 import type {
   InventoryItem,
-  InventoryItemCreation
+  InventoryItemFormData
 } from '@al-un/ressaite-core/inventory/inventory.models'
 import CurrentInventoryItemsList from '@/components/inventories/CurrentInventoryItemsList.vue'
 import RstModal from '@/components/ui/container/RstModal.vue'
@@ -49,7 +49,7 @@ const inventoryId = parseInt((pageContext as any).routeParams.inventoryId)
 
 // ----------------------------------------------------------------------------
 
-interface InventoryItemForm extends InventoryItemCreation {
+interface InventoryItemForm extends InventoryItemFormData {
   containerId: number
 }
 

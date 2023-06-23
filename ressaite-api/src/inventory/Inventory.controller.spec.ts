@@ -8,7 +8,7 @@ import { userOneForeverToken } from "@al-un/ressaite-core/um/access-token.mocks"
 import app from "@/app";
 import { UserModel } from "@/um/User.model";
 import { userOne } from "@al-un/ressaite-core/um/users.mocks";
-import { InventoryCreation } from "@al-un/ressaite-core/inventory/inventory.models";
+import { InventoryFormData } from "@al-un/ressaite-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
 import { userOneInventories } from "@al-un/ressaite-core/inventory/inventory.mocks";
 import { testAuthentication } from "@/um/Auth.middleware.spec";
@@ -36,7 +36,8 @@ describe("InventoryController", () => {
   });
 
   describe("for inventories", () => {
-    const toCreateInventory: InventoryCreation = {
+    const toCreateInventory: InventoryFormData = {
+      id: null,
       name: "Inventory name",
     };
 

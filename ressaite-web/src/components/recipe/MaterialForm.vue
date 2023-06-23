@@ -17,15 +17,15 @@
 <script lang="ts" setup>
 import { watch, type PropType } from 'vue'
 
-import type { MaterialCreation } from '@al-un/ressaite-core/recipe/material.models'
+import type { MaterialFormData } from '@al-un/ressaite-core/recipe/material.models'
 import RstInput from '@/components/ui/form/RstInput.vue'
 
 const props = defineProps({
-  modelValue: { type: Object as PropType<MaterialCreation>, required: true }
+  modelValue: { type: Object as PropType<MaterialFormData>, required: true }
 })
 const emits = defineEmits(['update:modelValue', 'cancel'])
 
-let materialForm!: MaterialCreation
+let materialForm!: MaterialFormData
 
 /**
  * @see https://eslint.vuejs.org/rules/no-setup-props-destructure.html

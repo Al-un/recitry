@@ -4,11 +4,10 @@ import { reactive, ref } from 'vue'
 import type {
   Inventory,
   InventoryContainer,
-  InventoryContainerCreation,
-  InventoryCreation,
+  InventoryContainerFormData,
+  InventoryFormData,
   InventoryDetail,
-  InventoryItem,
-  InventoryItemCreation,
+  InventoryItemFormData,
   InventoryListItem
 } from '@al-un/ressaite-core/inventory/inventory.models'
 import type { InventoryEndpointTypes } from '@al-un/ressaite-core/inventory/inventory.endpoints'
@@ -49,7 +48,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     loading.value = false
   }
 
-  async function createInventory(newInventory: InventoryCreation) {
+  async function createInventory(newInventory: InventoryFormData) {
     loading.value = true
 
     const resp = await callEndpoint('inventoryCreate', null, newInventory)
@@ -92,7 +91,7 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   async function createInventoryContainer(
     inventoryId: number,
-    container: InventoryContainerCreation
+    container: InventoryContainerFormData
   ) {
     loading.value = true
 
@@ -165,7 +164,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   async function createInventoryItem(
     inventoryId: number,
     inventoryContainerId: number,
-    item: InventoryItemCreation
+    item: InventoryItemFormData
   ) {
     loading.value = true
 
@@ -203,7 +202,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     inventoryId: number,
     inventoryContainerId: number,
     itemId: number,
-    item: Partial<InventoryItemCreation>
+    item: Partial<InventoryItemFormData>
   ) {
     loading.value = true
 

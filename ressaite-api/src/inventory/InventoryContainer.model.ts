@@ -53,6 +53,7 @@ export class InventoryContainerModel extends Model {
   get toInventoryContainer(): InventoryContainer {
     return {
       id: this.id,
+      inventoryId: this.inventoryId,
       name: this.name,
       author: this.author.toMinimalProfile,
       createdAt: this.createdAt,

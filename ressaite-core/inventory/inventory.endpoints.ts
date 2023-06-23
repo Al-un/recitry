@@ -4,11 +4,11 @@ import type { PathWithNoParam } from "../core/base-api.routes";
 import type {
   Inventory,
   InventoryContainer,
-  InventoryContainerCreation,
-  InventoryCreation,
+  InventoryContainerFormData,
+  InventoryFormData,
   InventoryDetail,
   InventoryItem,
-  InventoryItemCreation,
+  InventoryItemFormData,
   InventoryListItem,
 } from "./inventory.models";
 import type {
@@ -21,7 +21,7 @@ export type InventoryEndpointTypes = {
   inventoryCreate: EndpointType<
     "POST",
     PathWithNoParam,
-    InventoryCreation,
+    InventoryFormData,
     Inventory
   >;
   inventoryList: EndpointType<
@@ -34,20 +34,20 @@ export type InventoryEndpointTypes = {
   inventoryUpdate: EndpointType<
     "PATCH",
     PathWithInventoryId,
-    Partial<InventoryCreation>,
+    Partial<InventoryFormData>,
     Inventory
   >;
   inventoryDelete: EndpointType<"DELETE", PathWithInventoryId, null, null>;
   inventoryContainerCreate: EndpointType<
     "POST",
     PathWithInventoryId,
-    InventoryContainerCreation,
+    InventoryContainerFormData,
     InventoryContainer
   >;
   inventoryContainerUpdate: EndpointType<
     "PATCH",
     PathWithInventoryId & PathWithInventoryContainerId,
-    Partial<InventoryContainerCreation>,
+    Partial<InventoryContainerFormData>,
     InventoryContainer
   >;
   inventoryContainerDelete: EndpointType<
@@ -59,7 +59,7 @@ export type InventoryEndpointTypes = {
   inventoryItemCreate: EndpointType<
     "POST",
     PathWithInventoryId & PathWithInventoryContainerId,
-    InventoryItemCreation,
+    InventoryItemFormData,
     InventoryItem
   >;
   inventoryItemUpdate: EndpointType<
@@ -67,7 +67,7 @@ export type InventoryEndpointTypes = {
     PathWithInventoryId &
       PathWithInventoryContainerId &
       PathWithInventoryItemId,
-    Partial<InventoryItemCreation>,
+    Partial<InventoryItemFormData>,
     InventoryItem
   >;
   inventoryItemDelete: EndpointType<

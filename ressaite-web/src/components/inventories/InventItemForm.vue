@@ -16,15 +16,15 @@
 <script lang="ts" setup>
 import { watch, type PropType } from 'vue'
 
-import type { InventoryItemCreation } from '@al-un/ressaite-core/inventory/inventory.models'
+import type { InventoryItemFormData } from '@al-un/ressaite-core/inventory/inventory.models'
 import RstInput from '@/components/ui/form/RstInput.vue'
 
 const props = defineProps({
-  modelValue: { type: Object as PropType<InventoryItemCreation>, required: true }
+  modelValue: { type: Object as PropType<InventoryItemFormData>, required: true }
 })
 const emits = defineEmits(['update:modelValue', 'cancel'])
 
-let formData!: InventoryItemCreation
+let formData!: InventoryItemFormData
 
 watch(
   () => props.modelValue,

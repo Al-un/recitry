@@ -6,7 +6,9 @@ interface InventoryBase {
   name: string;
 }
 
-export interface InventoryCreation extends InventoryBase {}
+export interface InventoryFormData extends InventoryBase {
+  id: number | null;
+}
 
 export interface Inventory extends InventoryBase, HasAuthor, HasTimestamp {
   id: number;
@@ -22,9 +24,12 @@ export interface InventoryListItem extends Inventory {}
 
 interface InventoryContainerBase {
   name: string;
+  inventoryId: number;
 }
 
-export interface InventoryContainerCreation extends InventoryContainerBase {}
+export interface InventoryContainerFormData extends InventoryContainerBase {
+  id: number | null;
+}
 
 export interface InventoryContainer
   extends InventoryContainerBase,
@@ -48,9 +53,11 @@ interface InventoryItemBase {
   quantity: number;
   /** Best before :) */
   dueDate: Date | null;
+  /** The inventory container this item belongs to. Cannot be null */
+  containerId: number;
 }
 
-export interface InventoryItemCreation extends InventoryItemBase {
+export interface InventoryItemFormData extends InventoryItemBase {
   id: number | null;
   materialId: number | null;
 }

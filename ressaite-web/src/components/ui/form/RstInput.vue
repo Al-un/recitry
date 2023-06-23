@@ -6,12 +6,16 @@
       v-bind="$attrs"
       class="rst-input__input"
       :value="$attrs.modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update:modelValue', ($event?.target as any)?.value)"
     />
   </label>
 </template>
 
 <script lang="ts" setup>
+/**
+ * `($event?.target as any)?.value` used to make TypeScript highlighting happy
+ */
+
 // import { defineProps } from 'vue'
 
 // defineProps({
@@ -25,7 +29,7 @@
 <style lang="scss">
 @forward './RstInput.scss';
 
-.rst-input__label{
+.rst-input__label {
   color: var(--rst-txt-sub);
   font-size: var(--rst-font-size-small);
   font-weight: bold;

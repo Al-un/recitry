@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitRecipeCreation">
+  <form @submit.prevent="submitRecipe">
     <rst-input v-model="form.recipe.title" />
     <rst-input v-model="form.recipe.description" />
     <rst-input v-model="form.recipe.title" />
@@ -19,13 +19,12 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 
-import type { RecipeCreation, RecipeStep } from '@al-un/ressaite-core/recipe/models/recipe'
-import type { Material, MaterialCreation } from '@al-un/ressaite-core/recipe/models/material'
+import type { RecipeFormData } from '@al-un/ressaite-core/recipe/recipe.models'
 
 import RstInput from '@/components/ui/form/RstInput.vue'
 
 interface FormData {
-  recipe: RecipeCreation
+  recipe: RecipeFormData
 }
 
 const form: FormData = reactive({
@@ -33,8 +32,8 @@ const form: FormData = reactive({
     title: 'My recipe title',
     description: 'My recipe description',
     lang: 'en',
-    steps: [] as RecipeCreation['steps'],
-    materials: [] as RecipeCreation['materials']
+    steps: [] as RecipeFormData['steps'],
+    materials: [] as RecipeFormData['materials']
   }
 })
 
@@ -46,7 +45,7 @@ function deleteRecipeStep(stepIndex: number) {
   form.recipe.steps = form.recipe.steps.filter((_, index) => index !== stepIndex)
 }
 
-async function submitRecipeCreation() {
+async function submitRecipe() {
   console.log('Create recipe', form.recipe)
 }
 </script>

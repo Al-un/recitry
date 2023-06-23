@@ -40,13 +40,13 @@ import RstInput from '@/components/ui/form/RstInput.vue'
 
 import { useAppStore } from '@/stores/app'
 import { useInventoryStore } from '@/stores/inventories'
-import type { InventoryCreation } from '@al-un/ressaite-core/inventory/inventory.models'
+import type { InventoryFormData } from '@al-un/ressaite-core/inventory/inventory.models'
 
 const appStore = useAppStore()
 const inventoryStore = useInventoryStore()
 
 interface State {
-  newInventory: InventoryCreation | null
+  newInventory: InventoryFormData | null
 }
 
 const state = reactive<State>({
@@ -64,7 +64,7 @@ onMounted(loadInventory)
 // onServerPrefetch(loadInventory)
 
 function prepareToCreate() {
-  state.newInventory = { name: '' }
+  state.newInventory = { id: null, name: '' }
 }
 
 function stopCreate() {

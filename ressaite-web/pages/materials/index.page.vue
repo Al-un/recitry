@@ -70,7 +70,7 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
 
-import type { Material, MaterialCreation } from '@al-un/ressaite-core/recipe/material.models'
+import type { Material, MaterialFormData } from '@al-un/ressaite-core/recipe/material.models'
 import { callEndpoint, type CallEndpointResponse } from '@/api'
 import RstInput from '@/components/ui/form/RstInput.vue'
 import { useAppStore } from '@/stores/app'
@@ -86,7 +86,7 @@ interface State {
     limit: number
     totalCount: number | null
   }
-  materialForm: MaterialCreation | null
+  materialForm: MaterialFormData | null
   loading: boolean
 }
 
@@ -108,6 +108,7 @@ function canManage(material: Material): boolean {
 
 function prepareToCreate() {
   state.materialForm = {
+    id: null,
     name: '',
     lang: 'fr'
   }

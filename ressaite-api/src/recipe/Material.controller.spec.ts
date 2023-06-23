@@ -12,7 +12,7 @@ import {
   userOneForeverToken,
   userTwoForeverToken,
 } from "@al-un/ressaite-core/um/access-token.mocks";
-import { MaterialCreation } from "@al-un/ressaite-core/recipe/material.models";
+import { MaterialFormData } from "@al-un/ressaite-core/recipe/material.models";
 import { dumMatCarrot } from "@al-un/ressaite-core/recipe/material.mocks";
 import { testAuthentication } from "@/um/Auth.middleware.spec";
 
@@ -31,7 +31,7 @@ describe("MaterialController", () => {
   describe("searchMaterial", () => {});
 
   describe("createMaterial", () => {
-    let creationRequest: MaterialCreation = {
+    let creationRequest: MaterialFormData = {
       id: null,
       name: "plop",
       lang: "en",

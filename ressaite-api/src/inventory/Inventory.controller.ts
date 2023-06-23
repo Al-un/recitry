@@ -1,17 +1,12 @@
 import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory.endpoints";
-import {
-  InventoryContainerCreation,
-  InventoryCreation,
-  InventoryItemCreation,
-  InventoryListItem,
-} from "@al-un/ressaite-core/inventory/inventory.models";
+import { InventoryListItem } from "@al-un/ressaite-core/inventory/inventory.models";
 import { PaginatedResp } from "@al-un/ressaite-core/core/base-api.models";
 
 import { ExpressController } from "@/core/express";
 import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";
-import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
+import { includeUserMinimalProfile } from "@/um/User.model";
 
 import * as InventoryService from "./Inventory.service";
 import { includeMaterialShortInfo } from "@/recipe/Material.model";
@@ -42,7 +37,7 @@ export const createInventory: InventoryControllerTypes["inventoryCreate"] =
     const authorId = req.user?.id;
     if (!authorId) throw new Error("req.user.id is not defined");
 
-    const creationRequest = req.body as InventoryCreation;
+    const creationRequest = req.body;
     const inventory = await InventoryService.createInventory(
       creationRequest,
       authorId
@@ -55,8 +50,10 @@ export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
   async (req, res) => {
     const inventory = (req.res?.locals as any).inventory as InventoryModel;
 
-    const updateRequest = req.body as Partial<InventoryModel>;
-    inventory.set(updateRequest);
+    const updateRequest = req.body;
+    inventory.set({
+      name: updateRequest.name,
+    });
 
     await inventory.save();
 
@@ -120,7 +117,7 @@ export const createInventoryContainer: InventoryControllerTypes["inventoryContai
       return;
     }
 
-    const creationRequest = req.body as InventoryContainerCreation;
+    const creationRequest = req.body;
     const created = await InventoryContainerModel.create({
       name: creationRequest.name,
       authorId: userId,
@@ -136,20 +133,21 @@ export const createInventoryContainer: InventoryControllerTypes["inventoryContai
     res.status(201).json(c.toInventoryContainer);
   };
 
+/**
+ * Only name can be modified, a container cannot be transferred to another inventory
+ */
 export const updateInventoryContainer: InventoryControllerTypes["inventoryContainerUpdate"] =
   async (req, res) => {
     const inventoryContainer = (req.res?.locals as any)
       .inventoryContainer as InventoryContainerModel;
 
     const updateRequest = req.body;
-    inventoryContainer.set(updateRequest);
+    inventoryContainer.set({
+      name: updateRequest.name,
+      updatedAt: new Date(),
+    });
 
     await inventoryContainer.save();
-
-    // const c = await InventoryContainerModel.findByPk(inventoryContainer.id, {
-    //   include: [includeUserMinimalProfile],
-    // });
-    // if (c === null) throw new Error(`Container not found during update`);
 
     res.status(200).json(inventoryContainer.toInventoryContainer);
   };
@@ -186,7 +184,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
       return;
     }
 
-    const creationRequest = req.body as InventoryItemCreation;
+    const creationRequest = req.body;
     const created = await InventoryItemModel.create(
       {
         name: creationRequest.name,
@@ -208,13 +206,22 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
     res.status(201).json(ii.toInventoryItem);
   };
 
+/**
+ * An item cannot be transferred to another container
+ */
 export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"] =
   async (req, res) => {
     const inventoryItem = (req.res?.locals as any)
       .inventoryItem as InventoryItemModel;
 
     const updateRequest = req.body;
-    inventoryItem.set(updateRequest);
+    inventoryItem.set({
+      name: updateRequest.name,
+      quantity: updateRequest.quantity,
+      dueDate: updateRequest.dueDate,
+      materialId: updateRequest.materialId,
+      updatedAt: new Date(),
+    });
 
     await inventoryItem.save();
 

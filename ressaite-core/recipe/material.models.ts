@@ -7,7 +7,7 @@ interface MaterialBase {
   lang: Lang;
 }
 
-export interface MaterialCreation extends MaterialBase {
+export interface MaterialFormData extends MaterialBase {
   id: number | null;
 }
 
@@ -23,10 +23,12 @@ interface RecipeMaterialBase extends MaterialBase {
   qty: number | null;
   unit: string | null;
 }
+export interface RecipeMaterialFormData extends RecipeMaterialBase {
+  id: number | null;
+}
 
-export interface RecipeMaterial extends RecipeMaterialBase {}
-
-export interface RecipeMaterialCreation extends RecipeMaterialBase {
-  /**Material ID */
+export interface RecipeMaterial extends RecipeMaterialBase {
   id: number;
+  recipeId: number;
+  materialId: number;
 }
