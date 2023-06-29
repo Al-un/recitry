@@ -17,8 +17,14 @@ export const searchMaterial: MaterialControllerTypes["materialSearch"] = async (
   res
 ) => {
   const { page, limit, name } = req.query;
+  if (limit > 100) {
+    res.status(400).json({ message: `Keep pagination limit under 100` });
+    return;
+  }
 
-  const where = !!name ? { name: { [Op.like]: `%${name}%` } } : {};
+  // iLike is Postgres specific
+  // https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
+  const where = !!name ? { name: { [Op.iLike]: `%${name}%` } } : {};
 
   const { count, rows } = await MaterialModel.findAndCountAll({
     where,
@@ -45,9 +51,8 @@ export const createMaterial: MaterialControllerTypes["materialCreate"] = async (
     where: { name: creationRequest.name },
   });
   if (existingMaterial !== null) {
-    res.status(400).json({
-      message: `Material with name ${creationRequest.name} already exists`,
-    });
+    const message = `Material with name ${creationRequest.name} already exists`;
+    res.status(400).json({ message });
     return;
   }
 
@@ -74,18 +79,18 @@ export const updateMaterial: MaterialControllerTypes["materialUpdate"] = async (
   if (!userId) throw new Error("req.user.id is not defined");
 
   const materialId = req.params.materialId;
-  if (!materialId) throw new Error("materialId is not defined");
+  if (!materialId) throw new Error("req.params.materialId is not defined");
 
   let material = await MaterialModel.findByPk(materialId, {
     include: [includeUserMinimalProfile],
   });
   if (material === null) {
-    res.status(404).json({ message: `Material ${materialId} not found` });
+    res.status(404).json({ message: `Material #${materialId} not found` });
     return;
   }
 
   if (material.authorId !== userId) {
-    res.status(403).json({ message: `Cannot delete material ${materialId}` });
+    res.status(403).json({ message: `Cannot update material #${materialId}` });
   }
 
   const updateRequest = req.body;

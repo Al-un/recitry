@@ -18,6 +18,7 @@ import { testAuthentication } from "@/um/Auth.middleware.spec";
 
 describe("MaterialController", () => {
   let firstUser: UserModel;
+  let authorId: number;
 
   before(async () => {
     const userCandidate = await UserModel.findOne({
@@ -26,9 +27,72 @@ describe("MaterialController", () => {
     if (userCandidate === null) throw new Error("User One not found");
 
     firstUser = userCandidate;
+    authorId = firstUser.id;
   });
 
-  describe("searchMaterial", () => {});
+  describe("searchMaterial", () => {
+    const { path } = AllRoutes.materialSearch;
+    const name = "xyz";
+    const limit = 4;
+
+    before(async () => {
+      // Expect to not have dummy material with xyz name
+      await MaterialModel.create({ name: "bla-xyz01", lang: "fr", authorId });
+      await MaterialModel.create({ name: "bla-XYZ02", lang: "en", authorId });
+      await MaterialModel.create({ name: "bla-xYz03", lang: "en", authorId });
+      await MaterialModel.create({ name: "bla-xyz-04", lang: "fr", authorId });
+      await MaterialModel.create({ name: "bla-xyz-05", lang: "en", authorId });
+      await MaterialModel.create({ name: "bla-xyz-06", lang: "fr", authorId });
+      await MaterialModel.create({ name: "bla-xyz-07", lang: "fr", authorId });
+    });
+
+    // describe("when fetching the first page", () => {
+    //   let res: request.Response;
+    //   before(async () => {
+    //     const params = { page: 1, limit, name };
+    //     const route = buildRouteWithParam(path, params);
+    //     res = await request(app).get(route);
+    //   });
+
+    //   it("returns the first four materials", () => {
+    //     const body = res.body;
+    //     expect(body.data.length).to.eq(4);
+    //   });
+
+    //   it("returns the total count", () => {
+    //     const body = res.body;
+    //     expect(body.totalCount).to.eq(7);
+    //   });
+    // });
+
+    // describe("when fetching the second page", () => {
+    //   let res: request.Response;
+    //   before(async () => {
+    //     const params = { page: 2, limit, name };
+    //     const route = buildRouteWithParam(path, params);
+    //     res = await request(app).get(route);
+    //   });
+
+    //   it("returns the three next materials", () => {
+    //     const body = res.body;
+    //     expect(body.data.length).to.eq(3);
+    //   });
+    // });
+
+    // describe("when fetching the third page", () => {
+    //   let res: request.Response;
+    //   before(async () => {
+    //     const params = { page: 3, limit, name };
+    //     const route = buildRouteWithParam(path, params);
+    //     res = await request(app).get(route);
+    //   });
+
+    //   it("returns nothing", () => {
+    //     const body = res.body;
+    //     expect(body.data.length).to.eq(0);
+    //   });
+    // });
+  });
 
   describe("createMaterial", () => {
     let creationRequest: MaterialFormData = {
@@ -64,6 +128,7 @@ describe("MaterialController", () => {
   });
 
   describe("updateMaterial", () => {
+    const { path } = AllRoutes.materialUpdate;
     let someMaterial: MaterialModel;
     let route: string;
 
@@ -71,20 +136,14 @@ describe("MaterialController", () => {
       someMaterial = await MaterialModel.create({
         name: "xyz",
         lang: "fr",
-        authorId: firstUser.id,
+        authorId,
       });
-      route = buildRouteWithParam(AllRoutes.materialUpdate.path, {
-        materialId: someMaterial.id,
-      });
+      route = buildRouteWithParam(path, { materialId: someMaterial.id });
     });
 
     testAuthentication(
       request(app)
-        .patch(
-          buildRouteWithParam(AllRoutes.materialUpdate.path, {
-            materialId: 1,
-          })
-        )
+        .patch(buildRouteWithParam(path, { materialId: 1 }))
         .send({ name: "a" })
     );
 
@@ -108,40 +167,48 @@ describe("MaterialController", () => {
   });
 
   describe("deleteMaterial", () => {
-    let someMaterial: MaterialModel;
-    let route: string;
+    const { path } = AllRoutes.materialSearch;
+    let material: MaterialModel;
+    let route: string = "";
+    let res;
 
     before(async () => {
-      someMaterial = await MaterialModel.create({
+      material = await MaterialModel.create({
         name: "xyz",
         lang: "fr",
-        authorId: firstUser.id,
+        authorId,
       });
-      route = buildRouteWithParam(AllRoutes.materialDelete.path, {
-        materialId: someMaterial.id,
+      route = buildRouteWithParam(path, { materialId: material.id });
+    });
+
+    testAuthentication(request(app).delete(route));
+
+    describe("when the actor is not the owner", () => {
+      it("returns a 403 error", async () => {
+        res = await request(app)
+          .delete(route)
+          .auth(userTwoForeverToken.token, { type: "bearer" });
+
+        expect(res.status).to.eq(403);
       });
     });
 
-    testAuthentication(
-      request(app).delete(
-        buildRouteWithParam(AllRoutes.materialDelete.path, {
-          materialId: 1,
-        })
-      )
-    );
+    describe("when the actor is the owner", () => {
+      it("delete the material if it exists", async () => {
+        res = await request(app)
+          .delete(route)
+          .auth(userOneForeverToken.token, { type: "bearer" });
 
-    it("requires owner to perform the action", async () => {
-      let res = await request(app)
-        .delete(route)
-        .auth(userTwoForeverToken.token, { type: "bearer" });
-      expect(res.status).to.eq(403);
-    });
+        expect(res.status).to.eq(204);
+      });
 
-    it("delete the material", async () => {
-      let res = await request(app)
-        .delete(route)
-        .auth(userOneForeverToken.token, { type: "bearer" });
-      expect(res.status).to.eq(204);
+      it("returns 404 if it does not exists", async () => {
+        res = await request(app)
+          .delete(buildRouteWithParam(path, { materialId: 99999 }))
+          .auth(userOneForeverToken.token, { type: "bearer" });
+
+        expect(res.status).to.eq(404);
+      });
     });
   });
 });
