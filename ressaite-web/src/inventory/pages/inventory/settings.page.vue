@@ -73,6 +73,9 @@
           </section>
 
           <section class="rst-form__input-group rst-button-group align-right">
+            <button @click="stopContainerForm" class="rst-button secondary" type="reset">
+              Cancel
+            </button>
             <button class="rst-button primary" type="submit">Add container</button>
           </section>
         </form>
@@ -138,14 +141,14 @@ onMounted(loadInventory)
 
 const isCreating = computed(() => {
   const check = (form: ContainerForm): form is InventoryContainerFormData => {
-    return form !== null && (form as InventoryContainer).id === undefined
+    return form !== null && (form as InventoryContainer).id === null
   }
   return check(state.containerForm)
 })
 
 const isEditing = computed(() => {
   const check = (form: ContainerForm): form is InventoryContainer => {
-    return form !== null && (form as InventoryContainer).id !== undefined
+    return form !== null && (form as InventoryContainer).id !== null
   }
   return check(state.containerForm)
 })

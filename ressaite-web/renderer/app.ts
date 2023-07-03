@@ -84,7 +84,7 @@ export function createApp(pageContext: PageContext) {
   app.use(store)
 
   // https://vue-i18n.intlify.dev/guide/installation.html
-  console.log("Loading i18n", i18nMessages)
+  // console.log("Loading i18n", i18nMessages)
   const i18n = createI18n({
     locale: 'en',
     fallbackLocale: 'en',
