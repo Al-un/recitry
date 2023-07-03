@@ -6,12 +6,12 @@
     </div>
 
     <h2>Inventories</h2>
-    <invent-list />
+    <InventoryList />
   </div>
 </template>
 
 <script lang="ts" setup>
-import InventList from '@/components/inventories/InventList.vue'
+import InventoryList from '@/inventory/components/InventoryList.vue'
 </script>
 
 <style lang="scss">

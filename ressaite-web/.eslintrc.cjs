@@ -17,7 +17,7 @@ module.exports = {
     // Ignore multi-word rule for page names as vite-plugin-ssr
     // requires FileSystem routing
     {
-      files: ['pages/**/*.vue'],
+      files: ['**/*.page.vue'],
       rules: {
         'vue/multi-word-component-names': "off"
       }

@@ -7,7 +7,7 @@ import { createApp } from './app'
 import { getPageTitle } from './getPageTitle'
 import type { PageContext } from './types'
 
-import '@/styles/main.scss'
+import '@/core/styles/main.scss'
 
 export const clientRouting = true
 export const prefetchStaticAssets = { when: 'VIEWPORT' }
