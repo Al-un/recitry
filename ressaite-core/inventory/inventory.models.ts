@@ -51,8 +51,8 @@ interface InventoryItemBase {
    * material but different due date
    */
   quantity: number;
-  /** Best before :) */
-  dueDate: Date | null;
+  /** Best before :) Date saved without time in UTC */
+  dueDate: string | null;
   /** The inventory container this item belongs to. Cannot be null */
   containerId: number;
 }

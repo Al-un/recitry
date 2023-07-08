@@ -6,8 +6,8 @@
       v-bind="$attrs"
       class="rst-input__input"
       ref="input"
-      :value="$attrs.modelValue"
-      @input="$emit('update:modelValue', ($event?.target as any)?.value)"
+      :value="modelValue"
+      @input="$emit('update:model-value', ($event?.target as any)?.value)"
     />
   </label>
 </template>
@@ -20,6 +20,9 @@ import { ref } from 'vue'
  */
 
 const input = ref<HTMLInputElement | null>(null)
+
+defineProps({ modelValue: { type: [String, Number], default: null } })
+defineEmits(['update:model-value'])
 
 function focusInput() {
   input.value?.focus()

@@ -26,7 +26,7 @@ export const userOneInventories: MockProfileData = {
               name: "Mon premier objet",
               material: null,
               quantity: 8,
-              dueDate: new Date("2029-12-31"),
+              dueDate: "2029-12-31",
             },
             {
               id: 1212,
@@ -48,7 +48,7 @@ export const userOneInventories: MockProfileData = {
                 lang: "fr",
               },
               quantity: 7,
-              dueDate: new Date("2023-03-23"),
+              dueDate: "2023-03-23",
             },
           ],
         },

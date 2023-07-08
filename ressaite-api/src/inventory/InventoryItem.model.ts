@@ -63,7 +63,7 @@ export class InventoryItemModel extends Model {
       name: this.name,
       author: this.author.toMinimalProfile,
       quantity: this.quantity,
-      dueDate: this.dueDate,
+      dueDate: this.dueDate?.toISOString() || null,
       material: this.material ? this.material.toShortInfo : null,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,

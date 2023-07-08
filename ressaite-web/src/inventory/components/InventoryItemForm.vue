@@ -11,8 +11,7 @@
       step="1"
       required
     />
-    <RstInput v-model="formData.dueDate" label="Due date" type="date" />
-    <pre>{{ formData.dueDate }}</pre>
+    <RstInputDate v-model="formData.dueDate" label="Due date" />
 
     <RstSelect
       v-model.number="formData.containerId"
@@ -36,6 +35,7 @@ import type {
   InventoryItemFormData
 } from '@al-un/ressaite-core/inventory/inventory.models'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
+import RstInputDate from '@/core/components/ui/form/RstInputDate.vue'
 import RstSelect from '@/core/components/ui/form/RstSelect.vue'
 
 const props = defineProps({
@@ -48,9 +48,7 @@ let formData!: InventoryItemFormData
 
 watch(
   () => props.modelValue,
-  () => {
-    formData = props.modelValue
-  },
+  () => (formData = props.modelValue),
   { immediate: true }
 )
 

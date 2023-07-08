@@ -18,36 +18,12 @@ export const createInventory = async (
   inventory: InventoryFormData,
   authorId: number
 ): Promise<Inventory> => {
-  // console.log(`Creating inventory with author ${authorId}`, inventory);
   const i = await InventoryModel.create({
     name: inventory.name,
     authorId: authorId,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-
-  // for (let container of inventory.containers) {
-  //   const c = await InventoryContainerModel.create({
-  //     name: container.name,
-  //     authorId: authorId,
-  //     inventoryId: i.id,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   });
-
-  //   for (let item of container.items) {
-  //     await InventoryItemModel.create({
-  //       name: item.name,
-  //       quantity: item.quantity,
-  //       dueDate: item.dueDate,
-  //       authorId: authorId,
-  //       containerId: c.id,
-  //       materialId: item.materialId,
-  //       createdAt: new Date(),
-  //       updatedAt: new Date(),
-  //     });
-  //   }
-  // }
 
   const result = await fetchInventory(i.id);
   if (!result) throw new Error("Created inventory not found");
@@ -93,18 +69,7 @@ export const fetchInventory = async (
       include: [includeUserMinimalProfile, includeMaterialShortInfo],
     });
     for (let item of items) {
-      const formattedItem: InventoryItem = {
-        id: item.id,
-        containerId: item.containerId,
-        name: item.name,
-        dueDate: item.dueDate,
-        author: item.author.toMinimalProfile,
-        quantity: item.quantity,
-        material: item.material ? item.material.toShortInfo : null,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-      };
-      formattedContainer.items.push(formattedItem);
+      formattedContainer.items.push(item.toInventoryItem);
     }
 
     inventory.containers.push(formattedContainer);

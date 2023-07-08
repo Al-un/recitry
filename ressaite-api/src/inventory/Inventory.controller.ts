@@ -1,6 +1,7 @@
 import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory.endpoints";
 import { InventoryListItem } from "@al-un/ressaite-core/inventory/inventory.models";
 import { PaginatedResp } from "@al-un/ressaite-core/core/base-api.models";
+import {parseDate} from "@al-un/ressaite-core/core/utils/datetime"
 
 import { ExpressController } from "@/core/express";
 import { InventoryModel } from "./Inventory.model";
@@ -191,7 +192,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
       {
         name: creationRequest.name,
         quantity: creationRequest.quantity,
-        dueDate: creationRequest.dueDate,
+        dueDate: parseDate(creationRequest.dueDate),
         materialId: creationRequest.materialId,
         authorId: userId,
         containerId: creationRequest.containerId,
@@ -217,11 +218,12 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
       .inventoryItem as InventoryItemModel;
 
     const updateRequest = req.body;
+
     inventoryItem.set({
       name: updateRequest.name,
       containerId: updateRequest.containerId,
       quantity: updateRequest.quantity,
-      dueDate: updateRequest.dueDate,
+      dueDate: parseDate(updateRequest.dueDate || null),
       materialId: updateRequest.materialId,
       updatedAt: new Date(),
     });

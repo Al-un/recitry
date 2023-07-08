@@ -207,10 +207,9 @@ export const useInventoryStore = defineStore('inventory', () => {
     )
     if (resp.status === 200) {
       const updatedItem = resp.data
-      console.log(`updatedItem`, updatedItem)
+
       if (current.value && current.value.id === inventoryId) {
         current.value.containers = current.value.containers.map((c) => {
-          console.log(`Checking c.id ${c.id}`, c)
           if (c.id === updatedItem.containerId) {
             let foundInContainer = false
             const items = c.items.map((item) => {
@@ -222,14 +221,9 @@ export const useInventoryStore = defineStore('inventory', () => {
               return item
             })
 
-            if (!foundInContainer) {
-              items.push(updatedItem)
-            }
+            if (!foundInContainer) items.push(updatedItem)
 
-            console.log(`Found ${foundInContainer}`, items)
-            const container = { ...c, items }
-            console.log('container', container)
-            return container
+            return { ...c, items }
           }
 
           return {
