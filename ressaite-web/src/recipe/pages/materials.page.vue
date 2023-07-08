@@ -19,7 +19,7 @@
     </p>
 
     <section class="rst-card padded">
-      <form @submit.prevent="searchMaterial" class="material-search-form">
+      <form @submit.prevent="loadData" class="material-search-form">
         <rst-input v-model="materialSearch" label="Search material name" />
         <button class="rst-button primary" type="submit">Search</button>
       </form>
@@ -45,6 +45,12 @@
           </button>
         </li>
       </ul>
+
+      <div class="rst-button-group">
+        <button :disabled="!hasPrev" @click="loadPrev" class="rst-button secondary">Prev</button>
+        <button :disabled="!hasNext" @click="loadNext" class="rst-button secondary">Next</button>
+        <span>{{ paginationState.currentPage }} / {{ lastPage }}</span>
+      </div>
     </section>
   </div>
 
@@ -65,30 +71,46 @@ import RstInput from '@/core/components/ui/form/RstInput.vue'
 import RstModal from '@/core/components/ui/container/RstModal.vue'
 import MaterialForm from '@/recipe/components/MaterialForm.vue'
 import { useAuthStore } from '@/um/stores/auth'
+import { usePagination } from '@/core/compositions/use-pagination'
+import type { WithPagination } from '@al-un/ressaite-core/core/base-api.endpoints'
 
 const authStore = useAuthStore()
 
 interface State {
   list: Material[]
-  pagination: {
-    currentPage: number
-    limit: number
-    totalCount: number | null
-  }
-  materialForm: MaterialFormData | null
+  // pagination: {
+  //   currentPage: number
+  //   limit: number
+  //   totalCount: number | null
+  // }
   loading: boolean
+  materialForm: MaterialFormData | null
 }
 
 const materialSearch = ref('')
 const state = reactive<State>({
   list: [],
   loading: false,
-  pagination: { currentPage: 1, limit: 100, totalCount: null },
+  // pagination: { currentPage: 1, limit: 100, totalCount: null },
   materialForm: null
 })
 
+const { hasNext, hasPrev, lastPage, loadData, loadNext, loadPrev, paginationState } =
+  usePagination<Material>(async ({ page, limit }: WithPagination) => {
+    const resp = await callEndpoint('materialSearch', null, {
+      name: materialSearch.value || '',
+      page: page,
+      limit: limit
+    })
+
+    state.list = resp.data.data
+    return resp
+  })
+paginationState.limit = 3
+
 onMounted(async () => {
-  await searchMaterial()
+  await loadData()
+  // await searchMaterial(pagination)
 })
 
 function canManage(material: Material): boolean {
@@ -117,7 +139,7 @@ async function saveMaterial() {
   if (state.materialForm === null) {
     return
   }
-  state.loading = true
+  // state.loading = true
 
   let resp: CallEndpointResponse<Material>
   if (state.materialForm.id) {
@@ -128,66 +150,65 @@ async function saveMaterial() {
     )
 
     if (resp.status === 200) {
-      state.list = state.list.map((m) => {
-        if (m.id !== state.materialForm?.id) {
-          return m
-        }
+      // state.list = state.list.map((m) => {
+      //   if (m.id !== state.materialForm?.id) {
+      //     return m
+      //   }
 
-        return resp.data
-      })
+      //   return resp.data
+      // })
       state.materialForm = null
     }
   } else {
     resp = await callEndpoint('materialCreate', null, state.materialForm)
     if (resp.status === 201) {
-      state.list.push(resp.data)
+      // state.list.push(resp.data)
     }
   }
 
-  state.loading = false
+  // state.loading = false
   stopForm()
 }
 
 async function deleteMaterial(material: Material) {
-  state.loading = true
-  const res = await callEndpoint('materialDelete', { materialId: material.id }, null)
-
-  if (res.status === 204) {
-    state.list = state.list.filter((m) => m.id !== material.id)
-  }
-  state.loading = false
+  // state.loading = true
+  // const res = await callEndpoint('materialDelete', { materialId: material.id }, null)
+  // if (res.status === 204) {
+  //   state.list = state.list.filter((m) => m.id !== material.id)
+  // }
+  // state.loading = false
 }
 
-async function searchMaterial() {
-  state.loading = true
-  const res = await callEndpoint('materialSearch', null, {
-    name: materialSearch.value || '',
-    page: state.pagination.currentPage,
-    limit: state.pagination.limit
-  })
+// async function searchMaterial(pagination: PaginationState) {
+//   state.loading = true
+//   const res = await callEndpoint('materialSearch', null, {
+//     name: materialSearch.value || '',
+//     page: pagination.currentPage,
+//     limit: pagination.limit
+//   })
 
-  state.list = res.data.data
-  state.pagination.totalCount = res.data.totalCount
-  state.loading = false
-}
+//   state.list = res.data.data
+//   // state.pagination.totalCount = res.data.totalCount
+//   state.loading = false
+// }
 
-async function searchPrevPage() {
-  if (state.pagination.currentPage > 0) {
-    state.pagination.currentPage--
+// async function searchPrevPage() {
+//   if (state.pagination.currentPage > 0) {
+//     state.pagination.currentPage--
 
-    await searchMaterial()
-  }
-}
+//     await searchMaterial()
+//   }
+// }
 
-async function searchNextPage() {
-  if (state.pagination.currentPage > 0) {
-    state.pagination.currentPage++
+// async function searchNextPage() {
+//   if (state.pagination.currentPage > 0) {
+//     state.pagination.currentPage++
 
-    await searchMaterial()
-  }
+//     await searchMaterial()
+//   }
 
-  await searchMaterial()
-}
+//   await searchMaterial()
+// }
 </script>
 
 <style lang="scss">
