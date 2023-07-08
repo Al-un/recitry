@@ -19,13 +19,13 @@
     </p>
 
     <section class="rst-card padded">
-      <form @submit.prevent="loadData" class="material-search-form">
-        <rst-input v-model="materialSearch" label="Search material name" />
+      <form @submit.prevent="searchMaterial" class="material-search-form">
+        <rst-input v-model="materialSearch" placeholder="Search material name" />
         <button class="rst-button primary" type="submit">Search</button>
       </form>
 
       <pre v-if="state.loading">LOADING...</pre>
-      <ul v-if="state.list.length" class="rst-list">
+      <ul v-if="state.list.length" class="rst-list materials-list">
         <li v-for="material in state.list" :key="material.id" class="rst-list-item">
           <span class="material-table__name">{{ material.name }}</span>
           <span class="flex-spacer"></span>
@@ -46,10 +46,10 @@
         </li>
       </ul>
 
-      <div class="rst-button-group">
+      <div class="rst-button-group pagination-buttons">
         <button :disabled="!hasPrev" @click="loadPrev" class="rst-button secondary">Prev</button>
-        <button :disabled="!hasNext" @click="loadNext" class="rst-button secondary">Next</button>
         <span>{{ paginationState.currentPage }} / {{ lastPage }}</span>
+        <button :disabled="!hasNext" @click="loadNext" class="rst-button secondary">Next</button>
       </div>
     </section>
   </div>
@@ -106,7 +106,7 @@ const { hasNext, hasPrev, lastPage, loadData, loadNext, loadPrev, paginationStat
     state.list = resp.data.data
     return resp
   })
-paginationState.limit = 3
+paginationState.limit = 10
 
 onMounted(async () => {
   await loadData()
@@ -115,6 +115,11 @@ onMounted(async () => {
 
 function canManage(material: Material): boolean {
   return material.author.id === authStore.sessionInfo?.user.id
+}
+
+async function searchMaterial() {
+  paginationState.currentPage = 1
+  await loadData()
 }
 
 function prepareToCreate() {
@@ -139,7 +144,7 @@ async function saveMaterial() {
   if (state.materialForm === null) {
     return
   }
-  // state.loading = true
+  state.loading = true
 
   let resp: CallEndpointResponse<Material>
   if (state.materialForm.id) {
@@ -150,33 +155,43 @@ async function saveMaterial() {
     )
 
     if (resp.status === 200) {
-      // state.list = state.list.map((m) => {
-      //   if (m.id !== state.materialForm?.id) {
-      //     return m
-      //   }
+      state.list = state.list.map((m) => {
+        if (m.id !== state.materialForm?.id) {
+          return m
+        }
 
-      //   return resp.data
-      // })
-      state.materialForm = null
+        return resp.data
+      })
     }
   } else {
     resp = await callEndpoint('materialCreate', null, state.materialForm)
     if (resp.status === 201) {
-      // state.list.push(resp.data)
+      //
+      state.list.unshift(resp.data)
+      state.list = state.list.slice(0, 10)
+
+      if (paginationState.totalCount) {
+        paginationState.totalCount++
+      }
     }
   }
 
-  // state.loading = false
+  state.materialForm = null
+  state.loading = false
   stopForm()
 }
 
 async function deleteMaterial(material: Material) {
-  // state.loading = true
-  // const res = await callEndpoint('materialDelete', { materialId: material.id }, null)
-  // if (res.status === 204) {
-  //   state.list = state.list.filter((m) => m.id !== material.id)
-  // }
-  // state.loading = false
+  state.loading = true
+  const res = await callEndpoint('materialDelete', { materialId: material.id }, null)
+  if (res.status === 204) {
+    state.list = state.list.filter((m) => m.id !== material.id)
+
+    if (paginationState.totalCount) {
+      paginationState.totalCount--
+    }
+  }
+  state.loading = false
 }
 
 // async function searchMaterial(pagination: PaginationState) {
@@ -222,22 +237,29 @@ async function deleteMaterial(material: Material) {
 
 .material-search-form {
   @include flex-row;
-  .rst-input-search {
-    flex-grow: 1;
-    margin-right: 8px;
-  }
-}
-
-.material-create-form {
-  @include flex-row;
+  justify-content: center;
   .rst-input {
-    flex-grow: 1;
-    margin-right: 8px;
+    margin-inline-end: 8px;
   }
 }
 
 .rst-list-item {
   .rst-button + .rst-button {
+    margin-inline-start: 8px;
+  }
+}
+
+.materials-list {
+  margin-block-start: 16px;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-block-start: 16px;
+
+  * + * {
     margin-inline-start: 8px;
   }
 }

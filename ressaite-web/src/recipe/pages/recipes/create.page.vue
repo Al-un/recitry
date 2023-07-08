@@ -21,7 +21,7 @@ import { reactive } from 'vue'
 
 import type { RecipeFormData } from '@al-un/ressaite-core/recipe/recipe.models'
 
-import RstInput from '@/components/ui/form/RstInput.vue'
+import RstInput from '@/core/components/ui/form/RstInput.vue'
 
 interface FormData {
   recipe: RecipeFormData

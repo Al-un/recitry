@@ -5,6 +5,7 @@
     <input
       v-bind="$attrs"
       class="rst-input__input"
+      ref="input"
       :value="$attrs.modelValue"
       @input="$emit('update:modelValue', ($event?.target as any)?.value)"
     />
@@ -12,9 +13,21 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
+
 /**
  * `($event?.target as any)?.value` used to make TypeScript highlighting happy
  */
+
+const input = ref<HTMLInputElement | null>(null)
+
+function focusInput() {
+  input.value?.focus()
+}
+
+// Expose focus function for parent components:
+// https://vuejs.org/guide/essentials/template-refs.html#ref-on-component
+defineExpose({ focusInput })
 </script>
 
 <style lang="scss">

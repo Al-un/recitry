@@ -20,25 +20,42 @@
   &:hover {
     background-color: var(--rst-primary-active);
   }
+
+  &:disabled {
+    background-color: var(--rst-disabled);
+    border-color: var(--rst-disabled);
+    cursor: not-allowed;
+  }
 }
 
 .rst-button.secondary {
   background-color: var(--rst-bg-content);
   color: var(--rst-primary);
-  border: 1px solid var(--rst-primary);
+  border: 1px solid currentColor;
 
   &:hover {
     background-color: var(--rst-bg-content-hover);
   }
+
+  &:disabled {
+    color: var(--rst-disabled);
+    cursor: not-allowed;
+  }
 }
 
-.rst-button.danger{
+.rst-button.danger {
   background-color: var(--rst-danger);
   color: white;
   border: 1px solid var(--rst-danger);
 
   &:hover {
     background-color: var(--rst-danger-active);
+  }
+
+  &:disabled {
+    background-color: var(--rst-disabled);
+    border-color: var(--rst-disabled);
+    cursor: not-allowed;
   }
 }
 

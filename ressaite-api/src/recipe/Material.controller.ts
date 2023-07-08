@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 import { MaterialEndpointTypes } from "@al-un/ressaite-core/recipe/material.endpoints";
 
@@ -24,12 +24,21 @@ export const searchMaterial: MaterialControllerTypes["materialSearch"] = async (
 
   // iLike is Postgres specific
   // https://sequelize.org/docs/v6/core-concepts/model-querying-basics/#operators
-  const where = !!name ? { name: { [Op.iLike]: `%${name}%` } } : {};
+  // Solved by https://stackoverflow.com/a/41732931/4906586
+  const where = !!name
+    ? // Postgres only
+      // { name: { [Op.iLike]: `%${name}%` } }
+
+      Sequelize.where(Sequelize.fn("lower", Sequelize.col("name")), {
+        [Op.like]: `%${name}%`,
+      })
+    : {};
 
   const { count, rows } = await MaterialModel.findAndCountAll({
     where,
     offset: (page - 1) * limit,
     limit,
+    order: [["updatedAt", "DESC"]],
     include: [includeUserMinimalProfile],
   });
 
