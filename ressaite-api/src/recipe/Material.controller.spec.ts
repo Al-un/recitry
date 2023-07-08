@@ -166,19 +166,19 @@ describe("MaterialController", () => {
     });
   });
 
-  describe("deleteMaterial", () => {
-    const { path } = AllRoutes.materialSearch;
-    let material: MaterialModel;
-    let route: string = "";
+  describe.only("deleteMaterial", () => {
+    const { path } = AllRoutes.materialDelete;
+    let toDeleteMaterial: MaterialModel;
+    let route: string = buildRouteWithParam(path, { materialId: 999 });
     let res;
 
     before(async () => {
-      material = await MaterialModel.create({
-        name: "xyz",
+      toDeleteMaterial = await MaterialModel.create({
+        name: "xyz-to-be-deleted-and-stuff",
         lang: "fr",
         authorId,
       });
-      route = buildRouteWithParam(path, { materialId: material.id });
+      route = buildRouteWithParam(path, { materialId: toDeleteMaterial.id });
     });
 
     testAuthentication(request(app).delete(route));
