@@ -17,6 +17,7 @@ export type MaterialEndpointTypes = {
     MaterialFormData,
     Material
   >;
+  materialDisplay: EndpointType<"GET", PathWithMaterialId, null, Material>;
   materialUpdate: EndpointType<
     "PATCH",
     PathWithMaterialId,

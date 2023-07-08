@@ -80,6 +80,22 @@ export const createMaterial: MaterialControllerTypes["materialCreate"] = async (
   res.status(201).json(createdMaterial.toMaterial);
 };
 
+export const displayMaterial: MaterialControllerTypes["materialDisplay"] =
+  async (req, res) => {
+    const materialId = req.params.materialId;
+    if (!materialId) throw new Error("req.params.materialId is not defined");
+
+    let material = await MaterialModel.findByPk(materialId, {
+      include: [includeUserMinimalProfile],
+    });
+    if (material === null) {
+      res.status(404).json({ message: `Material #${materialId} not found` });
+      return;
+    }
+
+    res.status(200).json(material.toMaterial);
+  };
+
 export const updateMaterial: MaterialControllerTypes["materialUpdate"] = async (
   req,
   res

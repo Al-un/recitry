@@ -1,7 +1,7 @@
 import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory.endpoints";
 import { InventoryListItem } from "@al-un/ressaite-core/inventory/inventory.models";
 import { PaginatedResp } from "@al-un/ressaite-core/core/base-api.models";
-import {parseDate} from "@al-un/ressaite-core/core/utils/datetime"
+import { parseDate } from "@al-un/ressaite-core/core/utils/datetime";
 
 import { ExpressController } from "@/core/express";
 import { InventoryModel } from "./Inventory.model";
@@ -219,6 +219,8 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
 
     const updateRequest = req.body;
 
+    console.log(`Updating item ${inventoryItem.id} with`, updateRequest);
+
     inventoryItem.set({
       name: updateRequest.name,
       containerId: updateRequest.containerId,
@@ -230,7 +232,12 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
 
     await inventoryItem.save();
 
-    res.status(200).json(inventoryItem.toInventoryItem);
+    const ii = await InventoryItemModel.findByPk(inventoryItem.id, {
+      include: [includeUserMinimalProfile, includeMaterialShortInfo],
+    });
+    if (ii === null) throw new Error("Created container not found");
+
+    res.status(200).json(ii.toInventoryItem);
   };
 
 export const deleteInventoryItem: InventoryControllerTypes["inventoryItemDelete"] =

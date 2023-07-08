@@ -17,6 +17,10 @@ const MaterialRouterConfig: ExpressRouterConfig<MaterialEndpointTypes> = {
     controller: MaterialController.createMaterial,
     middlewares: [isAuthenticated],
   },
+  materialDisplay: {
+    route: MaterialRoutes["materialDisplay"],
+    controller: MaterialController.displayMaterial,
+  },
   materialUpdate: {
     route: MaterialRoutes["materialUpdate"],
     controller: MaterialController.updateMaterial,

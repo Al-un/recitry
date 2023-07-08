@@ -20,6 +20,8 @@
       required
     />
 
+    <MaterialSelect v-model="formData.materialId" label="Material"/>
+
     <section>
       <button @click="$emit('cancel')" class="rst-button secondary" type="reset">Cancel</button>
       <button class="rst-button primary" type="submit">Save</button>
@@ -37,6 +39,7 @@ import type {
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import RstInputDate from '@/core/components/ui/form/RstInputDate.vue'
 import RstSelect from '@/core/components/ui/form/RstSelect.vue'
+import MaterialSelect from '@/recipe/components/MaterialSelect.vue'
 
 const props = defineProps({
   modelValue: { type: Object as PropType<InventoryItemFormData>, required: true },
