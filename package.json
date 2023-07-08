@@ -11,7 +11,8 @@
     "build:all": "nx run-many -t build",
     "build:api": "nx build @al-un/ressaite-api",
     "build:web": "nx vercel-build @al-un/ressaite-web",
-    "test:all": "nx run-many -t test"
+    "test:all": "nx run-many -t test",
+    "type-check": "nx run-many -t type-check"
   },
   "devDependencies": {
     "@types/cors": "2.8.13",
