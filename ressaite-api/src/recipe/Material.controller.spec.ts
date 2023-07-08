@@ -166,7 +166,7 @@ describe("MaterialController", () => {
     });
   });
 
-  describe.only("deleteMaterial", () => {
+  describe("deleteMaterial", () => {
     const { path } = AllRoutes.materialDelete;
     let toDeleteMaterial: MaterialModel;
     let route: string = buildRouteWithParam(path, { materialId: 999 });
