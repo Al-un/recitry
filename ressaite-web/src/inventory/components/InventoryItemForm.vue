@@ -1,10 +1,10 @@
 <template>
   <form @submit.prevent="submitForm" class="rst-form">
-    <h2>Item form</h2>
+    <h1>Inventory item</h1>
 
-    <RstInput v-model="formData.name" label="Name" required />
+    <RstInput v-model="formData.name" label="Item name" required />
     <RstInput
-      v-model="formData.quantity"
+      v-model.number="formData.quantity"
       label="Quantity"
       type="number"
       min="0"
@@ -12,11 +12,14 @@
       required
     />
     <RstInput v-model="formData.dueDate" label="Due date" type="date" />
+    <pre>{{ formData.dueDate }}</pre>
 
-    <select v-model="formData.containerId">
-      <option v-for="c in containers" :key="c.id" :value="c.id">{{ c.name }}</option>
-    </select>
-    <RstInput v-model="formData.containerId" label="Container" />
+    <RstSelect
+      v-model.number="formData.containerId"
+      :options="containerOptions"
+      label="Container"
+      required
+    />
 
     <section>
       <button @click="$emit('cancel')" class="rst-button secondary" type="reset">Cancel</button>
@@ -26,13 +29,14 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, type PropType } from 'vue'
+import { watch, type PropType, computed } from 'vue'
 
 import type {
   InventoryContainer,
   InventoryItemFormData
 } from '@al-un/ressaite-core/inventory/inventory.models'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
+import RstSelect from '@/core/components/ui/form/RstSelect.vue'
 
 const props = defineProps({
   modelValue: { type: Object as PropType<InventoryItemFormData>, required: true },
@@ -49,6 +53,10 @@ watch(
   },
   { immediate: true }
 )
+
+const containerOptions = computed(() => {
+  return props.containers.map((c) => ({ value: c.id, label: c.name }))
+})
 
 function submitForm() {
   emits('update:modelValue', formData)

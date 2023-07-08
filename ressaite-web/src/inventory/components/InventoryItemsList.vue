@@ -3,22 +3,22 @@
     There is no container at the moment, let's create one in the Inventory settings.
   </main>
 
-  <main v-if="inventory.containers.length > 0 && state.displayMode === 'container'">
-    <section v-for="c in itemsByContainers" :key="c.id">
+  <main v-if="state.displayMode === 'container'">
+    <section v-for="c in itemsByContainers" :key="c.id" class="rst-card padded rst-page-section">
       <h2>{{ c.name }}</h2>
 
       <p v-if="c.items.length === 0">
         There is no items in this container. Let's create one with the "Add item" button above.
       </p>
 
-      <div class="items-by-container">
-        <template v-for="item in c.items" :key="item.id">
-          <div class="item__quantity">{{ item.quantity }}</div>
+      <div class="items-by-container rst-list">
+        <div v-for="item in c.items" :key="item.id" class="rst-list-item">
           <div class="item__name">{{ item.name }}</div>
+          <div class="item__quantity">x {{ item.quantity }}</div>
           <div class="item__material">{{ item.material?.name }}</div>
           <div class="item__duedate">{{ item.formattedDueDate }}</div>
-          <div class="item__created">{{ item.formattedCreatedAt }}</div>
-          <div class="item__updated">{{ item.formattedUpdatedAt }}</div>
+          <!-- <div class="item__created">{{ item.formattedCreatedAt }}</div>
+          <div class="item__updated">{{ item.formattedUpdatedAt }}</div> -->
           <div class="item__actions rst-button-group">
             <button @click="prepareToEditItem(item)" class="rst-button primary" type="button">
               Edit
@@ -27,12 +27,12 @@
               Delete
             </button>
           </div>
-        </template>
+        </div>
       </div>
     </section>
   </main>
 
-  <div v-else class="items-container">
+  <!-- <div v-else class="items-container">
     <template v-for="item in items" :key="item.id">
       <div class="item__container">{{ item.containerName }}</div>
       <div class="item__quantity">{{ item.quantity }}</div>
@@ -48,7 +48,7 @@
         <button @click="deleteItem(item)" class="rst-button danger" type="button">Delete</button>
       </div>
     </template>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts" setup>
@@ -69,7 +69,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['prepareToEdit', 'delete'])
+const emit = defineEmits(['prepare-to-edit', 'delete'])
 
 type State = {
   displayMode: 'container' | 'dueDate'
@@ -146,7 +146,7 @@ const itemsByContainers = computed<ItemsByContainer[]>(() => {
 // ----------------------------------------------------------------------------
 
 function prepareToEditItem(item: FormattedItem) {
-  emit('prepareToEdit', item, item.containerId)
+  emit('prepare-to-edit', item, item.containerId)
 }
 
 async function deleteItem(item: FormattedItem) {
@@ -155,41 +155,38 @@ async function deleteItem(item: FormattedItem) {
 </script>
 
 <style lang="scss">
-// .items-container {
-//   display: grid;
-//   grid-template-areas: 'container quantity name material duedate created updated actions';
-//   align-items: center;
-//   margin-block: 16px;
+.items-by-container {
+  @include generate-grid-areas(
+    'item__name',
+    'item__quantity',
+    'item__material',
+    'item__duedate',
+    'item__actions'
+  );
+  .rst-list-item {
+    display: grid;
+    grid-template-areas: 'item__name item__quantity item__material item__duedate item__actions';
+    grid-template-columns: repeat(5, 1fr);
 
-//   @include media('<tablet') {
-//     grid-template-areas:
-//       'quantity name material actions'
-//       'duedate created updated actions';
-//   }
-// }
+    @include media('<tablet') {
+      grid-template-areas:
+        'item__name item__name item__quantity'
+        'item__duedate item__actions item__actions';
+      grid-template-columns: 1fr 1fr max-content;
+      gap: 8px 0;
+    }
+  }
 
-// .items__container {
-//   grid-area: container;
-// }
-// .items__quantity {
-//   grid-area: quantity;
-// }
-// .items__name {
-//   grid-area: name;
-// }
-// .items__material {
-//   grid-area: material;
-// }
-// .items__duedate {
-//   grid-area: duedate;
-// }
-// .items__created {
-//   grid-area: created;
-// }
-// .items__updated {
-//   grid-area: updated;
-// }
-// .items__actions {
-//   grid-area: actions;
-// }
+  .item__duedate {
+    @include media('<tablet') {
+      color: var(--rst-txt-sub);
+    }
+  }
+
+  .item__material {
+    @include media('<tablet') {
+      display: none;
+    }
+  }
+}
 </style>

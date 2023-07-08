@@ -115,15 +115,10 @@ function stopItemForm() {
 function saveItem() {
   if (!state.itemForm) return
 
-  if (state.itemForm.id !== null) {
-    inventoryStore.updateInventoryItem(
-      inventoryId,
-      state.itemForm.containerId,
-      state.itemForm.id,
-      state.itemForm
-    )
+  if (state.itemForm.id === null) {
+    inventoryStore.createInventoryItem(inventoryId, state.itemForm)
   } else {
-    inventoryStore.createInventoryItem(inventoryId, state.itemForm.containerId, state.itemForm)
+    inventoryStore.updateInventoryItem(inventoryId, state.itemForm.id, state.itemForm)
   }
   stopItemForm()
 }

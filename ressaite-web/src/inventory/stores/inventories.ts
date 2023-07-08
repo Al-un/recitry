@@ -63,7 +63,7 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   async function updateInventory(inventory: InventoryFormData) {
     loading.value = true
-    if(inventory.id === null){
+    if (inventory.id === null) {
       throw new Error(`Cannot update inventory ${inventory.name} with null ID`)
     }
 
@@ -96,12 +96,15 @@ export const useInventoryStore = defineStore('inventory', () => {
     container: InventoryContainerFormData
   ) {
     loading.value = true
+    if (container.id !== null) {
+      throw new Error(`Cannot create container with non-null ID: ${JSON.stringify(container)}`)
+    }
 
     const resp = await callEndpoint('inventoryContainerCreate', { inventoryId }, container)
     if (resp.status === 201) {
       const createdContainer = resp.data
 
-      if (current.value) {
+      if (current.value && current.value.id === createdContainer.inventoryId) {
         current.value.containers.push({ ...createdContainer, items: [] })
       }
     }
@@ -109,8 +112,15 @@ export const useInventoryStore = defineStore('inventory', () => {
     loading.value = false
   }
 
-  async function updateInventoryContainer(inventoryId: number, container: InventoryContainer) {
+  async function updateInventoryContainer(
+    inventoryId: number,
+    container: InventoryContainerFormData
+  ) {
     loading.value = true
+
+    if (container.id === null) {
+      throw new Error(`Cannot update container with null ID: ${JSON.stringify(container)}`)
+    }
 
     const resp = await callEndpoint(
       'inventoryContainerUpdate',
@@ -123,7 +133,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     if (resp.status === 200) {
       const updatedContainer = resp.data
 
-      if (current.value) {
+      if (current.value && current.value.id === updatedContainer.inventoryId) {
         current.value = {
           ...current.value,
           containers: current.value.containers.map((c) => {
@@ -150,7 +160,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     })
     console.log('RESP', resp)
     if (resp.status === 204) {
-      if (current.value) {
+      if (current.value && current.value.id === inventoryId) {
         console.log('CONTAINER', current.value)
         current.value = {
           ...current.value,
@@ -163,37 +173,20 @@ export const useInventoryStore = defineStore('inventory', () => {
     loading.value = false
   }
 
-  async function createInventoryItem(
-    inventoryId: number,
-    inventoryContainerId: number,
-    item: InventoryItemFormData
-  ) {
+  async function createInventoryItem(inventoryId: number, item: InventoryItemFormData) {
     loading.value = true
 
-    const resp = await callEndpoint(
-      'inventoryItemCreate',
-      { inventoryId, inventoryContainerId },
-      item
-    )
+    const resp = await callEndpoint('inventoryItemCreate', { inventoryId }, item)
+
     if (resp.status === 201) {
       const createdItem = resp.data
-
-      if (current.value) {
-        const container = current.value.containers.find((c) => c.id === inventoryContainerId)
+      if (current.value && current.value.id === inventoryId) {
+        const container = current.value.containers.find((c) => c.id === createdItem.containerId)
         if (container) {
           container.items.push(createdItem)
+        } else {
+          console.warn(`Could not find container ID ${createdItem.containerId}`)
         }
-        // current.value = {
-        //   ...current.value,
-        //   containers: current.value.containers.map((c) => {
-        //     if (c.id !== inventoryContainerId) return c
-
-        //     return {
-        //       ...c,
-        //       items: [...c.items, createdItem]
-        //     }
-        //   })
-        // }
       }
     }
 
@@ -202,7 +195,6 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   async function updateInventoryItem(
     inventoryId: number,
-    inventoryContainerId: number,
     itemId: number,
     item: Partial<InventoryItemFormData>
   ) {
@@ -210,24 +202,41 @@ export const useInventoryStore = defineStore('inventory', () => {
 
     const resp = await callEndpoint(
       'inventoryItemUpdate',
-      { inventoryId, inventoryContainerId, inventoryItemId: itemId },
+      { inventoryId, inventoryItemId: itemId },
       item
     )
     if (resp.status === 200) {
       const updatedItem = resp.data
+      console.log(`updatedItem`, updatedItem)
+      if (current.value && current.value.id === inventoryId) {
+        current.value.containers = current.value.containers.map((c) => {
+          console.log(`Checking c.id ${c.id}`, c)
+          if (c.id === updatedItem.containerId) {
+            let foundInContainer = false
+            const items = c.items.map((item) => {
+              if (item.id === updatedItem.id) {
+                foundInContainer = true
+                return updatedItem
+              }
 
-      if (current.value) {
-        current.value = {
-          ...current.value,
-          containers: current.value.containers.map((c) => {
-            if (c.id !== inventoryContainerId) return c
+              return item
+            })
 
-            return {
-              ...c,
-              items: c.items.map((i) => (i.id === updatedItem.id ? updatedItem : i))
+            if (!foundInContainer) {
+              items.push(updatedItem)
             }
-          })
-        }
+
+            console.log(`Found ${foundInContainer}`, items)
+            const container = { ...c, items }
+            console.log('container', container)
+            return container
+          }
+
+          return {
+            ...c,
+            items: c.items.filter((i) => i.id !== updatedItem.id)
+          }
+        })
       }
     }
 
@@ -239,7 +248,6 @@ export const useInventoryStore = defineStore('inventory', () => {
 
     const resp = await callEndpoint('inventoryItemDelete', {
       inventoryId,
-      inventoryContainerId: containerId,
       inventoryItemId: itemId
     })
     if (resp.status === 204) {

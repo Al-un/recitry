@@ -2,7 +2,7 @@
  * Given a list of CSS classes, assign a `grid-area to each class with
  * same name as the CSS class
  */
-@mixin generate-grid-areas($cssClasses) {
+@mixin generate-grid-areas($cssClasses...) {
   @each $cssClass in $cssClasses {
     .#{$cssClass} {
       grid-area: #{$cssClass};

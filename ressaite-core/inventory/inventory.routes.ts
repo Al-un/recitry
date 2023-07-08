@@ -35,15 +35,15 @@ export const InventoryRoutes: RouteOf<InventoryEndpointTypes> = {
     method: "DELETE",
   },
   inventoryItemCreate: {
-    path: "/v1/inventory/:inventoryId/container/:inventoryContainerId/items",
+    path: "/v1/inventory/:inventoryId/items",
     method: "POST",
   },
   inventoryItemUpdate: {
-    path: "/v1/inventory/:inventoryId/container/:inventoryContainerId/item/:inventoryItemId",
+    path: "/v1/inventory/:inventoryId/item/:inventoryItemId",
     method: "PATCH",
   },
   inventoryItemDelete: {
-    path: "/v1/inventory/:inventoryId/container/:inventoryContainerId/item/:inventoryItemId",
+    path: "/v1/inventory/:inventoryId/item/:inventoryItemId",
     method: "DELETE",
   },
 };

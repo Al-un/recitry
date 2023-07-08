@@ -30,7 +30,12 @@ export type InventoryEndpointTypes = {
     null,
     PaginatedResp<InventoryListItem[]>
   >;
-  inventoryDisplay: EndpointType<"GET", PathWithInventoryId, null, InventoryDetail>;
+  inventoryDisplay: EndpointType<
+    "GET",
+    PathWithInventoryId,
+    null,
+    InventoryDetail
+  >;
   inventoryUpdate: EndpointType<
     "PATCH",
     PathWithInventoryId,
@@ -58,23 +63,19 @@ export type InventoryEndpointTypes = {
   >;
   inventoryItemCreate: EndpointType<
     "POST",
-    PathWithInventoryId & PathWithInventoryContainerId,
+    PathWithInventoryId,
     InventoryItemFormData,
     InventoryItem
   >;
   inventoryItemUpdate: EndpointType<
     "PATCH",
-    PathWithInventoryId &
-      PathWithInventoryContainerId &
-      PathWithInventoryItemId,
+    PathWithInventoryId & PathWithInventoryItemId,
     Partial<InventoryItemFormData>,
     InventoryItem
   >;
   inventoryItemDelete: EndpointType<
     "DELETE",
-    PathWithInventoryId &
-      PathWithInventoryContainerId &
-      PathWithInventoryItemId,
+    PathWithInventoryId & PathWithInventoryItemId,
     null,
     null
   >;

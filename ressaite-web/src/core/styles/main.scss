@@ -5,7 +5,6 @@
 @forward './components/rst-form.scss';
 @forward './components/rst-link.scss';
 @forward './components/rst-list.scss';
-@forward './components/rst-select.scss';
 @forward './components/rst-table.scss';
 @forward './utils/flex.scss';
 @forward './utils/page.scss';
@@ -56,7 +55,7 @@
     --rst-divider: #aaa;
 
     --rst-txt-color: #ffffff;
-    --rst-txt-sub: #eee;
+    --rst-txt-sub: #dddddd;
     --rst-txt-color-alternate: #ffffff;
 
     // https://banc.digital/blog/typography-font-sizes-styles-formats

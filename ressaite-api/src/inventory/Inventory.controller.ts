@@ -170,21 +170,23 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
       return;
     }
 
-    const { inventoryId, inventoryContainerId } = req.params;
+    const { inventoryId } = req.params;
     const inventory = await InventoryModel.findByPk(inventoryId);
     if (inventory === null) {
       res.sendStatus(404);
       return;
     }
+
+    const creationRequest = req.body;
+
     const inventoryContainer = await InventoryContainerModel.findByPk(
-      inventoryContainerId
+      creationRequest.containerId
     );
     if (inventoryContainer === null) {
       res.sendStatus(404);
       return;
     }
 
-    const creationRequest = req.body;
     const created = await InventoryItemModel.create(
       {
         name: creationRequest.name,
@@ -192,7 +194,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
         dueDate: creationRequest.dueDate,
         materialId: creationRequest.materialId,
         authorId: userId,
-        containerId: inventoryContainerId,
+        containerId: creationRequest.containerId,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -217,6 +219,7 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
     const updateRequest = req.body;
     inventoryItem.set({
       name: updateRequest.name,
+      containerId: updateRequest.containerId,
       quantity: updateRequest.quantity,
       dueDate: updateRequest.dueDate,
       materialId: updateRequest.materialId,

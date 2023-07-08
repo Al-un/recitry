@@ -1,22 +1,26 @@
 <template>
-  <label class="rst-select-lang">
-    <div v-if="$attrs['label']" class="rst-select-lang__label">{{ $attrs['label'] }}</div>
-    <slot></slot>
-    <select @change="(event) => $emit('update:modelValue', (event.target as any).value)" class="rst-select">
-      v-bind="$attrs"
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-      <option value="jp">日本語</option>
-    </select>
-  </label>
+  <RstSelect
+    label="Language"
+    :options="options"
+    :model-value="modelValue"
+    @update:model-value="(payload) => $emit('update:modelValue', payload)"
+  ></RstSelect>
 </template>
 
 <script lang="ts" setup>
+import RstSelect from './RstSelect.vue'
+
 defineProps({
   modelValue: { type: String, required: true }
 })
 
 defineEmits(['update:modelValue'])
+
+const options = [
+  { value: 'en', label: 'English' },
+  { value: 'fr', label: 'Français' },
+  { value: 'jp', label: '日本語' }
+]
 </script>
 
 <style lang="scss">

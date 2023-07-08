@@ -193,18 +193,17 @@ function stopContainerForm() {
 }
 
 async function saveContainer() {
-  const check = (form: ContainerForm): form is InventoryContainer => {
-    return form !== null && (form as InventoryContainer).id !== undefined
-  }
-
   const { containerForm } = state
-  if (containerForm === null) return
-
-  if (check(containerForm)) {
-    await inventoryStore.updateInventoryContainer(inventoryId, containerForm)
-  } else {
-    await inventoryStore.createInventoryContainer(inventoryId, containerForm)
+  if (containerForm === null) {
+    throw new Error(`Cannot save null containerForm`)
   }
+
+  if (containerForm.id === null) {
+    await inventoryStore.createInventoryContainer(inventoryId, containerForm)
+  } else {
+    await inventoryStore.updateInventoryContainer(inventoryId, containerForm)
+  }
+
   stopContainerForm()
 }
 

@@ -42,6 +42,7 @@ defineEmits(['click:backdrop'])
 
   @include media('<tablet') {
     position: absolute;
+    height: calc(100% - 40px); // Hack: does not take full parent height on mobile
   }
 
   li {
