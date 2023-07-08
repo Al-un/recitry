@@ -4,8 +4,8 @@ import { InventoryModel } from "@/inventory/Inventory.model";
 import { InventoryContainerModel } from "@/inventory/InventoryContainer.model";
 import { InventoryItemModel } from "@/inventory/InventoryItem.model";
 import { MaterialModel } from "@/recipe/Material.model";
-import { AccessTokenModel } from "@/um/models/AccessToken";
-import { UserModel } from "@/um/models/User";
+import { AccessTokenModel } from "@/um/AccessToken.model";
+import { UserModel } from "@/um/User.model";
 
 let sequelize: Sequelize;
 

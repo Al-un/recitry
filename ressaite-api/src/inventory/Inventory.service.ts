@@ -1,49 +1,29 @@
 import {
   Inventory,
-  InventoryContainer,
-  InventoryCreation,
+  InventoryContainerWithItems,
+  InventoryFormData,
+  InventoryDetail,
   InventoryItem,
 } from "@al-un/ressaite-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";
-import { UserModel } from "@/um/models/User";
-import { MaterialModel } from "@/recipe/Material.model";
+import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
+import {
+  MaterialModel,
+  includeMaterialShortInfo,
+} from "@/recipe/Material.model";
 
 export const createInventory = async (
-  inventory: InventoryCreation,
+  inventory: InventoryFormData,
   authorId: number
 ): Promise<Inventory> => {
-  // console.log(`Creating inventory with author ${authorId}`, inventory);
   const i = await InventoryModel.create({
     name: inventory.name,
     authorId: authorId,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
-
-  for (let container of inventory.containers) {
-    const c = await InventoryContainerModel.create({
-      name: container.name,
-      authorId: authorId,
-      inventoryId: i.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    for (let item of container.items) {
-      await InventoryItemModel.create({
-        name: item.name,
-        quantity: item.quantity,
-        dueDate: item.dueDate,
-        authorId: authorId,
-        containerId: c.id,
-        materialId: item.materialId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-    }
-  }
 
   const result = await fetchInventory(i.id);
   if (!result) throw new Error("Created inventory not found");
@@ -53,13 +33,13 @@ export const createInventory = async (
 
 export const fetchInventory = async (
   inventoryId: number
-): Promise<Inventory | null> => {
+): Promise<InventoryDetail | null> => {
   const i = await InventoryModel.findByPk(inventoryId, {
-    include: [{ model: UserModel, attributes: ["id", "username"] }],
+    include: [includeUserMinimalProfile],
   });
   if (i === null) return null;
 
-  const inventory: Inventory = {
+  const inventory: InventoryDetail = {
     id: i.id,
     name: i.name,
     author: i.author.toMinimalProfile,
@@ -70,12 +50,13 @@ export const fetchInventory = async (
 
   const containers = await InventoryContainerModel.findAll({
     where: { inventoryId: i.id },
-    include: [{ model: UserModel, attributes: ["id", "username"] }],
+    include: [includeUserMinimalProfile],
   });
 
   for (let c of containers) {
-    const formattedContainer: InventoryContainer = {
+    const formattedContainer: InventoryContainerWithItems = {
       id: c.id,
+      inventoryId: i.id,
       name: c.name,
       author: c.author.toMinimalProfile,
       items: [],
@@ -85,25 +66,10 @@ export const fetchInventory = async (
 
     const items = await InventoryItemModel.findAll({
       where: { containerId: c.id },
-      include: [
-        { model: UserModel, attributes: ["id", "username"] },
-        { model: MaterialModel, attributes: ["id", "name", "lang"] },
-      ],
+      include: [includeUserMinimalProfile, includeMaterialShortInfo],
     });
     for (let item of items) {
-      const formattedItem: InventoryItem = {
-        id: item.id,
-        name: item.name,
-        dueDate: item.dueDate,
-        author: item.author.toMinimalProfile,
-        quantity: item.quantity,
-        material: item.material
-          ? { id: item.material.id, name: item.material.name }
-          : null,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
-      };
-      formattedContainer.items.push(formattedItem);
+      formattedContainer.items.push(item.toInventoryItem);
     }
 
     inventory.containers.push(formattedContainer);

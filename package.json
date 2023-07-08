@@ -4,14 +4,15 @@
   "scripts": {
     "setup:quick-start": "nx run-many -t setup:quick-start",
     "dev:all:quick-start": "nx run-many -t dev:quick-start",
-    "dev:api": "nx dev @al-un/ressaite-api",
-    "dev:web": "nx dev @al-un/ressaite-web",
-    "dev:quick-start:api": "nx dev:quick-start @al-un/ressaite-api",
-    "dev:quick-start:web": "nx dev:quick-start @al-un/ressaite-web",
+    "dev:api": "nx dev:quick-start @al-un/ressaite-api",
+    "dev:web": "nx dev:quick-start @al-un/ressaite-web",
+    "dev:custom:api": "nx dev @al-un/ressaite-api",
+    "dev:custom:web": "nx dev @al-un/ressaite-web",
     "build:all": "nx run-many -t build",
     "build:api": "nx build @al-un/ressaite-api",
     "build:web": "nx vercel-build @al-un/ressaite-web",
-    "test:all": "nx run-many -t test"
+    "test:all": "nx run-many -t test",
+    "type-check": "nx run-many -t type-check"
   },
   "devDependencies": {
     "@types/cors": "2.8.13",

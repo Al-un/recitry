@@ -1,8 +1,8 @@
 import type { EndpointType, WithPagination } from "../core/base-api.endpoints";
-import { PaginatedResp } from "../core/base-api.models";
+import type { PaginatedResp } from "../core/base-api.models";
 import type { PathWithNoParam } from "../core/base-api.routes";
-import type { Material, MaterialCreation } from "./material.models";
-import { PathWithMaterialId } from "./material.routes";
+import type { Material, MaterialFormData } from "./material.models";
+import type { PathWithMaterialId } from "./material.routes";
 
 export type MaterialEndpointTypes = {
   materialSearch: EndpointType<
@@ -14,13 +14,14 @@ export type MaterialEndpointTypes = {
   materialCreate: EndpointType<
     "POST",
     PathWithNoParam,
-    MaterialCreation,
+    MaterialFormData,
     Material
   >;
+  materialDisplay: EndpointType<"GET", PathWithMaterialId, null, Material>;
   materialUpdate: EndpointType<
     "PATCH",
     PathWithMaterialId,
-    Partial<Material>,
+    Partial<MaterialFormData>,
     Material
   >;
   materialDelete: EndpointType<"DELETE", PathWithMaterialId, null, null>;

@@ -1,28 +1,34 @@
-import { HasTimestamp } from "../core/base-api.models";
+import type { HasTimestamp } from "../core/base-api.models";
+import type { MaterialShortInfo } from "../recipe/material.models";
 import type { HasAuthor } from "../um/users.models";
 
 interface InventoryBase {
   name: string;
 }
 
-export interface InventoryCreation extends InventoryBase {
-  containers: InventoryContainerCreation[];
+export interface InventoryFormData extends InventoryBase {
+  id: number | null;
 }
 
 export interface Inventory extends InventoryBase, HasAuthor, HasTimestamp {
   id: number;
-  containers: InventoryContainer[];
 }
+
+export interface InventoryDetail extends Inventory {
+  containers: InventoryContainerWithItems[];
+}
+
+export interface InventoryListItem extends Inventory {}
 
 // ----------------------------------------------------------------------------
 
 interface InventoryContainerBase {
   name: string;
+  inventoryId: number;
 }
 
-export interface InventoryContainerCreation extends InventoryContainerBase {
-  inventoryId: number | null;
-  items: InventoryItemCreation[];
+export interface InventoryContainerFormData extends InventoryContainerBase {
+  id: number | null;
 }
 
 export interface InventoryContainer
@@ -30,6 +36,9 @@ export interface InventoryContainer
     HasAuthor,
     HasTimestamp {
   id: number;
+}
+
+export interface InventoryContainerWithItems extends InventoryContainer {
   items: InventoryItem[];
 }
 
@@ -42,13 +51,15 @@ interface InventoryItemBase {
    * material but different due date
    */
   quantity: number;
-  /** Best before :) */
-  dueDate: Date | null;
+  /** Best before :) Date saved without time in UTC */
+  dueDate: string | null;
+  /** The inventory container this item belongs to. Cannot be null */
+  containerId: number;
 }
 
-export interface InventoryItemCreation extends InventoryItemBase {
+export interface InventoryItemFormData extends InventoryItemBase {
+  id: number | null;
   materialId: number | null;
-  inventoryContainerId: number | null;
 }
 
 export interface InventoryItem
@@ -56,8 +67,5 @@ export interface InventoryItem
     HasAuthor,
     HasTimestamp {
   id: number;
-  material: {
-    id: number;
-    name: string;
-  } | null;
+  material: MaterialShortInfo | null;
 }

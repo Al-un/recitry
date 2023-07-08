@@ -7,9 +7,13 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { Material } from "@al-un/ressaite-core/recipe/material.models";
-import { UserModel } from "@/um/models/User";
+import {
+  Material,
+  MaterialShortInfo,
+} from "@al-un/ressaite-core/recipe/material.models";
+import { UserModel } from "@/um/User.model";
 import { Lang, allLangs } from "@al-un/ressaite-core/core/models/lang";
+import { Includeable } from "sequelize";
 
 export const tableName = "material";
 
@@ -41,7 +45,15 @@ export class MaterialModel extends Model {
   @BelongsTo(() => UserModel)
   author!: UserModel;
 
-  get toJson(): Material {
+  get toShortInfo(): MaterialShortInfo {
+    return {
+      id: this.id,
+      name: this.name,
+      lang: this.lang,
+    };
+  }
+
+  get toMaterial(): Material {
     return {
       id: this.id,
       name: this.name,
@@ -52,3 +64,8 @@ export class MaterialModel extends Model {
     };
   }
 }
+
+export const includeMaterialShortInfo: Includeable = {
+  model: MaterialModel,
+  attributes: ["id", "name", "lang"],
+};

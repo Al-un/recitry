@@ -2,7 +2,7 @@ import { MaterialEndpointTypes } from "@al-un/ressaite-core/recipe/material.endp
 import { MaterialRoutes } from "@al-un/ressaite-core/recipe/material.routes";
 
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
-import AuthMiddleware from "@/um/middlewares/AuthMiddleware";
+import { isAuthenticated } from "@/um/Auth.middleware";
 import * as MaterialController from "./Material.controller";
 
 // ----------------------------------------------------------------------------
@@ -15,17 +15,21 @@ const MaterialRouterConfig: ExpressRouterConfig<MaterialEndpointTypes> = {
   materialCreate: {
     route: MaterialRoutes["materialCreate"],
     controller: MaterialController.createMaterial,
-    middlewares: [AuthMiddleware],
+    middlewares: [isAuthenticated],
+  },
+  materialDisplay: {
+    route: MaterialRoutes["materialDisplay"],
+    controller: MaterialController.displayMaterial,
   },
   materialUpdate: {
     route: MaterialRoutes["materialUpdate"],
     controller: MaterialController.updateMaterial,
-    middlewares: [AuthMiddleware],
+    middlewares: [isAuthenticated],
   },
   materialDelete: {
     route: MaterialRoutes["materialDelete"],
     controller: MaterialController.deleteMaterial,
-    middlewares: [AuthMiddleware],
+    middlewares: [isAuthenticated],
   },
 };
 

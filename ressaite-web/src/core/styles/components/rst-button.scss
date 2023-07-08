@@ -1,0 +1,80 @@
+.rst-button {
+  border-radius: 8px;
+  border: none;
+  padding: 4px 16px;
+  text-align: center;
+  transition: background-color 0.25s;
+  min-width: 80px;
+}
+
+.rst-button:hover,
+.rst-button:active {
+  cursor: pointer;
+}
+
+.rst-button.primary {
+  background-color: var(--rst-primary);
+  color: var(--rst-txt-color-alternate);
+  border: 1px solid var(--rst-primary);
+
+  &:hover {
+    background-color: var(--rst-primary-active);
+  }
+
+  &:disabled {
+    background-color: var(--rst-disabled);
+    border-color: var(--rst-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.rst-button.secondary {
+  background-color: var(--rst-bg-content);
+  color: var(--rst-primary);
+  border: 1px solid currentColor;
+
+  &:hover {
+    background-color: var(--rst-bg-content-hover);
+  }
+
+  &:disabled {
+    color: var(--rst-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.rst-button.danger {
+  background-color: var(--rst-danger);
+  color: white;
+  border: 1px solid var(--rst-danger);
+
+  &:hover {
+    background-color: var(--rst-danger-active);
+  }
+
+  &:disabled {
+    background-color: var(--rst-disabled);
+    border-color: var(--rst-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.rst-button-group {
+  display: flex;
+
+  &.fluid {
+    width: 100%;
+
+    .rst-button {
+      flex-grow: 1;
+    }
+  }
+
+  &.align-right {
+    justify-content: flex-end;
+  }
+
+  .rst-button + .rst-button {
+    margin-inline-start: 8px;
+  }
+}

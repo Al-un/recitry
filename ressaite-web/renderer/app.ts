@@ -39,8 +39,8 @@ import { createSSRApp, defineComponent, h, markRaw, reactive } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 import i18nMessages from '@/i18n'
-import '@/styles/main.scss'
-import RstApp from '@/layout/RstApp.vue'
+import '@/core/styles/main.scss'
+import RstApp from '@/core/layout/RstApp.vue'
 import type { PageContext } from './types'
 import { setPageContext } from './usePageContext'
 
@@ -84,6 +84,7 @@ export function createApp(pageContext: PageContext) {
   app.use(store)
 
   // https://vue-i18n.intlify.dev/guide/installation.html
+  // console.log("Loading i18n", i18nMessages)
   const i18n = createI18n({
     locale: 'en',
     fallbackLocale: 'en',

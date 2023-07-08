@@ -1,11 +1,11 @@
 import type { EndpointType, WithPagination } from "../core/base-api.endpoints";
 import type { PathWithNoParam } from "../core/base-api.routes";
 import type { PathWithUserId } from "../um/users.routes";
-import type { Recipe, RecipeCreation } from "./recipe.models";
+import type { Recipe, RecipeFormData } from "./recipe.models";
 import type { PathWithRecipeId } from "./recipe.routes";
 
 export type RecipeEndpointTypes = {
-  recipeCreate: EndpointType<"POST", PathWithNoParam, RecipeCreation, Recipe>;
+  recipeCreate: EndpointType<"POST", PathWithNoParam, RecipeFormData, Recipe>;
   recipeSearch: EndpointType<
     "GET",
     PathWithNoParam,
@@ -19,7 +19,7 @@ export type RecipeEndpointTypes = {
     WithPagination,
     Recipe[]
   >;
-  recipeUpdate: EndpointType<"PUT", PathWithRecipeId, Recipe, Recipe>;
+  recipeUpdate: EndpointType<"PUT", PathWithRecipeId, RecipeFormData, Recipe>;
 };
 
 // ----------------------------------------------------------------------------

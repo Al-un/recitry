@@ -11,6 +11,8 @@ export type PaginatedResp<List> = {
 };
 
 export interface HasTimestamp {
-  createdAt?: Date;
-  updatedAt?: Date;
+  /** Expected to be UTC */
+  createdAt?: string;
+  /** Expected to be UTC */
+  updatedAt?: string;
 }

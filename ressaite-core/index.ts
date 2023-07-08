@@ -1,6 +1,6 @@
 import type { MiscEndpointTypes } from "./core/misc.endpoints";
 import { MiscRoutes } from "./core/misc.routes";
-import { InventoryEndpointTypes } from "./inventory/inventory.endpoints";
+import type { InventoryEndpointTypes } from "./inventory/inventory.endpoints";
 import { InventoryRoutes } from "./inventory/inventory.routes";
 import type { MaterialEndpointTypes } from "./recipe/material.endpoints";
 import { MaterialRoutes } from "./recipe/material.routes";

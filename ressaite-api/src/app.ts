@@ -3,10 +3,11 @@ import cors from "cors";
 
 import InternalErrorMiddleware from "@/core/middlewares/InternalErrorMiddleware";
 import MiscRouter from "@/core/routers/MiscRouter";
-import AuthRouter from "@/um/routers/AuthRouter";
+import AuthRouter from "@/um/Auth.router";
 import InventoryRouter from "@/inventory/Inventory.router";
 import MaterialRouter from "@/recipe/Material.router";
 import UnknownRouteMiddleware from "./core/middlewares/UnknownRouteMiddleware";
+import LoggerMiddleware from "./core/middlewares/Logger.middleware";
 
 const app = express();
 
@@ -33,6 +34,9 @@ if (CORS_WHITELISTED_ORIGIN) {
 } else {
   console.log("CORS not enabled");
 }
+
+// For all routes
+app.use(LoggerMiddleware);
 
 // Load all routes
 app.use(MiscRouter);

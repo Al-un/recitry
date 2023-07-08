@@ -1,6 +1,6 @@
 import type { Lang } from "../core/models/lang";
 import type { HasAuthor } from "../um/users.models";
-import type { RecipeMaterial, RecipeMaterialCreation } from "./material.models";
+import type { RecipeMaterial, RecipeMaterialFormData } from "./material.models";
 
 interface RecipeBase {
   title: string;
@@ -13,8 +13,8 @@ export interface RecipeStep {
   body: string;
 }
 
-export interface RecipeCreation extends RecipeBase {
-  materials: (RecipeMaterial | RecipeMaterialCreation)[];
+export interface RecipeFormData extends RecipeBase {
+  materials: (RecipeMaterial | RecipeMaterialFormData)[];
 }
 
 export interface Recipe extends RecipeBase, HasAuthor {

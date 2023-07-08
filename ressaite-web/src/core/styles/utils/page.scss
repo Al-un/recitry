@@ -1,0 +1,17 @@
+@use './../lib/include-media' as *;
+
+.central-aligned-page {
+  padding: 24px 10% 0;
+  flex-grow: 1; // to fill container width
+  overflow: auto; // make scroll here to avoid scrolling on navbar
+
+  @include media('<tablet') {
+    padding: 12px 8px 24px;
+  }
+}
+
+.rst-page-section {
+  & + .rst-page-section {
+    margin-block-start: 16px;
+  }
+}

@@ -38,6 +38,7 @@ jobs:
       - name: Load Cache
         uses: ./.github/actions/setup-and-cache
 
+      - run: npm run type-check
       - run: npm run build:web
   build-api:
     name: Build Ressaite API

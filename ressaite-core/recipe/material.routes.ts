@@ -10,6 +10,10 @@ export const MaterialRoutes: RouteOf<MaterialEndpointTypes> = {
     path: "/v1/materials/",
     method: "POST",
   },
+  materialDisplay: {
+    path: "/v1/material/:materialId",
+    method: "GET",
+  },
   materialUpdate: {
     path: "/v1/material/:materialId",
     method: "PATCH",

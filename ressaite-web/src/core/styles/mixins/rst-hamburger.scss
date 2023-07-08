@@ -1,0 +1,73 @@
+@use 'sass:math';
+
+/**
+ * Require an inner span to work! This is pure styling and does not manage
+ * form state such as <input type="checkbox">
+ *
+ * https://alvarotrigo.com/blog/hamburger-menu-css/
+ */
+
+@mixin rst-hamburger($size) {
+  /** Percentage of the size used as padding */
+  $hamburger-padding-factor: 0.2;
+  $bun-width: (1 - 2 * $hamburger-padding-factor) * $size;
+  $bun-height: 2px;
+  $bun-spacing: math.div($bun-width - 2*$bun-height, 2);
+  $bun-growth: 1.1;
+
+  width: $size;
+  height: $size;
+  position: relative;
+  padding: $hamburger-padding-factor * $size;
+
+  span {
+    background-color: var(--rst-primary);
+    width: $bun-width;
+    height: $bun-height;
+    position: absolute;
+    top: math.div($size - $bun-height, 2);
+    transition: all 0.25s;
+
+    &:before,
+    &:after {
+      background-color: var(--rst-primary);
+      content: ' ';
+      position: absolute;
+      width: $bun-width;
+      height: $bun-height;
+      transition: all 0.25s;
+    }
+
+    &:before {
+      top: -$bun-spacing;
+    }
+
+    &:after {
+      top: $bun-spacing;
+    }
+  }
+
+  &.active {
+    span {
+      height: 0px;
+
+      &:before {
+        width: $bun-growth * $bun-width;
+        transform: rotate(45deg);
+        top: 0px;
+      }
+
+      &:after {
+        width: $bun-growth * $bun-width;
+        transform: rotate(-45deg);
+        top: 0px;
+      }
+    }
+  }
+
+  &:hover,
+  &:active {
+    background-color: var(--rst-bg-content-hover);
+    cursor: pointer;
+  }
+}

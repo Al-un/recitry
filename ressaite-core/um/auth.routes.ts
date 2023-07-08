@@ -10,6 +10,10 @@ export const AuthRoutes: RouteOf<AuthEndpointTypes> = {
     path: "/v1/logout",
     method: "POST",
   },
+  sessionInfo: {
+    path: "/v1/session-info",
+    method: "GET",
+  },
   signup: {
     path: "/v1/signup",
     method: "POST",

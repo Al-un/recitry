@@ -8,7 +8,7 @@ import {
 } from "sequelize-typescript";
 
 import { InventoryItem } from "@al-un/ressaite-core/inventory/inventory.models";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { MaterialModel } from "@/recipe/Material.model";
 
@@ -56,14 +56,17 @@ export class InventoryItemModel extends Model {
   @BelongsTo(() => MaterialModel)
   material!: MaterialModel | null;
 
-  get toResponseFormat(): InventoryItem {
+  get toInventoryItem(): InventoryItem {
     return {
       id: this.id,
+      containerId: this.containerId,
       name: this.name,
       author: this.author.toMinimalProfile,
       quantity: this.quantity,
-      dueDate: this.dueDate,
-      material: null, // not handled for now
+      dueDate: this.dueDate?.toISOString() || null,
+      material: this.material ? this.material.toShortInfo : null,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 }

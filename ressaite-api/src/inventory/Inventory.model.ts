@@ -8,8 +8,12 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { Inventory } from "@al-un/ressaite-core/inventory/inventory.models";
-import { UserModel } from "@/um/models/User";
+import {
+  Inventory,
+  InventoryDetail,
+  InventoryListItem,
+} from "@al-un/ressaite-core/inventory/inventory.models";
+import { UserModel } from "@/um/User.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 
 export const tableName = "inventory";
@@ -39,16 +43,31 @@ export class InventoryModel extends Model {
   @HasMany(() => InventoryContainerModel, { onDelete: "CASCADE" })
   containers!: InventoryContainerModel[];
 
-  get toResponseFormat(): Inventory {
+  get toInventory(): Inventory {
     return {
       id: this.id,
       name: this.name,
       // author: { id: 123, username: "pouet" },
       author: this.author.toMinimalProfile,
-      containers: [],
-      // containers: this.containers.map(
+      // containers: [],
+      // containers: (this.containers || []).map(
       //   (container) => container.toResponseFormat
       // ),
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
+
+  get toInventoryListItem(): InventoryListItem {
+    return {
+      ...this.toInventory,
+    };
+  }
+
+  get toInventoryDetail(): InventoryDetail {
+    return {
+      ...this.toInventory,
+      containers: this.containers.map((c) => c.toInventoryContainerWithItems),
     };
   }
 }

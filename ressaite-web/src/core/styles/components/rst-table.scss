@@ -1,0 +1,15 @@
+.rst-table {
+}
+
+.rst-table-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+
+  border-top: 1px solid var(--rst-divider);
+
+  &:last-of-type{
+    border-bottom: 1px solid var(--rst-divider);
+  }
+}

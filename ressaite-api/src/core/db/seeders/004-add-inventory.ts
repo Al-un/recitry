@@ -2,14 +2,12 @@ import {
   InventoryModel,
   tableName as inventoryTableName,
 } from "@/inventory/Inventory.model";
-import { tableName as inventoryContainerTableName } from "@/inventory/InventoryContainer.model";
-import { tableName as inventoryItemTableName } from "@/inventory/InventoryItem.model";
-import { UserModel } from "@/um/models/User";
+import { UserModel } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
 import { userOne } from "@al-un/ressaite-core/um/users.mocks";
 import { userOneInventories } from "@al-un/ressaite-core/inventory/inventory.mocks";
-import { Inventory } from "@al-un/ressaite-core/inventory/inventory.models";
+import { InventoryDetail } from "@al-un/ressaite-core/inventory/inventory.models";
 import { InventoryContainerModel } from "@/inventory/InventoryContainer.model";
 import { InventoryItemModel } from "@/inventory/InventoryItem.model";
 
@@ -21,7 +19,7 @@ export const up: Seed = async ({ context: sequelize }) => {
     throw new Error(`${userOne.username} user not yet created`);
   }
 
-  const createInventory = async (i: Inventory, u: UserModel) => {
+  const createInventory = async (i: InventoryDetail, u: UserModel) => {
     const inventory = await InventoryModel.create({
       name: i.name,
       authorId: u.id,
@@ -54,6 +52,7 @@ export const up: Seed = async ({ context: sequelize }) => {
   };
 
   await createInventory(userOneInventories.inventories[0], firstUser);
+  await createInventory(userOneInventories.inventories[1], firstUser);
 };
 
 export const down: Seed = async ({ context: sequelize }) => {

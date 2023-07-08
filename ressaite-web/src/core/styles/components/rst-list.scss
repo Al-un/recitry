@@ -1,0 +1,13 @@
+.rst-list {
+  & > * {
+    border-top: 1px solid var(--rst-divider);
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  & > *:last-child {
+    border-bottom: 1px solid var(--rst-divider);
+  }
+}

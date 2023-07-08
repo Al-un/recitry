@@ -4,10 +4,12 @@ import type { PathWithNoParam } from "../core/base-api.routes";
 import type {
   Inventory,
   InventoryContainer,
-  InventoryContainerCreation,
-  InventoryCreation,
+  InventoryContainerFormData,
+  InventoryFormData,
+  InventoryDetail,
   InventoryItem,
-  InventoryItemCreation,
+  InventoryItemFormData,
+  InventoryListItem,
 } from "./inventory.models";
 import type {
   PathWithInventoryContainerId,
@@ -19,60 +21,61 @@ export type InventoryEndpointTypes = {
   inventoryCreate: EndpointType<
     "POST",
     PathWithNoParam,
-    InventoryCreation,
+    InventoryFormData,
     Inventory
   >;
   inventoryList: EndpointType<
     "GET",
     WithPagination,
     null,
-    PaginatedResp<Inventory[]>
+    PaginatedResp<InventoryListItem[]>
   >;
-  inventoryDisplay: EndpointType<"GET", PathWithInventoryId, null, Inventory>;
+  inventoryDisplay: EndpointType<
+    "GET",
+    PathWithInventoryId,
+    null,
+    InventoryDetail
+  >;
   inventoryUpdate: EndpointType<
     "PATCH",
     PathWithInventoryId,
-    Partial<Inventory>,
+    Partial<InventoryFormData>,
     Inventory
   >;
   inventoryDelete: EndpointType<"DELETE", PathWithInventoryId, null, null>;
   inventoryContainerCreate: EndpointType<
     "POST",
     PathWithInventoryId,
-    InventoryContainerCreation,
+    InventoryContainerFormData,
     InventoryContainer
   >;
   inventoryContainerUpdate: EndpointType<
     "PATCH",
     PathWithInventoryId & PathWithInventoryContainerId,
-    Partial<InventoryContainer>,
+    Partial<InventoryContainerFormData>,
     InventoryContainer
   >;
   inventoryContainerDelete: EndpointType<
     "DELETE",
-    PathWithInventoryId,
+    PathWithInventoryId & PathWithInventoryContainerId,
     null,
     null
   >;
   inventoryItemCreate: EndpointType<
     "POST",
-    PathWithInventoryId & PathWithInventoryContainerId,
-    InventoryItemCreation,
+    PathWithInventoryId,
+    InventoryItemFormData,
     InventoryItem
   >;
   inventoryItemUpdate: EndpointType<
     "PATCH",
-    PathWithInventoryId &
-      PathWithInventoryContainerId &
-      PathWithInventoryItemId,
-    Partial<InventoryItem>,
+    PathWithInventoryId & PathWithInventoryItemId,
+    Partial<InventoryItemFormData>,
     InventoryItem
   >;
   inventoryItemDelete: EndpointType<
     "DELETE",
-    PathWithInventoryId &
-      PathWithInventoryContainerId &
-      PathWithInventoryItemId,
+    PathWithInventoryId & PathWithInventoryItemId,
     null,
     null
   >;

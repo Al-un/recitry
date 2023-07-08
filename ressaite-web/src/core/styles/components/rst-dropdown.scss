@@ -1,0 +1,18 @@
+.rst-dropdown {
+  position: relative;
+}
+
+.rst-dropdown-content {
+  display: none;
+  position: absolute;
+  width: 100%;
+  background-color: var(--rst-bg-content);
+}
+
+.rst-dropdown:hover,
+.rst-dropdown:active,
+.rst-dropdown:focus {
+  .rst-dropdown-content {
+    display: block;
+  }
+}

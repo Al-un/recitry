@@ -1,7 +1,7 @@
 import { Migration } from "@/umzug";
 import { DataTypes } from "sequelize";
 
-import { tableName as userTableName} from "@/um/models/User";
+import { tableName as userTableName} from "@/um/User.model";
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(userTableName, {
@@ -12,12 +12,12 @@ export const up: Migration = async ({ context: sequelize }) => {
       type: DataTypes.INTEGER,
     },
     username: {
-      allowNull: false,
+      allowNull: true,
       unique: true,
       type: DataTypes.STRING,
     },
     email: {
-      allowNull: true,
+      allowNull: false,
       unique: true,
       type: DataTypes.STRING,
     },
