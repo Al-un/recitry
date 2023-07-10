@@ -2,6 +2,7 @@ import { MaterialEndpointTypes } from "@al-un/ressaite-core/recipe/material.endp
 import { MaterialRoutes } from "@al-un/ressaite-core/recipe/material.routes";
 
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
+import PaginationCheckMiddleware from "@/core/middlewares/PaginationCheckMiddleware";
 import { isAuthenticated } from "@/um/Auth.middleware";
 import * as MaterialController from "./Material.controller";
 
@@ -11,6 +12,7 @@ const MaterialRouterConfig: ExpressRouterConfig<MaterialEndpointTypes> = {
   materialSearch: {
     route: MaterialRoutes["materialSearch"],
     controller: MaterialController.searchMaterial,
+    middlewares: [PaginationCheckMiddleware(50)],
   },
   materialCreate: {
     route: MaterialRoutes["materialCreate"],

@@ -3,7 +3,7 @@
     <RstInput v-model="materialSearch" type="search" :label="label">
       <p>{{ searchFeedback }}</p>
     </RstInput>
-    <ul class="rst-dropdown-content materials-list">
+    <ul class="rst-dropdown-content material-select__options-list">
       <li v-for="m in state.materials" @click="selectMaterial(m)" :key="m.id">
         {{ m.name }}
       </li>
@@ -36,7 +36,7 @@ watch(materialSearch, async (newSearch, _) => {
     searchFeedback.value = 'Searching...'
     const resp = await callEndpoint('materialSearch', null, {
       name: materialSearch.value,
-      page: 0,
+      page: 1,
       limit: 20
     })
 
@@ -71,7 +71,7 @@ function selectMaterial(m: MaterialShortInfo) {
 </script>
 
 <style lang="scss">
-.materials-list {
+.material-select__options-list {
   li {
     padding: 8px;
     border-top: 1px solid var(--rst-divider);
