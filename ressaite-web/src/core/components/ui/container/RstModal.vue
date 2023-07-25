@@ -1,6 +1,6 @@
 <template>
-  <Teleport to="body">
-    <div v-if="show" class="rst-modal">
+  <Teleport v-if="show" to="body">
+    <div class="rst-modal">
       <div class="rst-modal-content" :class="{ padded }">
         <slot></slot>
       </div>

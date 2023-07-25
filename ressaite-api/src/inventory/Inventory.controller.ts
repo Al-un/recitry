@@ -193,7 +193,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
         name: creationRequest.name,
         quantity: creationRequest.quantity,
         dueDate: parseDate(creationRequest.dueDate),
-        materialId: creationRequest.materialId,
+        materialId: creationRequest.material?.id || null,
         authorId: userId,
         containerId: creationRequest.containerId,
         createdAt: new Date(),
@@ -226,7 +226,7 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
       containerId: updateRequest.containerId,
       quantity: updateRequest.quantity,
       dueDate: parseDate(updateRequest.dueDate || null),
-      materialId: updateRequest.materialId,
+      materialId: updateRequest.material?.id || null,
       updatedAt: new Date(),
     });
 

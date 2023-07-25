@@ -4,19 +4,22 @@ import type { HasAuthor } from "../um/users.models";
 
 interface MaterialBase {
   name: string;
+}
+
+/** When creating or updating a material */
+export interface MaterialFormData extends MaterialBase {
+  id: number | null;
   lang: Lang;
 }
 
-export interface MaterialFormData extends MaterialBase {
-  id: number | null;
-}
-
+/** When displaying a material minimal info */
 export interface MaterialShortInfo extends MaterialBase {
   id: number;
 }
 
 export interface Material extends MaterialBase, HasAuthor, HasTimestamp {
   id: number;
+  lang: Lang;
 }
 
 interface RecipeMaterialBase extends MaterialBase {

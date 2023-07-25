@@ -59,7 +59,7 @@ interface InventoryItemBase {
 
 export interface InventoryItemFormData extends InventoryItemBase {
   id: number | null;
-  materialId: number | null;
+  material: MaterialShortInfo | null;
 }
 
 export interface InventoryItem

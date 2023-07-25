@@ -21,7 +21,11 @@
   </div>
   <div v-else>Loading inventory...</div>
 
-  <RstModal v-if="state.itemForm" @close="state.itemForm = null" :show="state.itemForm !== null">
+  <RstModal
+    v-if="state.itemForm !== null"
+    @close="state.itemForm = null"
+    :show="state.itemForm !== null"
+  >
     <InventoryItemForm
       @cancel="stopItemForm"
       @update:model-value="saveItem"
@@ -32,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onServerPrefetch, reactive } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 
 import { usePageContext } from '../../../../renderer/usePageContext'
 import type {
@@ -92,7 +96,7 @@ function prepareToCreateItem() {
     name: '',
     quantity: 1,
     containerId: inventoryStore.current.containers[0].id,
-    materialId: null,
+    material: null,
     dueDate: null
   }
 }
@@ -103,7 +107,7 @@ function prepareToEditItem(item: InventoryItem, containerId: number) {
     name: item.name,
     containerId: containerId,
     quantity: item.quantity,
-    materialId: item.material && item.material?.id,
+    material: item.material,
     dueDate: item.dueDate
   }
 }

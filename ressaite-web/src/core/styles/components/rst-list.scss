@@ -1,13 +1,23 @@
 .rst-list {
   & > * {
+    background-color: var(--rst-bg-content);
     border-top: 1px solid var(--rst-divider);
     padding: 8px;
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    transition: background-color 0.25ms;
   }
 
   & > *:last-child {
     border-bottom: 1px solid var(--rst-divider);
+  }
+
+  &.selectable {
+    & > *:hover {
+      background-color: var(--rst-bg-content-hover);
+      cursor: pointer;
+    }
   }
 }

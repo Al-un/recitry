@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm" class="rst-form">
+  <form @submit.prevent="submitForm" class="rst-form inventory-item-form">
     <h1>Inventory item</h1>
 
     <RstInput v-model="formData.name" label="Item name" required />
@@ -20,7 +20,7 @@
       required
     />
 
-    <MaterialSelectInput v-model="formData.materialId" label="Material"/>
+    <MaterialSelectInput v-model="formData.material" label="Material" />
 
     <section>
       <button @click="$emit('cancel')" class="rst-button secondary" type="reset">Cancel</button>
@@ -64,4 +64,9 @@ function submitForm() {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.inventory-item-form {
+  width: 100vw;
+  max-width: 400px;
+}
+</style>
