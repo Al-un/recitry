@@ -25,32 +25,35 @@
       </form>
 
       <pre v-if="state.loading">LOADING...</pre>
-      <ul v-if="state.list.length" class="rst-list materials-list">
-        <li v-for="material in state.list" :key="material.id" class="rst-list-item">
-          <span class="material-table__name">{{ material.name }}</span>
-          <span class="flex-spacer"></span>
-          <button
-            v-if="canManage(material)"
-            @click="prepareToEditMaterial(material)"
-            class="rst-button primary"
-          >
-            Edit
-          </button>
-          <button
-            v-if="canManage(material)"
-            @click="deleteMaterial(material)"
-            class="rst-button danger"
-          >
-            Delete
-          </button>
-        </li>
-      </ul>
+      <template v-else-if="state.list.length">
+        <ul class="rst-list materials-list">
+          <li v-for="material in state.list" :key="material.id" class="rst-list-item">
+            <span class="material-table__name">{{ material.name }}</span>
+            <span class="flex-spacer"></span>
+            <button
+              v-if="canManage(material)"
+              @click="prepareToEditMaterial(material)"
+              class="rst-button primary"
+            >
+              Edit
+            </button>
+            <button
+              v-if="canManage(material)"
+              @click="deleteMaterial(material)"
+              class="rst-button danger"
+            >
+              Delete
+            </button>
+          </li>
+        </ul>
 
-      <div class="rst-button-group pagination-buttons">
-        <button :disabled="!hasPrev" @click="loadPrev" class="rst-button secondary">Prev</button>
-        <span>{{ paginationState.currentPage }} / {{ lastPage }}</span>
-        <button :disabled="!hasNext" @click="loadNext" class="rst-button secondary">Next</button>
-      </div>
+        <RstPaginationButtons
+          :pagination="pagination"
+          @load-prev="pagination.loadPrev"
+          @load-next="pagination.loadNext"
+        />
+      </template>
+      <div v-else class="materials-no-result">No result :(</div>
     </section>
   </div>
 
@@ -69,6 +72,7 @@ import type { Material, MaterialFormData } from '@al-un/ressaite-core/recipe/mat
 import { callEndpoint, type CallEndpointResponse } from '@/core/api'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import RstModal from '@/core/components/ui/container/RstModal.vue'
+import RstPaginationButtons from '@/core/components/ui/control/RstPaginationButtons.vue'
 import MaterialForm from '@/recipe/components/MaterialForm.vue'
 import { useAuthStore } from '@/um/stores/auth'
 import { usePagination } from '@/core/compositions/use-pagination'
@@ -95,21 +99,20 @@ const state = reactive<State>({
   materialForm: null
 })
 
-const { hasNext, hasPrev, lastPage, loadData, loadNext, loadPrev, paginationState } =
-  usePagination<Material>(async ({ page, limit }: WithPagination) => {
-    const resp = await callEndpoint('materialSearch', null, {
-      name: materialSearch.value || '',
-      page: page,
-      limit: limit
-    })
-
-    state.list = resp.data.data
-    return resp
+const pagination = usePagination<Material>(async ({ page, limit }: WithPagination) => {
+  const resp = await callEndpoint('materialSearch', null, {
+    name: materialSearch.value || '',
+    page: page,
+    limit: limit
   })
-paginationState.limit = 10
+
+  state.list = resp.data.data
+  return resp
+})
+pagination.paginationState.limit = 10
 
 onMounted(async () => {
-  await loadData()
+  await pagination.loadData()
   // await searchMaterial(pagination)
 })
 
@@ -118,8 +121,8 @@ function canManage(material: Material): boolean {
 }
 
 async function searchMaterial() {
-  paginationState.currentPage = 1
-  await loadData()
+  pagination.paginationState.currentPage = 1
+  await pagination.loadData()
 }
 
 function prepareToCreate() {
@@ -170,8 +173,8 @@ async function saveMaterial() {
       state.list.unshift(resp.data)
       state.list = state.list.slice(0, 10)
 
-      if (paginationState.totalCount) {
-        paginationState.totalCount++
+      if (pagination.paginationState.totalCount) {
+        pagination.paginationState.totalCount++
       }
     }
   }
@@ -187,43 +190,12 @@ async function deleteMaterial(material: Material) {
   if (res.status === 204) {
     state.list = state.list.filter((m) => m.id !== material.id)
 
-    if (paginationState.totalCount) {
-      paginationState.totalCount--
+    if (pagination.paginationState.totalCount) {
+      pagination.paginationState.totalCount--
     }
   }
   state.loading = false
 }
-
-// async function searchMaterial(pagination: PaginationState) {
-//   state.loading = true
-//   const res = await callEndpoint('materialSearch', null, {
-//     name: materialSearch.value || '',
-//     page: pagination.currentPage,
-//     limit: pagination.limit
-//   })
-
-//   state.list = res.data.data
-//   // state.pagination.totalCount = res.data.totalCount
-//   state.loading = false
-// }
-
-// async function searchPrevPage() {
-//   if (state.pagination.currentPage > 0) {
-//     state.pagination.currentPage--
-
-//     await searchMaterial()
-//   }
-// }
-
-// async function searchNextPage() {
-//   if (state.pagination.currentPage > 0) {
-//     state.pagination.currentPage++
-
-//     await searchMaterial()
-//   }
-
-//   await searchMaterial()
-// }
 </script>
 
 <style lang="scss">
@@ -253,14 +225,8 @@ async function deleteMaterial(material: Material) {
   margin-block-start: 16px;
 }
 
-.pagination-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-block-start: 16px;
-
-  * + * {
-    margin-inline-start: 8px;
-  }
+.materials-no-result {
+  text-align: center;
+  padding-block: 16px;
 }
 </style>
