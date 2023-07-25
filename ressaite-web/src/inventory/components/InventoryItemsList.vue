@@ -2,6 +2,16 @@
   <main v-if="inventory.containers.length === 0" class="rst-card padded">
     There is no container at the moment, let's create one in the Inventory settings.
   </main>
+  <div v-else>
+    Display mode:
+    <RstSelect
+      v-model="state.displayMode"
+      :options="[
+        { value: 'container', label: 'By container' },
+        { value: 'dueDate', label: 'By due date' }
+      ]"
+    />
+  </div>
 
   <main v-if="state.displayMode === 'container'">
     <section v-for="c in itemsByContainers" :key="c.id" class="rst-card padded rst-page-section">
@@ -32,6 +42,8 @@
     </section>
   </main>
 
+  <main v-else-if="state.displayMode === 'dueDate'">
+  </main>
   <!-- <div v-else class="items-container">
     <template v-for="item in items" :key="item.id">
       <div class="item__container">{{ item.containerName }}</div>
@@ -58,6 +70,7 @@ import type {
   InventoryDetail,
   InventoryItem
 } from '@al-un/ressaite-core/inventory/inventory.models'
+import RstSelect from '@/core/components/ui/form/RstSelect.vue'
 import { formatDate } from '@/core/utils/datetime'
 
 // ----------------------------------------------------------------------------
@@ -97,7 +110,7 @@ type ItemsByContainer = {
 
 // ----------------------------------------------------------------------------
 
-const items = computed<FormattedItem[]>(() => {
+const itemsByDueDate = computed<FormattedItem[]>(() => {
   if (props.inventory === null) {
     return []
   }
