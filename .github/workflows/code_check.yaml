@@ -1,4 +1,4 @@
-name: Code check
+name: CI
 
 on:
   push:
@@ -55,8 +55,8 @@ jobs:
   #     - run: npm run build:api
 
   # ---------- CI -------------------------------------------------------------
-  ci:
-    name: Check all packages integration
+  build:
+    name: Build
     needs: init
     runs-on: ubuntu-latest
 
@@ -70,8 +70,32 @@ jobs:
       - name: Run build check
         run: npm run build:all
 
+  type-check:
+    name: Type checking
+    needs: init
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load Cache
+        uses: ./.github/actions/setup-and-cache
+
       - name: Run type check
         run: npm run type-check:all
+
+  test:
+    name: Test
+    needs: init
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Load Cache
+        uses: ./.github/actions/setup-and-cache
 
       - name: Run test
         run: npm run test:all
