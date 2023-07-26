@@ -13,3 +13,5 @@ dist
 
 # Test
 mochawesome-report
+.nyc_output
+coverage

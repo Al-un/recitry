@@ -89,8 +89,12 @@ export const listInventories: InventoryControllerTypes["inventoryList"] =
     const userId = req.user?.id;
     if (!userId) throw new Error("req.user.id is not defined");
 
+    const { page, limit } = req.query;
+
     const inventories = await InventoryModel.findAll({
       where: { authorId: userId },
+      offset: (page - 1) * limit,
+      limit,
       include: [includeUserMinimalProfile],
     });
 
@@ -193,7 +197,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
         name: creationRequest.name,
         quantity: creationRequest.quantity,
         dueDate: parseDate(creationRequest.dueDate),
-        materialId: creationRequest.materialId,
+        materialId: creationRequest.material?.id || null,
         authorId: userId,
         containerId: creationRequest.containerId,
         createdAt: new Date(),
@@ -226,7 +230,7 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
       containerId: updateRequest.containerId,
       quantity: updateRequest.quantity,
       dueDate: parseDate(updateRequest.dueDate || null),
-      materialId: updateRequest.materialId,
+      materialId: updateRequest.material?.id || null,
       updatedAt: new Date(),
     });
 

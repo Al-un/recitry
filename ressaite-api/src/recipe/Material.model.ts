@@ -49,7 +49,6 @@ export class MaterialModel extends Model {
     return {
       id: this.id,
       name: this.name,
-      lang: this.lang,
     };
   }
 
@@ -67,5 +66,5 @@ export class MaterialModel extends Model {
 
 export const includeMaterialShortInfo: Includeable = {
   model: MaterialModel,
-  attributes: ["id", "name", "lang"],
+  attributes: ["id", "name"],
 };

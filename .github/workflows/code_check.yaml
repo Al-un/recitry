@@ -1,4 +1,4 @@
-name: Code check
+name: CI
 
 on:
   push:
@@ -25,9 +25,38 @@ jobs:
       - name: Setup & Cache
         uses: ./.github/actions/setup-and-cache
 
-  # ---------- Build ----------------------------------------------------------
-  build-web:
-    name: Build Ressaite Web
+  # # ---------- Build ----------------------------------------------------------
+  # build-web:
+  #   name: Build Ressaite Web
+  #   needs: init
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Load Cache
+  #       uses: ./.github/actions/setup-and-cache
+
+  #     - run: npm run type-check
+  #     - run: npm run build:web
+  # build-api:
+  #   name: Build Ressaite API
+  #   needs: init
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Load Cache
+  #       uses: ./.github/actions/setup-and-cache
+
+  #     - run: npm run build:api
+
+  # ---------- CI -------------------------------------------------------------
+  build:
+    name: Build
     needs: init
     runs-on: ubuntu-latest
 
@@ -38,10 +67,11 @@ jobs:
       - name: Load Cache
         uses: ./.github/actions/setup-and-cache
 
-      - run: npm run type-check
-      - run: npm run build:web
-  build-api:
-    name: Build Ressaite API
+      - name: Run build check
+        run: npm run build:all
+
+  type-check:
+    name: Type checking
     needs: init
     runs-on: ubuntu-latest
 
@@ -52,11 +82,11 @@ jobs:
       - name: Load Cache
         uses: ./.github/actions/setup-and-cache
 
-      - run: npm run build:api
+      - name: Run type check
+        run: npm run type-check:all
 
-  # ---------- Build ----------------------------------------------------------
   test:
-    name: Test all packages
+    name: Test
     needs: init
     runs-on: ubuntu-latest
 
@@ -67,4 +97,5 @@ jobs:
       - name: Load Cache
         uses: ./.github/actions/setup-and-cache
 
-      - run: npm run test:all
+      - name: Run test
+        run: npm run test:all

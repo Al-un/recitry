@@ -1,12 +1,29 @@
+import { computed, reactive, type ComputedRef } from 'vue'
 import type { WithPagination } from '@al-un/ressaite-core/core/base-api.endpoints'
 import type { PaginatedResp } from '@al-un/ressaite-core/core/base-api.models'
-import { computed, reactive } from 'vue'
 import type { CallEndpointResponse } from '../api'
 
-export interface PaginationState {
+export interface PaginationState<EntityList> {
   currentPage: number
   limit: number
+  list: EntityList
   totalCount: number | null
+}
+
+export interface UsePaginationOptions {
+  limit?: number
+}
+
+export interface PaginationComposition<Entity> {
+  state: PaginationState<Entity[]>
+  lastPage: ComputedRef<number>
+  hasNext: ComputedRef<boolean>
+  hasPrev: ComputedRef<boolean>
+  addToList: (entity: Entity, addAtBeginningOfList?: boolean) => void
+  loadData: () => Promise<void>
+  loadNext: () => Promise<void>
+  loadPrev: () => Promise<void>
+  removeFromList: (entity: Entity) => void
 }
 
 /**
@@ -18,65 +35,95 @@ export interface PaginationState {
 export const usePagination = <Entity>(
   fetchDataFn: (
     pagination: WithPagination
-  ) => Promise<CallEndpointResponse<PaginatedResp<Entity[]>>>
-) => {
-  const paginationState = reactive<PaginationState>({
+  ) => Promise<CallEndpointResponse<PaginatedResp<Entity[]>>>,
+  options: UsePaginationOptions = {}
+): PaginationComposition<Entity> => {
+  const state: PaginationState<Entity[]> = reactive({
     currentPage: 1,
-    limit: 100,
+    limit: options.limit || 100,
+    list: [],
     totalCount: null
   })
 
-  const lastPage = computed(() => {
-    if (paginationState.totalCount === null) return -1
+  // --------------------------------------------------------------------------
 
-    const last = Math.ceil(paginationState.totalCount / paginationState.limit)
+  const lastPage = computed(() => {
+    if (state.totalCount === null) return -1
+
+    const last = Math.ceil(state.totalCount / state.limit)
     return last
   })
 
   const hasNext = computed(() => {
-    if (paginationState.totalCount === null) return false
+    if (state.totalCount === null) return false
 
-    return paginationState.currentPage < lastPage.value
+    return state.currentPage < lastPage.value
   })
 
   const hasPrev = computed(() => {
-    return paginationState.currentPage > 1
+    return state.currentPage > 1
   })
+
+  // --------------------------------------------------------------------------
+
+  function addToList(entity: Entity, addAtBeginningOfList: boolean = true) {
+    if (addAtBeginningOfList) {
+      state.list.unshift(entity)
+    } else {
+      state.list.push(entity)
+    }
+    state.list = state.list.slice(0, state.limit)
+
+    if (state.totalCount) state.totalCount++
+  }
+
+  function removeFromList(entity: Entity) {
+    /** @todo: handle equality check */
+    // @ts-ignore
+    state.list = state.list.filter((e) => e.id !== entity.id)
+
+    if (state.totalCount) state.totalCount--
+  }
 
   async function loadData() {
     const resp = await fetchDataFn({
-      page: paginationState.currentPage,
-      limit: paginationState.limit
+      page: state.currentPage,
+      limit: state.limit
     })
 
-    paginationState.totalCount = resp.data.totalCount
+    state.list = resp.data.data
+    state.totalCount = resp.data.totalCount
   }
 
   async function loadPrev() {
     if (!hasPrev.value) {
-      throw new Error(`Pagination ${paginationState.currentPage} cannot prev`)
+      throw new Error(`Pagination ${state.currentPage} cannot prev`)
     }
 
-    paginationState.currentPage--
+    state.currentPage--
     await loadData()
   }
 
   async function loadNext() {
     if (!hasNext.value) {
-      throw new Error(`Pagination ${paginationState.currentPage} cannot next`)
+      throw new Error(`Pagination ${state.currentPage} cannot next`)
     }
 
-    paginationState.currentPage++
+    state.currentPage++
     await loadData()
   }
 
+  // --------------------------------------------------------------------------
+
   return {
+    addToList,
     hasNext,
     hasPrev,
     lastPage,
     loadData,
     loadNext,
     loadPrev,
-    paginationState
+    removeFromList,
+    state
   }
 }

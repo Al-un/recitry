@@ -26,8 +26,8 @@ export type InventoryEndpointTypes = {
   >;
   inventoryList: EndpointType<
     "GET",
-    WithPagination,
     null,
+    WithPagination,
     PaginatedResp<InventoryListItem[]>
   >;
   inventoryDisplay: EndpointType<
