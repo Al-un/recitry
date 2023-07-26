@@ -20,11 +20,11 @@
 
 <script lang="ts" setup>
 import type { PropType } from 'vue'
-import type { usePagination } from '@/core/compositions/use-pagination'
+import type { PaginationComposition } from '@/core/compositions/use-pagination'
 
 defineProps({
   pagination: {
-    type: Object as PropType<ReturnType<typeof usePagination>>,
+    type: Object as PropType<PaginationComposition<any>>,
     required: true
   }
 })

@@ -1,4 +1,4 @@
-import { computed, reactive } from 'vue'
+import { computed, reactive, type ComputedRef } from 'vue'
 import type { WithPagination } from '@al-un/ressaite-core/core/base-api.endpoints'
 import type { PaginatedResp } from '@al-un/ressaite-core/core/base-api.models'
 import type { CallEndpointResponse } from '../api'
@@ -14,18 +14,30 @@ export interface UsePaginationOptions {
   limit?: number
 }
 
+export interface PaginationComposition<Entity> {
+  state: PaginationState<Entity[]>
+  lastPage: ComputedRef<number>
+  hasNext: ComputedRef<boolean>
+  hasPrev: ComputedRef<boolean>
+  addToList: (entity: Entity, addAtBeginningOfList?: boolean) => void
+  loadData: () => Promise<void>
+  loadNext: () => Promise<void>
+  loadPrev: () => Promise<void>
+  removeFromList: (entity: Entity) => void
+}
+
 /**
  * Support pagination of data loading
  *
  * @param loadData the async function to load paginated data and must take
  * the pagination state as argument
  */
-export const usePagination = <Entity extends { id: number }>(
+export const usePagination = <Entity>(
   fetchDataFn: (
     pagination: WithPagination
   ) => Promise<CallEndpointResponse<PaginatedResp<Entity[]>>>,
   options: UsePaginationOptions = {}
-) => {
+): PaginationComposition<Entity> => {
   const state: PaginationState<Entity[]> = reactive({
     currentPage: 1,
     limit: options.limit || 100,
@@ -66,6 +78,8 @@ export const usePagination = <Entity extends { id: number }>(
   }
 
   function removeFromList(entity: Entity) {
+    /** @todo: handle equality check */
+    // @ts-ignore
     state.list = state.list.filter((e) => e.id !== entity.id)
 
     if (state.totalCount) state.totalCount--
