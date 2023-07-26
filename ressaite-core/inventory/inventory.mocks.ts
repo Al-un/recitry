@@ -45,7 +45,6 @@ export const userOneInventories: MockProfileData = {
               material: {
                 id: dumMatCarrot.id,
                 name: dumMatCarrot.name,
-                lang: "fr",
               },
               quantity: 7,
               dueDate: "2023-03-23",

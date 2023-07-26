@@ -2,6 +2,7 @@
   "name": "@al-un/ressaite-core",
   "private": true,
   "scripts": {
-    "setup:quick-start": "echo \"Nothing to do in the ressaite-core package\""
+    "setup:quick-start": "echo \"Nothing to do in the ressaite-core package\"",
+    "type-check": "tsc --noEmit"
   }
 }
