@@ -25,9 +25,9 @@
       </form>
 
       <pre v-if="state.loading">LOADING...</pre>
-      <template v-else-if="state.list.length">
+      <template v-else-if="pagination.state.list.length">
         <ul class="rst-list materials-list">
-          <li v-for="material in state.list" :key="material.id" class="rst-list-item">
+          <li v-for="material in pagination.state.list" :key="material.id" class="rst-list-item">
             <span class="material-table__name">{{ material.name }}</span>
             <span class="flex-spacer"></span>
             <button
@@ -68,60 +68,60 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
+
+import type { WithPagination } from '@al-un/ressaite-core/core/base-api.endpoints'
 import type { Material, MaterialFormData } from '@al-un/ressaite-core/recipe/material.models'
+
 import { callEndpoint, type CallEndpointResponse } from '@/core/api'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import RstModal from '@/core/components/ui/container/RstModal.vue'
 import RstPaginationButtons from '@/core/components/ui/control/RstPaginationButtons.vue'
+import { usePagination } from '@/core/compositions/use-pagination'
 import MaterialForm from '@/recipe/components/MaterialForm.vue'
 import { useAuthStore } from '@/um/stores/auth'
-import { usePagination } from '@/core/compositions/use-pagination'
-import type { WithPagination } from '@al-un/ressaite-core/core/base-api.endpoints'
 
 const authStore = useAuthStore()
 
+// ----------------------------------------------------------------------------
+
 interface State {
-  list: Material[]
-  // pagination: {
-  //   currentPage: number
-  //   limit: number
-  //   totalCount: number | null
-  // }
   loading: boolean
   materialForm: MaterialFormData | null
 }
 
 const materialSearch = ref('')
 const state = reactive<State>({
-  list: [],
   loading: false,
-  // pagination: { currentPage: 1, limit: 100, totalCount: null },
   materialForm: null
 })
 
-const pagination = usePagination<Material>(async ({ page, limit }: WithPagination) => {
-  const resp = await callEndpoint('materialSearch', null, {
-    name: materialSearch.value || '',
-    page: page,
-    limit: limit
-  })
+const pagination = usePagination<Material>(
+  async function ({ page, limit }: WithPagination) {
+    const resp = await callEndpoint('materialSearch', null, {
+      name: materialSearch.value || '',
+      page: page,
+      limit: limit
+    })
 
-  state.list = resp.data.data
-  return resp
-})
-pagination.paginationState.limit = 10
+    return resp
+  },
+  { limit: 10 }
+)
+
+// ----------------------------------------------------------------------------
 
 onMounted(async () => {
   await pagination.loadData()
-  // await searchMaterial(pagination)
 })
+
+// ----------------------------------------------------------------------------
 
 function canManage(material: Material): boolean {
   return material.author.id === authStore.sessionInfo?.user.id
 }
 
 async function searchMaterial() {
-  pagination.paginationState.currentPage = 1
+  pagination.state.currentPage = 1
   await pagination.loadData()
 }
 
@@ -129,7 +129,7 @@ function prepareToCreate() {
   state.materialForm = {
     id: null,
     name: '',
-    lang: 'fr'
+    lang: 'en'
   }
 }
 
@@ -158,7 +158,7 @@ async function saveMaterial() {
     )
 
     if (resp.status === 200) {
-      state.list = state.list.map((m) => {
+      pagination.state.list = pagination.state.list.map((m) => {
         if (m.id !== state.materialForm?.id) {
           return m
         }
@@ -169,13 +169,14 @@ async function saveMaterial() {
   } else {
     resp = await callEndpoint('materialCreate', null, state.materialForm)
     if (resp.status === 201) {
+      pagination.addToList(resp.data)
       //
-      state.list.unshift(resp.data)
-      state.list = state.list.slice(0, 10)
+      // pagination.state.list.unshift(resp.data)
+      // pagination.state.list = pagination.state.list.slice(0, 10)
 
-      if (pagination.paginationState.totalCount) {
-        pagination.paginationState.totalCount++
-      }
+      // if (pagination.state.totalCount) {
+      //   pagination.state.totalCount++
+      // }
     }
   }
 
@@ -188,11 +189,12 @@ async function deleteMaterial(material: Material) {
   state.loading = true
   const res = await callEndpoint('materialDelete', { materialId: material.id }, null)
   if (res.status === 204) {
-    state.list = state.list.filter((m) => m.id !== material.id)
+    pagination.removeFromList(material)
+    // pagination.state.list = pagination.state.list.filter((m) => m.id !== material.id)
 
-    if (pagination.paginationState.totalCount) {
-      pagination.paginationState.totalCount--
-    }
+    // if (pagination.state.totalCount) {
+    //   pagination.state.totalCount--
+    // }
   }
   state.loading = false
 }

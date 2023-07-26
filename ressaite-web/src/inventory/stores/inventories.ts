@@ -22,10 +22,10 @@ export const useInventoryStore = defineStore('inventory', () => {
   // ---------- Computed ------------------------------------------------------
 
   // ---------- Actions -------------------------------------------------------
-  async function loadInventories(req: InventoryEndpointTypes['inventoryList']['pathParams']) {
+  async function loadInventories(req: InventoryEndpointTypes['inventoryList']['request']) {
     loading.value = true
 
-    const resp = await callEndpoint('inventoryList', req)
+    const resp = await callEndpoint('inventoryList', null, req)
 
     if (resp.status === 200) {
       list.value = resp.data.data

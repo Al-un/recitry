@@ -55,7 +55,7 @@ const state = reactive<State>({
 const loadInventory = async () => {
   if (!appStore.isAuthenticated) return
 
-  await inventoryStore.loadInventories({ limit: 0, page: 0 })
+  await inventoryStore.loadInventories({ limit: 100, page: 1 })
 }
 
 onMounted(loadInventory)

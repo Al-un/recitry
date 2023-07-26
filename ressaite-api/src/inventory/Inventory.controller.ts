@@ -89,8 +89,12 @@ export const listInventories: InventoryControllerTypes["inventoryList"] =
     const userId = req.user?.id;
     if (!userId) throw new Error("req.user.id is not defined");
 
+    const { page, limit } = req.query;
+
     const inventories = await InventoryModel.findAll({
       where: { authorId: userId },
+      offset: (page - 1) * limit,
+      limit,
       include: [includeUserMinimalProfile],
     });
 

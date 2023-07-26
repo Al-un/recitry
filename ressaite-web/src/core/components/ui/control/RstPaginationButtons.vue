@@ -7,7 +7,7 @@
     >
       Prev
     </button>
-    <span>{{ pagination.paginationState.currentPage }} / {{ pagination.lastPage }}</span>
+    <span>{{ pagination.state.currentPage }} / {{ pagination.lastPage }}</span>
     <button
       :disabled="!pagination.hasNext"
       @click="$emit('load-next')"

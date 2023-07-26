@@ -2,7 +2,8 @@ import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory
 import { InventoryRoutes } from "@al-un/ressaite-core/inventory/inventory.routes";
 
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
-import {isAuthenticated} from "@/um/Auth.middleware";
+import PaginationCheckMiddleware from "@/core/middlewares/PaginationCheckMiddleware";
+import { isAuthenticated } from "@/um/Auth.middleware";
 import * as InventoryController from "./Inventory.controller";
 import {
   checkInventoryAuthor,
@@ -21,7 +22,7 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   inventoryList: {
     route: InventoryRoutes["inventoryList"],
     controller: InventoryController.listInventories,
-    middlewares: [isAuthenticated],
+    middlewares: [isAuthenticated, PaginationCheckMiddleware(100)],
   },
   inventoryDisplay: {
     route: InventoryRoutes["inventoryDisplay"],
