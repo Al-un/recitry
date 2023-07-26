@@ -19,9 +19,8 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType } from 'vue'
-
-import { usePagination } from '@/core/compositions/use-pagination'
+import type { PropType } from 'vue'
+import type { usePagination } from '@/core/compositions/use-pagination'
 
 defineProps({
   pagination: {
