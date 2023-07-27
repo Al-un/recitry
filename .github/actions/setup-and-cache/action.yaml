@@ -32,10 +32,10 @@ runs:
       with:
         path: |
           node_modules
-          ressaite-api/node_modules
-          ressaite-core/node_modules
-          ressaite-web/node_modules
-        key: ressaite-dependencies-${{ inputs.node-version }}-${{ hashFiles(inputs.lockfile) }}-v1
+          recitry-api/node_modules
+          recitry-core/node_modules
+          recitry-web/node_modules
+        key: recitry-dependencies-${{ inputs.node-version }}-${{ hashFiles(inputs.lockfile) }}-v1
 
 
     - name: Install dependencies (if necessary)
