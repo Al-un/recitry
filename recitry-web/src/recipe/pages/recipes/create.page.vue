@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 
-import type { RecipeFormData } from '@al-un/ressaite-core/recipe/recipe.models'
+import type { RecipeFormData } from '@al-un/recitry-core/recipe/recipe.models'
 
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 

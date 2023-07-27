@@ -1,16 +1,16 @@
 import { expect } from "chai";
 import request from "supertest";
 
-import { AllRoutes } from "@al-un/ressaite-core";
-import { buildRouteWithParam } from "@al-un/ressaite-core/core/base-api.utils";
-import { userOneForeverToken } from "@al-un/ressaite-core/um/access-token.mocks";
+import { AllRoutes } from "@al-un/recitry-core";
+import { buildRouteWithParam } from "@al-un/recitry-core/core/base-api.utils";
+import { userOneForeverToken } from "@al-un/recitry-core/um/access-token.mocks";
 
 import app from "@/app";
 import { UserModel } from "@/um/User.model";
-import { userOne } from "@al-un/ressaite-core/um/users.mocks";
-import { InventoryFormData } from "@al-un/ressaite-core/inventory/inventory.models";
+import { userOne } from "@al-un/recitry-core/um/users.mocks";
+import { InventoryFormData } from "@al-un/recitry-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
-import { userOneInventories } from "@al-un/ressaite-core/inventory/inventory.mocks";
+import { userOneInventories } from "@al-un/recitry-core/inventory/inventory.mocks";
 import { testAuthentication } from "@/um/Auth.middleware.spec";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 

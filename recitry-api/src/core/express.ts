@@ -1,9 +1,9 @@
 import { RequestHandler, Router } from "express";
 import type { ParsedQs } from "qs";
 
-import { EndpointTypes } from "@al-un/ressaite-core/core/base-api.endpoints";
-import { Route } from "@al-un/ressaite-core/core/base-api.routes";
-import { RstResp } from "@al-un/ressaite-core/core/base-api.models";
+import { EndpointTypes } from "@al-un/recitry-core/core/base-api.endpoints";
+import { Route } from "@al-un/recitry-core/core/base-api.routes";
+import { RstResp } from "@al-un/recitry-core/core/base-api.models";
 
 export type ExpressController<
   AllEndpoints extends EndpointTypes,

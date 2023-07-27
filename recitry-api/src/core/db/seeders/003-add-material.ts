@@ -2,13 +2,13 @@ import { tableName as materialTableName } from "@/recipe/Material.model";
 import { UserModel } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
-import { userOne } from "@al-un/ressaite-core/um/users.mocks";
+import { userOne } from "@al-un/recitry-core/um/users.mocks";
 import {
   dumMatCarrot,
   dumMatApple,
   dumMatOnion,
   dumMatWakame,
-} from "@al-un/ressaite-core/recipe/material.mocks";
+} from "@al-un/recitry-core/recipe/material.mocks";
 
 export const up: Seed = async ({ context: sequelize }) => {
   const firstUser = await UserModel.findOne({

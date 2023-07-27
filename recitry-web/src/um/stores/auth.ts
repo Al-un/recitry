@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/auth.endpoints'
+import type { AuthEndpointTypes } from '@al-un/recitry-core/um/auth.endpoints'
 import { callEndpoint } from '@/core/api'
-import type { SessionInfo } from '@al-un/ressaite-core/um/users.models'
+import type { SessionInfo } from '@al-un/recitry-core/um/users.models'
 
 export const useAuthStore = defineStore('auth', () => {
   // ---------- State ---------------------------------------------------------

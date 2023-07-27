@@ -1,10 +1,10 @@
 import { expect } from "chai";
 import request from "supertest";
 
-import { AllRoutes } from "@al-un/ressaite-core/";
+import { AllRoutes } from "@al-un/recitry-core/";
 import app from "@/app";
 import { AccessTokenModel } from "./AccessToken.model";
-import { userOne } from "@al-un/ressaite-core/um/users.mocks";
+import { userOne } from "@al-un/recitry-core/um/users.mocks";
 
 describe("AuthController", () => {
   describe("login", () => {

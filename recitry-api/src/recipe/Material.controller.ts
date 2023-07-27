@@ -1,6 +1,6 @@
 import { Op, Sequelize } from "sequelize";
 
-import { MaterialEndpointTypes } from "@al-un/ressaite-core/recipe/material.endpoints";
+import { MaterialEndpointTypes } from "@al-un/recitry-core/recipe/material.endpoints";
 
 import { ExpressController } from "@/core/express";
 import { UserModel, includeUserMinimalProfile } from "@/um/User.model";

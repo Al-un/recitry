@@ -4,7 +4,7 @@ import {
   InventoryFormData,
   InventoryDetail,
   InventoryItem,
-} from "@al-un/ressaite-core/inventory/inventory.models";
+} from "@al-un/recitry-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";

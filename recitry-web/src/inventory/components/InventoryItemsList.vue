@@ -65,11 +65,11 @@
 <script lang="ts" setup>
 import { computed, reactive, type PropType } from 'vue'
 
-import { parseDate } from '@al-un/ressaite-core/core/utils/datetime'
+import { parseDate } from '@al-un/recitry-core/core/utils/datetime'
 import type {
   InventoryDetail,
   InventoryItem
-} from '@al-un/ressaite-core/inventory/inventory.models'
+} from '@al-un/recitry-core/inventory/inventory.models'
 import RstSelect from '@/core/components/ui/form/RstSelect.vue'
 import { formatDate } from '@/core/utils/datetime'
 

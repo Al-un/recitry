@@ -8,8 +8,8 @@ import type {
   InventoryDetail,
   InventoryItemFormData,
   InventoryListItem
-} from '@al-un/ressaite-core/inventory/inventory.models'
-import type { InventoryEndpointTypes } from '@al-un/ressaite-core/inventory/inventory.endpoints'
+} from '@al-un/recitry-core/inventory/inventory.models'
+import type { InventoryEndpointTypes } from '@al-un/recitry-core/inventory/inventory.endpoints'
 import { callEndpoint } from '@/core/api'
 
 export const useInventoryStore = defineStore('inventory', () => {

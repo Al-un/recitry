@@ -12,7 +12,7 @@ import {
   Inventory,
   InventoryDetail,
   InventoryListItem,
-} from "@al-un/ressaite-core/inventory/inventory.models";
+} from "@al-un/recitry-core/inventory/inventory.models";
 import { UserModel } from "@/um/User.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 

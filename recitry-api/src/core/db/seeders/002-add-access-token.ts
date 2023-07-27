@@ -6,8 +6,8 @@ import {
   userOneForeverToken,
   userOneExpiredToken,
   userTwoForeverToken,
-} from "@al-un/ressaite-core/um/access-token.mocks";
-import { userOne, userTwo } from "@al-un/ressaite-core/um/users.mocks";
+} from "@al-un/recitry-core/um/access-token.mocks";
+import { userOne, userTwo } from "@al-un/recitry-core/um/users.mocks";
 
 export const up: Seed = async ({ context: sequelize }) => {
   const firstUser = await UserModel.findOne({

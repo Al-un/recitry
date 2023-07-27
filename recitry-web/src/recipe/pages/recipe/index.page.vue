@@ -5,7 +5,7 @@
 <script lang="ts" setup>
 import type { PropType } from 'vue'
 
-import type { Recipe } from '@al-un/ressaite-core/recipe/recipe.models'
+import type { Recipe } from '@al-un/recitry-core/recipe/recipe.models'
 
 defineProps({
   recipe: { type: Object as PropType<Recipe>, required: true }

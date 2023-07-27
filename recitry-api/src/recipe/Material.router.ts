@@ -1,5 +1,5 @@
-import { MaterialEndpointTypes } from "@al-un/ressaite-core/recipe/material.endpoints";
-import { MaterialRoutes } from "@al-un/ressaite-core/recipe/material.routes";
+import { MaterialEndpointTypes } from "@al-un/recitry-core/recipe/material.endpoints";
+import { MaterialRoutes } from "@al-un/recitry-core/recipe/material.routes";
 
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import PaginationCheckMiddleware from "@/core/middlewares/PaginationCheckMiddleware";

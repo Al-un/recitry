@@ -45,7 +45,7 @@
 import { reactive } from 'vue'
 import { navigate } from 'vite-plugin-ssr/client/router'
 
-import type { AuthEndpointTypes } from '@al-un/ressaite-core/um/auth.endpoints'
+import type { AuthEndpointTypes } from '@al-un/recitry-core/um/auth.endpoints'
 
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import { useAuthStore } from '@/um/stores/auth'

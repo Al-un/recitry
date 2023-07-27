@@ -11,7 +11,7 @@ import {
 import {
   InventoryContainer,
   InventoryContainerWithItems,
-} from "@al-un/ressaite-core/inventory/inventory.models";
+} from "@al-un/recitry-core/inventory/inventory.models";
 import { UserModel } from "@/um/User.model";
 import { InventoryModel } from "./Inventory.model";
 import { InventoryItemModel } from "./InventoryItem.model";

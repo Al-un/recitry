@@ -1,4 +1,4 @@
-import type { WithPagination } from "@al-un/ressaite-core/core/base-api.endpoints";
+import type { WithPagination } from "@al-un/recitry-core/core/base-api.endpoints";
 import { randomUUID } from "crypto";
 import { RequestHandler } from "express";
 

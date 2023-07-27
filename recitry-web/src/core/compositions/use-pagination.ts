@@ -1,6 +1,6 @@
 import { computed, reactive, type ComputedRef } from 'vue'
-import type { WithPagination } from '@al-un/ressaite-core/core/base-api.endpoints'
-import type { PaginatedResp } from '@al-un/ressaite-core/core/base-api.models'
+import type { WithPagination } from '@al-un/recitry-core/core/base-api.endpoints'
+import type { PaginatedResp } from '@al-un/recitry-core/core/base-api.models'
 import type { CallEndpointResponse } from '../api'
 
 export interface PaginationState<EntityList> {

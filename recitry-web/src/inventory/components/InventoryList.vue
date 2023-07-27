@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import { onMounted, /* onServerPrefetch,*/ reactive } from 'vue'
-import type { InventoryFormData } from '@al-un/ressaite-core/inventory/inventory.models'
+import type { InventoryFormData } from '@al-un/recitry-core/inventory/inventory.models'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import { useAuthStore } from '@/um/stores/auth'
 import { useInventoryStore } from '../stores/inventories'

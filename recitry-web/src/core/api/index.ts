@@ -1,5 +1,5 @@
-import { AllRoutes, type AllEndpoints, type AllEndpointsKey } from '@al-un/ressaite-core'
-import { buildRouteWithParam } from '@al-un/ressaite-core/core/base-api.utils'
+import { AllRoutes, type AllEndpoints, type AllEndpointsKey } from '@al-un/recitry-core'
+import { buildRouteWithParam } from '@al-un/recitry-core/core/base-api.utils'
 
 import { useAuthStore } from '@/um/stores/auth'
 

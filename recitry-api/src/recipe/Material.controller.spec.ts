@@ -1,19 +1,19 @@
 import { expect } from "chai";
 import request from "supertest";
 
-import { userOne } from "@al-un/ressaite-core/um/users.mocks";
+import { userOne } from "@al-un/recitry-core/um/users.mocks";
 import { UserModel } from "@/um/User.model";
 
 import app from "@/app";
 import { MaterialModel } from "./Material.model";
-import { buildRouteWithParam } from "@al-un/ressaite-core/core/base-api.utils";
-import { AllRoutes } from "@al-un/ressaite-core";
+import { buildRouteWithParam } from "@al-un/recitry-core/core/base-api.utils";
+import { AllRoutes } from "@al-un/recitry-core";
 import {
   userOneForeverToken,
   userTwoForeverToken,
-} from "@al-un/ressaite-core/um/access-token.mocks";
-import { MaterialFormData } from "@al-un/ressaite-core/recipe/material.models";
-import { dumMatCarrot } from "@al-un/ressaite-core/recipe/material.mocks";
+} from "@al-un/recitry-core/um/access-token.mocks";
+import { MaterialFormData } from "@al-un/recitry-core/recipe/material.models";
+import { dumMatCarrot } from "@al-un/recitry-core/recipe/material.mocks";
 import { testAuthentication } from "@/um/Auth.middleware.spec";
 
 describe("MaterialController", () => {

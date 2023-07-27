@@ -1,5 +1,5 @@
-import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory.endpoints";
-import { InventoryRoutes } from "@al-un/ressaite-core/inventory/inventory.routes";
+import { InventoryEndpointTypes } from "@al-un/recitry-core/inventory/inventory.endpoints";
+import { InventoryRoutes } from "@al-un/recitry-core/inventory/inventory.routes";
 
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import PaginationCheckMiddleware from "@/core/middlewares/PaginationCheckMiddleware";

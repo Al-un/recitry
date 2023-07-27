@@ -1,5 +1,5 @@
-import { AuthEndpointTypes } from "@al-un/ressaite-core/um/auth.endpoints";
-import { AuthRoutes } from "@al-un/ressaite-core/um/auth.routes";
+import { AuthEndpointTypes } from "@al-un/recitry-core/um/auth.endpoints";
+import { AuthRoutes } from "@al-un/recitry-core/um/auth.routes";
 import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import * as AuthController from "./Auth.controller";
 import * as AuthMiddleware from "./Auth.middleware";

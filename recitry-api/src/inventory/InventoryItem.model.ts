@@ -7,7 +7,7 @@ import {
   Table,
 } from "sequelize-typescript";
 
-import { InventoryItem } from "@al-un/ressaite-core/inventory/inventory.models";
+import { InventoryItem } from "@al-un/recitry-core/inventory/inventory.models";
 import { UserModel } from "@/um/User.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { MaterialModel } from "@/recipe/Material.model";

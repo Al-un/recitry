@@ -1,4 +1,4 @@
-import { RstErrorResp } from "@al-un/ressaite-core/core/base-api.models";
+import { RstErrorResp } from "@al-un/recitry-core/core/base-api.models";
 import { RequestHandler } from "express";
 
 /**

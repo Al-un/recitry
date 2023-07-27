@@ -10,9 +10,9 @@ import {
 import {
   Material,
   MaterialShortInfo,
-} from "@al-un/ressaite-core/recipe/material.models";
+} from "@al-un/recitry-core/recipe/material.models";
 import { UserModel } from "@/um/User.model";
-import { Lang, allLangs } from "@al-un/ressaite-core/core/models/lang";
+import { Lang, allLangs } from "@al-un/recitry-core/core/models/lang";
 import { Includeable } from "sequelize";
 
 export const tableName = "material";

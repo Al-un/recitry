@@ -35,7 +35,7 @@ import { watch, type PropType, computed } from 'vue'
 import type {
   InventoryContainer,
   InventoryItemFormData
-} from '@al-un/ressaite-core/inventory/inventory.models'
+} from '@al-un/recitry-core/inventory/inventory.models'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import RstInputDate from '@/core/components/ui/form/RstInputDate.vue'
 import RstSelect from '@/core/components/ui/form/RstSelect.vue'

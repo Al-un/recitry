@@ -5,9 +5,9 @@ import {
 import { UserModel } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
-import { userOne } from "@al-un/ressaite-core/um/users.mocks";
-import { userOneInventories } from "@al-un/ressaite-core/inventory/inventory.mocks";
-import { InventoryDetail } from "@al-un/ressaite-core/inventory/inventory.models";
+import { userOne } from "@al-un/recitry-core/um/users.mocks";
+import { userOneInventories } from "@al-un/recitry-core/inventory/inventory.mocks";
+import { InventoryDetail } from "@al-un/recitry-core/inventory/inventory.models";
 import { InventoryContainerModel } from "@/inventory/InventoryContainer.model";
 import { InventoryItemModel } from "@/inventory/InventoryItem.model";
 

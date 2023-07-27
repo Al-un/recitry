@@ -2,7 +2,7 @@ import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
 import bcrypt from "bcrypt";
 
 import { AccessTokenModel } from "./AccessToken.model";
-import { UserMinimalProfile, User } from "@al-un/ressaite-core/um/users.models";
+import { UserMinimalProfile, User } from "@al-un/recitry-core/um/users.models";
 import { Includeable } from "sequelize";
 
 export const tableName = "user";

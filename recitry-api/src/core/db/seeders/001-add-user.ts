@@ -1,7 +1,7 @@
 import { tableName as userTableName } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
-import { userOne, userTwo } from "@al-un/ressaite-core/um/users.mocks";
+import { userOne, userTwo } from "@al-un/recitry-core/um/users.mocks";
 
 export const up: Seed = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().bulkInsert(userTableName, [

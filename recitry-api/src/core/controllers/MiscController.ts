@@ -1,4 +1,4 @@
-import { MiscEndpointTypes } from "@al-un/ressaite-core/core/misc.endpoints";
+import { MiscEndpointTypes } from "@al-un/recitry-core/core/misc.endpoints";
 import { ExpressController } from "../express";
 
 // ----------------------------------------------------------------------------

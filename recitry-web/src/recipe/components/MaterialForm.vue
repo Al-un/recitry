@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import { watch, type PropType, onMounted, ref } from 'vue'
 
-import type { MaterialFormData } from '@al-un/ressaite-core/recipe/material.models'
+import type { MaterialFormData } from '@al-un/recitry-core/recipe/material.models'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import RstSelectLang from '@/core/components/ui/form/RstSelectLang.vue'
 

@@ -105,7 +105,7 @@ import type {
   InventoryContainer,
   InventoryContainerFormData,
   InventoryFormData
-} from '@al-un/ressaite-core/inventory/inventory.models'
+} from '@al-un/recitry-core/inventory/inventory.models'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import { useInventoryStore } from '@/inventory/stores/inventories'
 

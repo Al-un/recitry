@@ -69,8 +69,8 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
 
-import type { WithPagination } from '@al-un/ressaite-core/core/base-api.endpoints'
-import type { Material, MaterialFormData } from '@al-un/ressaite-core/recipe/material.models'
+import type { WithPagination } from '@al-un/recitry-core/core/base-api.endpoints'
+import type { Material, MaterialFormData } from '@al-un/recitry-core/recipe/material.models'
 
 import { callEndpoint, type CallEndpointResponse } from '@/core/api'
 import RstInput from '@/core/components/ui/form/RstInput.vue'

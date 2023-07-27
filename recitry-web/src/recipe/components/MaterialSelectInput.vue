@@ -33,7 +33,7 @@
 
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
-import type { MaterialShortInfo } from '@al-un/ressaite-core/recipe/material.models'
+import type { MaterialShortInfo } from '@al-un/recitry-core/recipe/material.models'
 import { callEndpoint } from '@/core/api'
 import RstInput from '@/core/components/ui/form/RstInput.vue'
 import RstModal from '@/core/components/ui/container/RstModal.vue'

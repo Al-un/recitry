@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import { tableName as materialTableName } from "@/recipe/Material.model";
 import { tableName as userTableName } from "@/um/User.model";
 import { Migration } from "@/umzug";
-import { allLangs } from "@al-un/ressaite-core/core/models/lang";
+import { allLangs } from "@al-un/recitry-core/core/models/lang";
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(materialTableName, {

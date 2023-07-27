@@ -1,7 +1,7 @@
-import { InventoryEndpointTypes } from "@al-un/ressaite-core/inventory/inventory.endpoints";
-import { InventoryListItem } from "@al-un/ressaite-core/inventory/inventory.models";
-import { PaginatedResp } from "@al-un/ressaite-core/core/base-api.models";
-import { parseDate } from "@al-un/ressaite-core/core/utils/datetime";
+import { InventoryEndpointTypes } from "@al-un/recitry-core/inventory/inventory.endpoints";
+import { InventoryListItem } from "@al-un/recitry-core/inventory/inventory.models";
+import { PaginatedResp } from "@al-un/recitry-core/core/base-api.models";
+import { parseDate } from "@al-un/recitry-core/core/utils/datetime";
 
 import { ExpressController } from "@/core/express";
 import { InventoryModel } from "./Inventory.model";

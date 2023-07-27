@@ -21,13 +21,13 @@ const writeDotEnv = (folderName: string, vars: string[]): string => {
   return quickStartEnv;
 };
 
-const apiDotEnvFile = writeDotEnv("ressaite-api", [
+const apiDotEnvFile = writeDotEnv("recitry-api", [
   'DB_DIALECT: "sqlite"',
-  'DB_STORAGE: "../ressaite-db/data/quick.db"',
+  'DB_STORAGE: "../recitry-db/data/quick.db"',
   "PORT:8000",
   'CORS_WHITELISTED_ORIGIN: "http://localhost:3000"',
 ]);
-writeDotEnv("ressaite-web", ['VITE_API_BASE_URL: "http://localhost:8000"']);
+writeDotEnv("recitry-web", ['VITE_API_BASE_URL: "http://localhost:8000"']);
 
 // ----------------------------------------------------------------------------
 

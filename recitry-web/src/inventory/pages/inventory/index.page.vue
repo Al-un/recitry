@@ -43,7 +43,7 @@ import type {
   InventoryContainer,
   InventoryItem,
   InventoryItemFormData
-} from '@al-un/ressaite-core/inventory/inventory.models'
+} from '@al-un/recitry-core/inventory/inventory.models'
 import RstModal from '@/core/components/ui/container/RstModal.vue'
 import InventoryItemsList from '@/inventory/components/InventoryItemsList.vue'
 import InventoryItemForm from '@/inventory/components/InventoryItemForm.vue'

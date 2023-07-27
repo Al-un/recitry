@@ -1,11 +1,11 @@
 import passport from "passport";
 import { Strategy as LocalStrategy, VerifyFunction } from "passport-local";
 
-import { AuthEndpointTypes } from "@al-un/ressaite-core/um/auth.endpoints";
+import { AuthEndpointTypes } from "@al-un/recitry-core/um/auth.endpoints";
 import { AccessTokenModel } from "./AccessToken.model";
 import { hashPassword, UserModel } from "./User.model";
 import { ExpressController } from "@/core/express";
-import { SessionInfo } from "@al-un/ressaite-core/um/users.models";
+import { SessionInfo } from "@al-un/recitry-core/um/users.models";
 
 // ----------------------------------------------------------------------------
 
