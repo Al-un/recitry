@@ -1,8 +1,8 @@
 {
-  "name": "@al-un/ressaite-core",
+  "name": "@al-un/recitry-core",
   "private": true,
   "scripts": {
-    "setup:quick-start": "echo \"Nothing to do in the ressaite-core package\"",
+    "setup:quick-start": "echo \"Nothing to do in the recitry-core package\"",
     "test": "nyc --reporter=lcov --all npm run test:run './**/*.spec.ts'",
     "test:run": "mocha  -r ts-node/register --exit",
     "type-check": "tsc --noEmit"

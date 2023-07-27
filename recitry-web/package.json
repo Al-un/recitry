@@ -1,5 +1,5 @@
 {
-  "name": "@al-un/ressaite-web",
+  "name": "@al-un/recitry-web",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -20,7 +20,7 @@
     "setup:quick-start": "echo \"Nothing to do (yet)\""
   },
   "dependencies": {
-    "@al-un/ressaite-core": "*",
+    "@al-un/recitry-core": "*",
     "pinia": "2.0.33",
     "sass": "1.60.0",
     "vite-plugin-ssr": "0.4.106",
