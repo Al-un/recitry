@@ -43,7 +43,7 @@ class MockUserData implements MockUser {
 export const userOne = new MockUserData({
   id: 1,
   username: "Eve",
-  email: "eve@ressaite.fr",
+  email: "eve@recitry.fr",
   password: "$2b$10$EuERg7PrpZtUDVr5MKXYYOzuJQUWiOFuY7C4FtKiP3rwwbMIBtaVu",
   clearPassword: "pouetpouet",
   salt: "$2b$10$EuERg7PrpZtUDVr5MKXYYO",
@@ -52,7 +52,7 @@ export const userOne = new MockUserData({
 export const userTwo = new MockUserData({
   id: 2,
   username: "Alice", // pas Adam
-  email: "alice@ressaite.fr",
+  email: "alice@recitry.fr",
   password: "$2b$10$EuERg7PrpZtUDVr5MKXYYOzuJQUWiOFuY7C4FtKiP3rwwbMIBtaVu",
   clearPassword: "pouetpouet",
   salt: "$2b$10$EuERg7PrpZtUDVr5MKXYYO",
