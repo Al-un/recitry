@@ -1,4 +1,4 @@
-# Ressaite API <!-- omit in toc -->
+# Recitry API <!-- omit in toc -->
 
 - [Dependencies](#dependencies)
   - [Runtime](#runtime)
@@ -7,7 +7,7 @@
   - [Testing](#testing)
   - [Others](#others)
 
-This is the back-end of Ressaite. Technical stack is:
+This is the back-end of Recitry. Technical stack is:
 
 - PostgreSQL database or Sqlite
 - ExpressJS, Passport

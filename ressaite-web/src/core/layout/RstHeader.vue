@@ -1,6 +1,6 @@
 <template>
   <header class="rst-header">
-    <a href="/" class="rst-header__logo"> Ressaite </a>
+    <a href="/" class="rst-header__logo"> Recitry </a>
 
     <div
       @click="$emit('menu:click')"
