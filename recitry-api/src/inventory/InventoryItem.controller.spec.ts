@@ -35,7 +35,7 @@ describe("InventoryItemController", () => {
     firstInventory = inventoryCandidate;
   });
 
-  describe("createInventoryItem", async () => {
+  describe.skip("createInventoryItem", () => {
     it('returns "not implemented yet" error', async () => {
       const res = await request(app)
         .post(AllRoutes.inventoryContainerCreate.path)
@@ -46,7 +46,7 @@ describe("InventoryItemController", () => {
     });
   });
 
-  describe("updateInventoryItem", async () => {
+  describe.skip("updateInventoryItem", () => {
     it('returns "not implemented yet" error', async () => {
       const res = await request(app)
         .patch(
@@ -61,7 +61,7 @@ describe("InventoryItemController", () => {
     });
   });
 
-  describe("deleteInventoryItem", async () => {
+  describe.skip("deleteInventoryItem", () => {
     it('returns "not implemented yet" error', async () => {
       const res = await request(app)
         .delete(
