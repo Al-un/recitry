@@ -1,7 +1,8 @@
 import { includeUserMinimalProfile } from "@/um/User.model";
 import { InventoryModel } from "./Inventory.model";
-import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryControllerTypes } from "./Inventory.controller";
+import { InventoryContainerModel } from "./InventoryContainer.model";
+import * as InventoryContainerService from "./InventoryContainer.service";
 
 // ----------------------------------------------------------------------------
 
@@ -22,20 +23,14 @@ export const createInventoryContainer: InventoryControllerTypes["inventoryContai
       return;
     }
 
-    const creationRequest = req.body;
-    const created = await InventoryContainerModel.create({
-      name: creationRequest.name,
-      authorId: userId,
-      inventoryId: inventoryId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-    const c = await InventoryContainerModel.findByPk(created.id, {
-      include: [includeUserMinimalProfile],
-    });
-    if (c === null) throw new Error("Created container not found");
+    const created = await InventoryContainerService.createInDb(
+      { ...req.body, inventoryId },
+      userId
+    );
 
-    res.status(201).json(c.toInventoryContainer);
+    const c = await InventoryContainerService.fetchFromDb(created.id);
+
+    res.status(201).json(c);
   };
 
 /**
@@ -59,10 +54,10 @@ export const updateInventoryContainer: InventoryControllerTypes["inventoryContai
 
 export const deleteInventoryContainer: InventoryControllerTypes["inventoryContainerDelete"] =
   async (req, res) => {
-    const inventoryContainer = (req.res?.locals as any)
+    const container = (req.res?.locals as any)
       .inventoryContainer as InventoryContainerModel;
 
-    await inventoryContainer.destroy();
+    InventoryContainerService.deleteInDb(container);
 
     res.sendStatus(204);
   };

@@ -3,26 +3,62 @@ import { InventoryListItem } from "@al-un/recitry-core/inventory/inventory.model
 import { PaginatedResp } from "@al-un/recitry-core/core/base-api.models";
 
 import { ExpressController } from "@/core/express";
-import { includeUserMinimalProfile } from "@/um/User.model";
+import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
 import { InventoryModel } from "./Inventory.model";
 import * as InventoryService from "./Inventory.service";
+import { InventoryContainerModel } from "./InventoryContainer.model";
+import { InventoryItemModel } from "./InventoryItem.model";
 
 // ----------------------------------------------------------------------------
 
 export type InventoryControllerTypes = ExpressController<
   InventoryEndpointTypes,
   {
-    inventoryContainerCreate: {};
-    inventoryContainerUpdate: {};
-    inventoryContainerDelete: {};
-    inventoryCreate: {};
-    inventoryUpdate: {};
-    inventoryDisplay: {};
-    inventoryList: {};
-    inventoryDelete: {};
-    inventoryItemCreate: {};
-    inventoryItemUpdate: {};
-    inventoryItemDelete: {};
+    inventoryCreate: {
+      user: UserModel;
+    };
+    inventoryList: {
+      user: UserModel;
+    };
+    inventoryDisplay: {
+      user: UserModel;
+    };
+    inventoryUpdate: {
+      user: UserModel;
+      inventory: InventoryModel;
+    };
+    inventoryDelete: {
+      user: UserModel;
+      inventory: InventoryModel;
+    };
+    inventoryContainerCreate: {
+      user: UserModel;
+      inventory: InventoryModel;
+    };
+    inventoryContainerUpdate: {
+      user: UserModel;
+      inventory: InventoryModel;
+      inventoryContainer: InventoryContainerModel;
+    };
+    inventoryContainerDelete: {
+      user: UserModel;
+      inventory: InventoryModel;
+      inventoryContainer: InventoryContainerModel;
+    };
+    inventoryItemCreate: {
+      user: UserModel;
+      inventory: InventoryModel;
+    };
+    inventoryItemUpdate: {
+      user: UserModel;
+      inventory: InventoryModel;
+      inventoryItem: InventoryItemModel;
+    };
+    inventoryItemDelete: {
+      user: UserModel;
+      inventory: InventoryModel;
+      inventoryItem: InventoryItemModel;
+    };
   }
 >;
 
@@ -30,8 +66,7 @@ export type InventoryControllerTypes = ExpressController<
 
 export const createInventory: InventoryControllerTypes["inventoryCreate"] =
   async (req, res) => {
-    const authorId = req.user?.id;
-    if (!authorId) throw new Error("req.user.id is not defined");
+    const authorId = res.locals.user.id;
 
     const creationRequest = req.body;
     const inventory = await InventoryService.createInventory(
@@ -44,7 +79,7 @@ export const createInventory: InventoryControllerTypes["inventoryCreate"] =
 
 export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
   async (req, res) => {
-    const inventory = (req.res?.locals as any).inventory as InventoryModel;
+    const inventory = res.locals.inventory;
 
     const updateRequest = req.body;
     inventory.set({
@@ -57,8 +92,8 @@ export const updateInventory: InventoryControllerTypes["inventoryUpdate"] =
   };
 
 export const deleteInventory: InventoryControllerTypes["inventoryDelete"] =
-  async (req, res) => {
-    const inventory = (req.res?.locals as any).inventory as InventoryModel;
+  async (_, res) => {
+    const inventory = res.locals.inventory;
 
     await inventory.destroy();
 

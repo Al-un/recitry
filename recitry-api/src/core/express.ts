@@ -15,6 +15,7 @@ export type ExpressController<
     ? RequestHandler<
         AllEndpoints[EndpointName]["pathParams"],
         RstResp<AllEndpoints[EndpointName]["response"]>,
+        // GET method does not allow payload
         unknown,
         AllEndpoints[EndpointName]["request"],
         Locals[EndpointName]
@@ -31,7 +32,7 @@ export type ExpressController<
 export type ExpressRouterConfig<AllEndpoints extends EndpointTypes> = {
   [EndpointName in keyof AllEndpoints]: {
     route: Route;
-    controller: ExpressController<AllEndpoints>[EndpointName];
+    controller: RequestHandler<any, any, any, any, any>;
     middlewares?: Array<RequestHandler<any, any, any, any, any>>;
   };
 };
