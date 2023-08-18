@@ -2,12 +2,17 @@ import type { WithPagination } from "@al-un/recitry-core/core/base-api.endpoints
 import { randomUUID } from "crypto";
 import { RequestHandler } from "express";
 
-const LoggerMiddleware: (
-  maxLimit: number
-) => RequestHandler<null, unknown, unknown, WithPagination> =
+type PaginationCheckMiddlewareType = (
+  maxLimit?: number
+) => RequestHandler<null, unknown, unknown, WithPagination>;
+
+const PaginationCheckMiddleware: PaginationCheckMiddlewareType =
   (maxLimit = 50) =>
   (req, res, next) => {
     const { page, limit } = req.query;
+    console.log(
+      `${res.locals.requestId}: paginate page ${page} limiting to ${limit}`
+    );
 
     if (page === null || page === undefined) {
       res.status(400).send({ message: "Pagination page is required" });
@@ -41,4 +46,4 @@ const LoggerMiddleware: (
     next();
   };
 
-export default LoggerMiddleware;
+export default PaginationCheckMiddleware;

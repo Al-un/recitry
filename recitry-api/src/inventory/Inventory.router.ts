@@ -5,6 +5,8 @@ import { ExpressRouterConfig, loadRouterConfig } from "@/core/express";
 import PaginationCheckMiddleware from "@/core/middlewares/PaginationCheckMiddleware";
 import { isAuthenticated } from "@/um/Auth.middleware";
 import * as InventoryController from "./Inventory.controller";
+import * as InventoryContainerController from "./InventoryContainer.controller";
+import * as InventoryItemController from "./InventoryItem.controller";
 import {
   checkInventoryAuthor,
   checkInventoryContainerAuthor,
@@ -41,12 +43,12 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   },
   inventoryContainerCreate: {
     route: InventoryRoutes["inventoryContainerCreate"],
-    controller: InventoryController.createInventoryContainer,
+    controller: InventoryContainerController.createInventoryContainer,
     middlewares: [isAuthenticated, checkInventoryAuthor],
   },
   inventoryContainerUpdate: {
     route: InventoryRoutes["inventoryContainerUpdate"],
-    controller: InventoryController.updateInventoryContainer,
+    controller: InventoryContainerController.updateInventoryContainer,
     middlewares: [
       isAuthenticated,
       checkInventoryAuthor,
@@ -55,7 +57,7 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   },
   inventoryContainerDelete: {
     route: InventoryRoutes["inventoryContainerDelete"],
-    controller: InventoryController.deleteInventoryContainer,
+    controller: InventoryContainerController.deleteInventoryContainer,
     middlewares: [
       isAuthenticated,
       checkInventoryAuthor,
@@ -64,12 +66,12 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   },
   inventoryItemCreate: {
     route: InventoryRoutes["inventoryItemCreate"],
-    controller: InventoryController.createInventoryItem,
+    controller: InventoryItemController.createInventoryItem,
     middlewares: [isAuthenticated, checkInventoryAuthor],
   },
   inventoryItemUpdate: {
     route: InventoryRoutes["inventoryItemUpdate"],
-    controller: InventoryController.updateInventoryItem,
+    controller: InventoryItemController.updateInventoryItem,
     middlewares: [
       isAuthenticated,
       checkInventoryAuthor,
@@ -78,7 +80,7 @@ const InventoryRouterConfig: ExpressRouterConfig<InventoryEndpointTypes> = {
   },
   inventoryItemDelete: {
     route: InventoryRoutes["inventoryItemDelete"],
-    controller: InventoryController.deleteInventoryItem,
+    controller: InventoryItemController.deleteInventoryItem,
     middlewares: [
       isAuthenticated,
       checkInventoryAuthor,

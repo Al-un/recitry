@@ -11,7 +11,7 @@ import { AccessTokenModel } from "./AccessToken.model";
 
 // ----------------------------------------------------------------------------
 
-export interface AuthLocal {
+export interface AuthLocals {
   user: UserModel;
 }
 
@@ -41,7 +41,13 @@ const bearerVerify: VerifyFunction = async function verify(token, cb) {
 
 passport.use(new BearerStrategy(bearerVerify));
 
-export const isAuthenticated: RequestHandler = (req, res, next) => {
+export const isAuthenticated: RequestHandler<
+  unknown,
+  any,
+  any,
+  any,
+  AuthLocals
+> = (req, res, next) => {
   type BearerCallback = Parameters<VerifyFunction>[1];
   const cbHandler: BearerCallback = (err, authInfo, opts) => {
     if (err) {
@@ -73,4 +79,3 @@ export const isAuthenticated: RequestHandler = (req, res, next) => {
 };
 
 // ----------------------------------------------------------------------------
-

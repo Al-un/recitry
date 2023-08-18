@@ -17,7 +17,7 @@ import {
 export const createInventory = async (
   inventory: InventoryFormData,
   authorId: number
-): Promise<Inventory> => {
+): Promise<InventoryModel> => {
   const i = await InventoryModel.create({
     name: inventory.name,
     authorId: authorId,
@@ -25,10 +25,7 @@ export const createInventory = async (
     updatedAt: new Date(),
   });
 
-  const result = await fetchInventory(i.id);
-  if (!result) throw new Error("Created inventory not found");
-
-  return result;
+  return i;
 };
 
 export const fetchInventory = async (
