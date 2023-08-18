@@ -64,22 +64,24 @@ export async function mochaGlobalSetup() {
     where: { username: userTwo.username },
   });
   if (userCandidate === null) throw new Error("User One not found");
-  testUser1 = userCandidate;
+  testUser2 = userCandidate;
 
   // Load core data: inventories
   let inventoryCandidate: InventoryModel | null;
   inventoryCandidate = await InventoryModel.findOne({
     where: { name: userOneInventoryOne.name, authorId: testUser1.id },
   });
-  if (inventoryCandidate === null)
+  if (inventoryCandidate === null) {
     throw new Error("testInventory1_1 not found");
+  }
   testInventory1_1 = inventoryCandidate;
 
   inventoryCandidate = await InventoryModel.findOne({
     where: { name: userOneInventoryTwo.name, authorId: testUser1.id },
   });
-  if (inventoryCandidate === null)
+  if (inventoryCandidate === null) {
     throw new Error("testInventory1_2 not found");
+  }
   testInventory1_2 = inventoryCandidate;
 
   // Load core data: material

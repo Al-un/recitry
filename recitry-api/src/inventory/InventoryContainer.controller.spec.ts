@@ -30,7 +30,6 @@ describe("InventoryContainerController", () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    console.log("testInventory", testInventory);
 
     testContainerUpdate = await InventoryContainerModel.create({
       name: "test/container for update",

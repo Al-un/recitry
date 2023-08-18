@@ -32,7 +32,7 @@ describe("AuthController", () => {
   describe("logout", () => {
     let token: string;
 
-    before(async () => {
+    beforeEach(async () => {
       // from v1/login test
       const res = await request(app)
         .post(AllRoutes.login.path)
@@ -63,7 +63,7 @@ describe("AuthController", () => {
 
     const signedUpUser = { email: "blah", password: "pouicpouic" };
 
-    before(async () => {
+    beforeEach(async () => {
       signUpResponse = await request(app)
         .post(AllRoutes.signup.path)
         .send(signedUpUser)
