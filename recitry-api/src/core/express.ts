@@ -18,14 +18,14 @@ export type ExpressController<
         // GET method does not allow payload
         unknown,
         AllEndpoints[EndpointName]["request"],
-        Locals[EndpointName]
+        Locals[EndpointName] & { requestId: string }
       >
     : RequestHandler<
         AllEndpoints[EndpointName]["pathParams"],
         RstResp<AllEndpoints[EndpointName]["response"]>,
         AllEndpoints[EndpointName]["request"],
         ParsedQs,
-        Locals[EndpointName]
+        Locals[EndpointName] & { requestId: string }
       >;
 };
 

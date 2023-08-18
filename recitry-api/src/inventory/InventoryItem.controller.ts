@@ -65,7 +65,10 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
 
     const updateRequest = req.body;
 
-    console.log(`Updating item ${inventoryItem.id} with`, updateRequest);
+    console.log(
+      `${res.locals.requestId}: updating item ${inventoryItem.id} with`,
+      updateRequest
+    );
 
     inventoryItem.set({
       name: updateRequest.name,

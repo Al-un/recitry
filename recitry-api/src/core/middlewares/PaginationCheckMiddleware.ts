@@ -10,7 +10,9 @@ const PaginationCheckMiddleware: PaginationCheckMiddlewareType =
   (maxLimit = 50) =>
   (req, res, next) => {
     const { page, limit } = req.query;
-    console.log(`Paginate with ${page} and ${limit}`);
+    console.log(
+      `${res.locals.requestId}: paginate page ${page} limiting to ${limit}`
+    );
 
     if (page === null || page === undefined) {
       res.status(400).send({ message: "Pagination page is required" });
@@ -41,7 +43,6 @@ const PaginationCheckMiddleware: PaginationCheckMiddlewareType =
       return;
     }
 
-    console.log("GO!");
     next();
   };
 
