@@ -1,10 +1,16 @@
-export type HttpMethod =
-  | "GET"
-  | "POST"
-  | "PATCH"
-  | "PUT"
-  | "DELETE"
-  | "OPTIONS";
+export type HttpMethod = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+
+export type SupertestHttpMethod = "get" | "post" | "patch" | "put" | "delete";
+
+export const toSupertestHttpMethod: {
+  [key in HttpMethod]: SupertestHttpMethod;
+} = {
+  GET: "get",
+  POST: "post",
+  PATCH: "patch",
+  PUT: "put",
+  DELETE: "delete",
+};
 
 export type EndpointType<
   method extends HttpMethod,
