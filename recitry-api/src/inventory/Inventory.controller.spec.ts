@@ -3,55 +3,40 @@ import request from "supertest";
 
 import { AllRoutes } from "@al-un/recitry-core";
 import { buildRouteWithParam } from "@al-un/recitry-core/core/base-api.utils";
+import { InventoryFormData } from "@al-un/recitry-core/inventory/inventory.models";
 import { userOneForeverToken } from "@al-un/recitry-core/um/access-token.mocks";
 
 import app from "@/app";
-import { UserModel } from "@/um/User.model";
-import { userOne } from "@al-un/recitry-core/um/users.mocks";
-import { InventoryFormData } from "@al-un/recitry-core/inventory/inventory.models";
-import { InventoryModel } from "./Inventory.model";
-import { userOneInventories } from "@al-un/recitry-core/inventory/inventory.mocks";
+import { testUser1 } from "@/mocha.fixtures";
 import { testAuthentication } from "@/um/Auth.middleware.spec";
+import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
+import { testCheckInventoryAccess } from "./Inventory.middleware.spec";
 
 describe("InventoryController", () => {
-  let firstUser: UserModel;
-  let firstInventory: InventoryModel;
-
-  before(async () => {
-    const userCandidate = await UserModel.findOne({
-      where: { username: userOne.username },
-    });
-    if (userCandidate === null) throw new Error("User One not found");
-    firstUser = userCandidate;
-
-    const inventoryCandidate = await InventoryModel.findOne({
-      where: {
-        name: userOneInventories.inventories[0].name,
-        authorId: firstUser.id,
-      },
-    });
-    if (inventoryCandidate === null) throw new Error("Inventory one not found");
-    firstInventory = inventoryCandidate;
-  });
-
-  const toCreateInventory: InventoryFormData = {
-    id: null,
-    name: "Inventory name",
-  };
-
   describe("createInventory", async () => {
-    testAuthentication(
-      request(app).post(AllRoutes.inventoryCreate.path).send(toCreateInventory)
-    );
+    const { path } = AllRoutes.inventoryCreate;
+    const toCreateInventory: InventoryFormData = {
+      id: null,
+      name: "test/InventoryController/createInventory",
+    };
+
+    testAuthentication(request(app).post(path).send(toCreateInventory));
 
     it("creates inventory", async () => {
       const res = await request(app)
-        .post(AllRoutes.inventoryCreate.path)
+        .post(path)
         .auth(userOneForeverToken.token, { type: "bearer" })
         .send(toCreateInventory);
-      console.log(res.body);
+
       expect(res.status).to.equal(201);
+
+      expect(res.body).to.have.property("id").to.be.not.null;
+      expect(res.body).to.have.property("name").to.eq(toCreateInventory.name);
+      expect(res.body)
+        .to.have.property("author")
+        .to.have.property("id")
+        .to.eq(testUser1.id);
     });
   });
 
@@ -61,14 +46,17 @@ describe("InventoryController", () => {
     const testAuthRoute = buildRouteWithParam(AllRoutes.inventoryDelete.path, {
       inventoryId: 9999,
     });
+
     testAuthentication(request(app).delete(testAuthRoute));
 
-    it("returns 404 when inventoryId does not exist", async () => {
-      const res = await request(app)
-        .delete(testAuthRoute)
-        .auth(userOneForeverToken.token, { type: "bearer" });
-      expect(res.status).to.eq(404);
-    });
+    testCheckInventoryAccess(userOneForeverToken, AllRoutes.inventoryDelete);
+
+    // it("returns 404 when inventoryId does not exist", async () => {
+    //   const res = await request(app)
+    //     .delete(testAuthRoute)
+    //     .auth(userOneForeverToken.token, { type: "bearer" });
+    //   expect(res.status).to.eq(404);
+    // });
 
     describe("When an inventory has no container", () => {
       let toBeDeletedInventory: InventoryModel;
@@ -78,7 +66,7 @@ describe("InventoryController", () => {
       before(async () => {
         toBeDeletedInventory = await InventoryModel.create({
           name: "plop",
-          authorId: firstUser.id,
+          authorId: testUser1.id,
         });
         deletedInventoryId = toBeDeletedInventory.id;
       });
@@ -107,11 +95,11 @@ describe("InventoryController", () => {
       before(async () => {
         toBeDeletedInventory = await InventoryModel.create({
           name: "plop",
-          authorId: firstUser.id,
+          authorId: testUser1.id,
         });
         toBeDeletedContainer = await InventoryContainerModel.create({
           name: "plop",
-          authorId: firstUser.id,
+          authorId: testUser1.id,
           inventoryId: toBeDeletedInventory.id,
         });
 

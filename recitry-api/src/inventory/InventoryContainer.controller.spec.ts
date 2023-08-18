@@ -10,45 +10,39 @@ import { UserModel } from "@/um/User.model";
 import { userOne } from "@al-un/recitry-core/um/users.mocks";
 import {
   InventoryContainer,
+  InventoryContainerFormData,
   InventoryFormData,
 } from "@al-un/recitry-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
-import { userOneInventories } from "@al-un/recitry-core/inventory/inventory.mocks";
 import { testAuthentication } from "@/um/Auth.middleware.spec";
 import { InventoryContainerModel } from "./InventoryContainer.model";
+import { testUser1 } from "@/mocha.fixtures";
 
 describe("InventoryContainerController", () => {
-  let firstUser: UserModel;
   let testInventory: InventoryModel;
   let testContainerUpdate: InventoryContainerModel;
   let testContainerDelete: InventoryContainerModel;
 
   before(async () => {
-    const userCandidate = await UserModel.findOne({
-      where: { username: userOne.username },
-    });
-    if (userCandidate === null) throw new Error("User One not found");
-    firstUser = userCandidate;
-
     testInventory = await InventoryModel.create({
-      name: "inventory to test containers",
-      authorId: firstUser.id,
+      name: "test/inventory to test containers",
+      authorId: testUser1.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
     console.log("testInventory", testInventory);
 
     testContainerUpdate = await InventoryContainerModel.create({
-      name: "container for update",
-      authorId: firstUser.id,
+      name: "test/container for update",
+      authorId: testUser1.id,
       inventoryId: testInventory.id,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     testContainerDelete = await InventoryContainerModel.create({
-      name: "container for delete",
-      authorId: firstUser.id,
+      name: "test/container for delete",
+      authorId: testUser1.id,
       inventoryId: testInventory.id,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -56,20 +50,24 @@ describe("InventoryContainerController", () => {
   });
 
   describe("createInventoryContainer", () => {
+    const { path } = AllRoutes.inventoryContainerCreate;
     let builtPath: string;
-    const payload = { name: "some new container" };
+    let payload: InventoryContainerFormData = {
+      id: null,
+      name: "test/InventoryContainerController/createInventoryContainer",
+      inventoryId: 1,
+    };
 
     before(() => {
-      console.log("testInventory", testInventory);
-      const { path } = AllRoutes.inventoryContainerCreate;
-      builtPath = buildRouteWithParam(path, {
-        inventoryId: testInventory.id,
-      });
+      builtPath = buildRouteWithParam(path, { inventoryId: testInventory.id });
+      payload.inventoryId = testInventory.id;
     });
 
-    // describe("with authentication", () => {
-    //   testAuthentication(request(app).post(builtPath).send(payload));
-    // });
+    testAuthentication(
+      request(app)
+        .post(buildRouteWithParam(path, { inventoryId: 1 }))
+        .send(payload)
+    );
 
     it("creates a container", async () => {
       const res = await request(app)
@@ -78,12 +76,13 @@ describe("InventoryContainerController", () => {
         .send(payload);
 
       expect(res.status).to.equal(201);
-      console.log("RES.body", res.body);
+
       expect(res.body).to.have.property("id").to.be.not.null;
+      expect(res.body).to.have.property("name").to.eq(payload.name);
       expect(res.body)
         .to.have.property("author")
         .to.have.property("id")
-        .to.eq(firstUser.id);
+        .to.eq(testUser1.id);
       expect(res.body)
         .to.have.property("inventoryId")
         .to.equal(testInventory.id);
@@ -91,21 +90,76 @@ describe("InventoryContainerController", () => {
   });
 
   describe("updateInventoryContainer", () => {
-    // const { path } = AllRoutes.inventoryContainerUpdate;
-    // const builtPath = buildRouteWithParam(path, {
-    //   inventoryId: testInventory.id,
-    //   inventoryContainerId: testContainerUpdate.id,
-    // });
-    // const payload = { name: "some new container" };
-    // testAuthentication(request(app).patch(builtPath).send(payload));
+    const { path } = AllRoutes.inventoryContainerUpdate;
+    let builtPath: string;
+    let payload: InventoryContainerFormData = {
+      id: null,
+      name: "test/InventoryContainerController/updateInventoryContainer",
+      inventoryId: 1,
+    };
+
+    before(() => {
+      builtPath = buildRouteWithParam(path, {
+        inventoryId: testInventory.id,
+        inventoryContainerId: testContainerUpdate.id,
+      });
+      payload.inventoryId = testInventory.id;
+    });
+
+    testAuthentication(
+      request(app)
+        .patch(
+          buildRouteWithParam(path, { inventoryId: 1, inventoryContainerId: 1 })
+        )
+        .send(payload)
+    );
+
+    it("updates a container and ignore irrelevant fields", async () => {
+      const res = await request(app)
+        .patch(builtPath)
+        .auth(userOneForeverToken.token, { type: "bearer" })
+        .send({ ...payload, id: 0, authorId: 0, inventoryId: 0 });
+
+      expect(res.status).to.equal(200);
+
+      // Test changed fields
+      expect(res.body).to.have.property("name").to.eq(payload.name);
+
+      // Test ignored fields
+      expect(res.body).to.have.property("id").to.eq(testContainerUpdate.id);
+      expect(res.body)
+        .to.have.property("author")
+        .to.have.property("id")
+        .to.eq(testUser1.id);
+      expect(res.body)
+        .to.have.property("inventoryId")
+        .to.equal(testInventory.id);
+    });
   });
 
   describe("deleteInventoryContainer", () => {
-    // const { path } = AllRoutes.inventoryContainerDelete;
-    // const builtPath = buildRouteWithParam(path, {
-    //   inventoryId: testInventory.id,
-    //   inventoryContainerId: testContainerDelete.id,
-    // });
-    // testAuthentication(request(app).delete(builtPath));
+    const { path } = AllRoutes.inventoryContainerDelete;
+    let builtPath: string;
+
+    before(() => {
+      builtPath = buildRouteWithParam(path, {
+        inventoryId: testInventory.id,
+        inventoryContainerId: testContainerUpdate.id,
+      });
+    });
+
+    testAuthentication(
+      request(app).delete(
+        buildRouteWithParam(path, { inventoryId: 1, inventoryContainerId: 1 })
+      )
+    );
+
+    it("deletes a container", async () => {
+      const res = await request(app)
+        .delete(builtPath)
+        .auth(userOneForeverToken.token, { type: "bearer" });
+
+      expect(res.status).to.equal(204);
+    });
   });
 });

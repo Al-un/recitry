@@ -8,54 +8,35 @@ import * as InventoryContainerService from "./InventoryContainer.service";
 
 export const createInventoryContainer: InventoryControllerTypes["inventoryContainerCreate"] =
   async (req, res) => {
-    const userId = (req.res?.locals as any).user?.id;
-    if (!userId) {
-      res.status(400).send({ message: "userId parameter not found" });
-      return;
-    }
-
-    const { inventoryId } = req.params;
-    const inventory = await InventoryModel.findByPk(inventoryId, {
-      include: [includeUserMinimalProfile],
-    });
-    if (inventory === null) {
-      res.sendStatus(404);
-      return;
-    }
+    const userId = res.locals.user.id;
+    const inventory = res.locals.inventory;
 
     const created = await InventoryContainerService.createInDb(
-      { ...req.body, inventoryId },
+      { ...req.body, inventoryId: inventory.id },
       userId
     );
 
     const c = await InventoryContainerService.fetchFromDb(created.id);
-
     res.status(201).json(c);
   };
 
-/**
- * Only name can be modified, a container cannot be transferred to another inventory
- */
+
 export const updateInventoryContainer: InventoryControllerTypes["inventoryContainerUpdate"] =
   async (req, res) => {
-    const inventoryContainer = (req.res?.locals as any)
-      .inventoryContainer as InventoryContainerModel;
+    const container = res.locals.inventoryContainer;
 
-    const updateRequest = req.body;
-    inventoryContainer.set({
-      name: updateRequest.name,
-      updatedAt: new Date(),
-    });
+    const updated = await InventoryContainerService.updateInDb(
+      container,
+      req.body
+    );
 
-    await inventoryContainer.save();
-
-    res.status(200).json(inventoryContainer.toInventoryContainer);
+    const c = await InventoryContainerService.fetchFromDb(updated.id);
+    res.status(200).json(c);
   };
 
 export const deleteInventoryContainer: InventoryControllerTypes["inventoryContainerDelete"] =
-  async (req, res) => {
-    const container = (req.res?.locals as any)
-      .inventoryContainer as InventoryContainerModel;
+  async (_, res) => {
+    const container = res.locals.inventoryContainer;
 
     InventoryContainerService.deleteInDb(container);
 

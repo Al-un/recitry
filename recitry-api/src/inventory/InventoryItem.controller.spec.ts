@@ -10,31 +10,10 @@ import { UserModel } from "@/um/User.model";
 import { userOne } from "@al-un/recitry-core/um/users.mocks";
 import { InventoryFormData } from "@al-un/recitry-core/inventory/inventory.models";
 import { InventoryModel } from "./Inventory.model";
-import { userOneInventories } from "@al-un/recitry-core/inventory/inventory.mocks";
 import { testAuthentication } from "@/um/Auth.middleware.spec";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 
 describe("InventoryItemController", () => {
-  let firstUser: UserModel;
-  let firstInventory: InventoryModel;
-
-  before(async () => {
-    const userCandidate = await UserModel.findOne({
-      where: { username: userOne.username },
-    });
-    if (userCandidate === null) throw new Error("User One not found");
-    firstUser = userCandidate;
-
-    const inventoryCandidate = await InventoryModel.findOne({
-      where: {
-        name: userOneInventories.inventories[0].name,
-        authorId: firstUser.id,
-      },
-    });
-    if (inventoryCandidate === null) throw new Error("Inventory one not found");
-    firstInventory = inventoryCandidate;
-  });
-
   describe.skip("createInventoryItem", () => {
     it('returns "not implemented yet" error', async () => {
       const res = await request(app)

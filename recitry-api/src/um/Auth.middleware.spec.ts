@@ -1,8 +1,7 @@
-import express, { Express } from "express";
 import { expect } from "chai";
+import express, { Express, RequestHandler } from "express";
 import request from "supertest";
 
-import { RequestHandler } from "express";
 import { isAuthenticated } from "./Auth.middleware";
 
 let app: Express;

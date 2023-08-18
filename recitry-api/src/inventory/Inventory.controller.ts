@@ -3,62 +3,36 @@ import { InventoryListItem } from "@al-un/recitry-core/inventory/inventory.model
 import { PaginatedResp } from "@al-un/recitry-core/core/base-api.models";
 
 import { ExpressController } from "@/core/express";
-import { UserModel, includeUserMinimalProfile } from "@/um/User.model";
+import { AuthLocals } from "@/um/Auth.middleware";
+import { includeUserMinimalProfile } from "@/um/User.model";
 import { InventoryModel } from "./Inventory.model";
+import {
+  HasCheckedInventoryContainerLocals,
+  HasCheckedInventoryItemLocals,
+  HasCheckedInventoryLocals,
+} from "./Inventory.middleware";
 import * as InventoryService from "./Inventory.service";
-import { InventoryContainerModel } from "./InventoryContainer.model";
-import { InventoryItemModel } from "./InventoryItem.model";
 
 // ----------------------------------------------------------------------------
 
 export type InventoryControllerTypes = ExpressController<
   InventoryEndpointTypes,
   {
-    inventoryCreate: {
-      user: UserModel;
-    };
-    inventoryList: {
-      user: UserModel;
-    };
-    inventoryDisplay: {
-      user: UserModel;
-    };
-    inventoryUpdate: {
-      user: UserModel;
-      inventory: InventoryModel;
-    };
-    inventoryDelete: {
-      user: UserModel;
-      inventory: InventoryModel;
-    };
-    inventoryContainerCreate: {
-      user: UserModel;
-      inventory: InventoryModel;
-    };
-    inventoryContainerUpdate: {
-      user: UserModel;
-      inventory: InventoryModel;
-      inventoryContainer: InventoryContainerModel;
-    };
-    inventoryContainerDelete: {
-      user: UserModel;
-      inventory: InventoryModel;
-      inventoryContainer: InventoryContainerModel;
-    };
-    inventoryItemCreate: {
-      user: UserModel;
-      inventory: InventoryModel;
-    };
-    inventoryItemUpdate: {
-      user: UserModel;
-      inventory: InventoryModel;
-      inventoryItem: InventoryItemModel;
-    };
-    inventoryItemDelete: {
-      user: UserModel;
-      inventory: InventoryModel;
-      inventoryItem: InventoryItemModel;
-    };
+    inventoryCreate: AuthLocals;
+    inventoryList: AuthLocals;
+    inventoryDisplay: AuthLocals;
+    inventoryUpdate: HasCheckedInventoryLocals;
+    inventoryDelete: HasCheckedInventoryLocals;
+    inventoryContainerCreate: HasCheckedInventoryLocals;
+    inventoryContainerUpdate: HasCheckedInventoryLocals &
+      HasCheckedInventoryContainerLocals;
+    inventoryContainerDelete: HasCheckedInventoryLocals &
+      HasCheckedInventoryContainerLocals;
+    inventoryItemCreate: HasCheckedInventoryLocals;
+    inventoryItemUpdate: HasCheckedInventoryLocals &
+      HasCheckedInventoryItemLocals;
+    inventoryItemDelete: HasCheckedInventoryLocals &
+      HasCheckedInventoryItemLocals;
   }
 >;
 
@@ -68,11 +42,12 @@ export const createInventory: InventoryControllerTypes["inventoryCreate"] =
   async (req, res) => {
     const authorId = res.locals.user.id;
 
-    const creationRequest = req.body;
-    const inventory = await InventoryService.createInventory(
-      creationRequest,
-      authorId
-    );
+    const i = await InventoryService.createInventory(req.body, authorId);
+
+    const inventory = await InventoryService.fetchInventory(i.id);
+    if (inventory === null) {
+      throw new Error(`Created inventory Id ${i.id} is null`);
+    }
 
     res.status(201).json(inventory);
   };

@@ -11,18 +11,8 @@ import { InventoryItemModel } from "./InventoryItem.model";
 
 export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"] =
   async (req, res) => {
-    const userId = (req.res?.locals as any).user?.id;
-    if (!userId) {
-      res.status(400).send({ message: "userId parameter not found" });
-      return;
-    }
-
-    const { inventoryId } = req.params;
-    const inventory = await InventoryModel.findByPk(inventoryId);
-    if (inventory === null) {
-      res.sendStatus(404);
-      return;
-    }
+    const userId = res.locals.user.id;
+    const inventory = res.locals.inventory;
 
     const creationRequest = req.body;
 
@@ -60,8 +50,7 @@ export const createInventoryItem: InventoryControllerTypes["inventoryItemCreate"
  */
 export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"] =
   async (req, res) => {
-    const inventoryItem = (req.res?.locals as any)
-      .inventoryItem as InventoryItemModel;
+    const inventoryItem = res.locals.inventoryItem;
 
     const updateRequest = req.body;
 
@@ -91,8 +80,7 @@ export const updateInventoryItem: InventoryControllerTypes["inventoryItemUpdate"
 
 export const deleteInventoryItem: InventoryControllerTypes["inventoryItemDelete"] =
   async (req, res) => {
-    const inventoryItem = (req.res?.locals as any)
-      .inventoryItem as InventoryItemModel;
+    const inventoryItem = res.locals.inventoryItem;
 
     await inventoryItem.destroy();
 

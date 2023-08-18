@@ -6,7 +6,10 @@ import { UserModel } from "@/um/User.model";
 import { Seed } from "@/umzug";
 
 import { userOne } from "@al-un/recitry-core/um/users.mocks";
-import { userOneInventories } from "@al-un/recitry-core/inventory/inventory.mocks";
+import {
+  userOneInventoryOne,
+  userOneInventoryTwo,
+} from "@al-un/recitry-core/inventory/inventory.mocks";
 import { InventoryDetail } from "@al-un/recitry-core/inventory/inventory.models";
 import { InventoryContainerModel } from "@/inventory/InventoryContainer.model";
 import { InventoryItemModel } from "@/inventory/InventoryItem.model";
@@ -51,8 +54,8 @@ export const up: Seed = async ({ context: sequelize }) => {
     }
   };
 
-  await createInventory(userOneInventories.inventories[0], firstUser);
-  await createInventory(userOneInventories.inventories[1], firstUser);
+  await createInventory(userOneInventoryOne, firstUser);
+  await createInventory(userOneInventoryTwo, firstUser);
 };
 
 export const down: Seed = async ({ context: sequelize }) => {
@@ -67,14 +70,14 @@ export const down: Seed = async ({ context: sequelize }) => {
     .getQueryInterface()
     .bulkDelete(
       inventoryTableName,
-      { name: userOneInventories.inventories[0].name, authorId: firstUser },
+      { name: userOneInventoryOne.name, authorId: firstUser },
       {}
     );
   await sequelize
     .getQueryInterface()
     .bulkDelete(
       inventoryTableName,
-      { name: userOneInventories.inventories[1].name, authorId: firstUser },
+      { name: userOneInventoryTwo.name, authorId: firstUser },
       {}
     );
 };

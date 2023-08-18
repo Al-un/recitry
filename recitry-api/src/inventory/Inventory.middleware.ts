@@ -1,22 +1,38 @@
 import { RequestHandler } from "express";
+
+import { AuthLocals } from "@/um/Auth.middleware";
+import { UserModel } from "@/um/User.model";
 import { InventoryModel } from "./Inventory.model";
 import { InventoryContainerModel } from "./InventoryContainer.model";
 import { InventoryItemModel } from "./InventoryItem.model";
-import { UserModel } from "@/um/User.model";
 
-export const checkInventoryAuthor: RequestHandler<{
-  inventoryId: number;
-}> = async (req, res, next) => {
-  const userId = req.res?.locals.user?.id;
-  if (!userId) {
-    res.status(400).send({ message: "userId parameter not found" });
-    return;
-  }
+// ----------------------------------------------------------------------------
+
+export interface HasCheckedInventoryLocals extends AuthLocals {
+  inventory: InventoryModel;
+}
+
+export interface HasCheckedInventoryContainerLocals extends AuthLocals {
+  inventoryContainer: InventoryContainerModel;
+}
+
+export interface HasCheckedInventoryItemLocals extends AuthLocals {
+  inventoryItem: InventoryItemModel;
+}
+
+// ----------------------------------------------------------------------------
+
+export const checkInventoryAuthor: RequestHandler<
+  { inventoryId: number },
+  any,
+  any,
+  any,
+  HasCheckedInventoryLocals
+> = async (req, res, next) => {
+  const userId = res.locals.user.id;
 
   const { inventoryId } = req.params;
-  const inventory = await InventoryModel.findByPk(inventoryId, {
-    include: { model: UserModel, attributes: ["id", "username"] },
-  });
+  const inventory = await InventoryModel.findByPk(inventoryId);
   if (inventory === null) {
     res.sendStatus(404);
     return;
@@ -32,21 +48,18 @@ export const checkInventoryAuthor: RequestHandler<{
   next();
 };
 
-export const checkInventoryContainerAuthor: RequestHandler<{
-  inventoryContainerId: number;
-}> = async (req, res, next) => {
-  const userId = req.res?.locals.user?.id;
-  if (!userId) {
-    res.status(400).send({ message: "userId parameter not found" });
-    return;
-  }
+export const checkInventoryContainerAuthor: RequestHandler<
+  { inventoryContainerId: number },
+  any,
+  any,
+  any,
+  HasCheckedInventoryContainerLocals
+> = async (req, res, next) => {
+  const userId = res.locals.user.id;
 
   const { inventoryContainerId } = req.params;
   const inventoryContainer = await InventoryContainerModel.findByPk(
-    inventoryContainerId,
-    {
-      include: { model: UserModel, attributes: ["id", "username"] },
-    }
+    inventoryContainerId
   );
   if (inventoryContainer === null) {
     res.sendStatus(404);
@@ -63,19 +76,17 @@ export const checkInventoryContainerAuthor: RequestHandler<{
   next();
 };
 
-export const checkInventoryItemAuthor: RequestHandler<{
-  inventoryItemId: number;
-}> = async (req, res, next) => {
-  const userId = req.res?.locals.user?.id;
-  if (!userId) {
-    res.status(400).send({ message: "userId parameter not found" });
-    return;
-  }
+export const checkInventoryItemAuthor: RequestHandler<
+  { inventoryItemId: number },
+  any,
+  any,
+  any,
+  HasCheckedInventoryItemLocals
+> = async (req, res, next) => {
+  const userId = res.locals.user.id;
 
   const { inventoryItemId } = req.params;
-  const inventoryItem = await InventoryItemModel.findByPk(inventoryItemId, {
-    include: { model: UserModel, attributes: ["id", "username"] },
-  });
+  const inventoryItem = await InventoryItemModel.findByPk(inventoryItemId);
   if (inventoryItem === null) {
     res.sendStatus(404);
     return;

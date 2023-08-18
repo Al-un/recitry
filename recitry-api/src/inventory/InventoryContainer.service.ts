@@ -20,12 +20,15 @@ export const createInDb = async (
   return c;
 };
 
+/**
+ * Only name can be modified, a container cannot be transferred to another inventory
+ */
 export const updateInDb = async (
   container: InventoryContainerModel,
-  payload: InventoryContainerFormData
+  payload: Partial<InventoryContainerFormData>
 ) => {
   container.set({
-    name: payload.name,
+    name: payload?.name,
     updatedAt: new Date(),
   });
   await container.save();

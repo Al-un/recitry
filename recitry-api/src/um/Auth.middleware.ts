@@ -11,7 +11,7 @@ import { AccessTokenModel } from "./AccessToken.model";
 
 // ----------------------------------------------------------------------------
 
-export interface AuthLocal {
+export interface AuthLocals {
   user: UserModel;
 }
 
@@ -46,7 +46,7 @@ export const isAuthenticated: RequestHandler<
   any,
   any,
   any,
-  { user: UserModel }
+  AuthLocals
 > = (req, res, next) => {
   type BearerCallback = Parameters<VerifyFunction>[1];
   const cbHandler: BearerCallback = (err, authInfo, opts) => {
